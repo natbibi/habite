@@ -1,0 +1,22 @@
+services:
+  api:
+    container_name: test_api
+    environment: 
+      - PGUSER=cohabit
+      - PGHOST=db
+      - PGPASSWORD=password
+      - PGDATABASE=trackerDB_test
+      - PGPORT=5432
+      - NODE_ENV=test
+    depends_on:
+      - db
+    tty: true
+  db:
+    container_name: test_db
+    volumes:
+      - "test_db:/var/lib/postgresql/data"
+    environment: 
+      - POSTGRES_DB=trackerDB_test
+      - POSTGRES_PASSWORD=password
+volumes:
+  test_db:
