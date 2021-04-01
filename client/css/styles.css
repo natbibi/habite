@@ -1,0 +1,9 @@
+footer {
+    display: flex;
+    justify-content: space-around;
+}
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+}
