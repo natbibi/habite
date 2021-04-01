@@ -7,6 +7,19 @@
 
 # Installation & usage
 
+### For our app to be run on your local machine:
+
+Clone this repo and navigate to the root directory of this repo.
+
+To start docker compose with client, server and database containers  
+`bash _scripts/startDev.sh`    
+
+**Clientside:** localhost:8000   
+**API:** localhost:3000
+
+To teardown docker compose completely  
+`bash _scripts/teardown.sh`  
+
 # Technologies
 
 ## Dependencies:
