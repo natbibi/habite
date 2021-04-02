@@ -1,0 +1,47 @@
+/* Fix nav bar at bottom */
+.bottom-nav {
+    background-color: grey;
+    display: flex;
+    justify-content: space-around;
+    overflow: hidden;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Style nav bar links */
+.bottom-nav a {
+    float: left;
+    display: block;
+    color: honeydew;
+    text-align: center;
+    padding: 1rem 1rem;
+    font-size: 18px;
+}
+
+.bottom-nav .icon {
+    display: none;
+}
+
+/* --***-- */
+/* Add nav bar responsiveness */
+@media screen and (max-width: 600px) {
+    .bottom-nav a:not(first-child) {display: none}
+    .bottom-nav a.icon {
+        float: right;
+        display: block;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .bottom-nav.responsive .icon {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+    }
+    .bottom-nav.responsive a {
+        float: none;
+        display: block;
+        text-align: left;
+    }
+}
+/* --***-- */
