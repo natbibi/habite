@@ -10,6 +10,6 @@ VALUES
 ('exercise'),
 ('sleep eight hours');
 
-INSERT INTO user_habits (user_id, habit_id) 
+INSERT INTO user_habits (user_id, habit_id, frequency) 
 VALUES
-(1,1),(1,2),(2,1),(3,3);
+(1,1,5),(1,2,8),(2,1,8),(3,3,8);

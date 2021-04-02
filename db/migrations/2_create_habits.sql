@@ -8,7 +8,8 @@ DROP TABLE IF EXISTS user_habits;
 CREATE TABLE user_habits (
     id serial PRIMARY KEY,
     user_id int references users(id),
-    habit_id int references habits(id)
+    habit_id int references habits(id),
+    frequency int
 );
 
 DROP TABLE IF EXISTS habit_entry;
