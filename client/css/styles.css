@@ -16,3 +16,13 @@ footer {
     bottom: 0;
     width: 100%
 }
+
+/* Style nav bar links */
+.bottom-nav a {
+    float: left;
+    display: block;
+    color: honeydew;
+    text-align: center;
+    padding: 1rem 1rem;
+    font-size: 18px;
+}
