@@ -34,9 +34,11 @@ To teardown docker compose completely
 
 
 # Process
-1. Plan design and project's MoSCoW
-2. Set up Docker Compose containers for Client, Server, Database 
-3. Set up file structure
+1. Plan design and project's MoSCoW  
+2. Set up Docker Compose containers for Client, Server, Database  
+3. Set up file structure 
+4. Server up and running, database seeds and schema created, client skeleton added 
+5. Deploy Client to Netlify and API to Heroku 
 
 
 # Wins & Challenges 
