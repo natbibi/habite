@@ -1,8 +1,6 @@
 /* Fix nav bar at bottom */
 .bottom-nav {
     background-color: grey;
-    display: flex;
-    justify-content: space-around;
     overflow: hidden;
     bottom: 0;
     width: 100%;
@@ -15,7 +13,17 @@
     color: honeydew;
     text-align: center;
     padding: 1rem 1rem;
+    text-decoration: none;
     font-size: 18px;
+}
+
+.bottom-nav a:hover {
+    background-color: #ddd;
+    color: black;
+  }
+
+.bottom-nav a.active {
+    background-color: black;
 }
 
 .bottom-nav .icon {
@@ -25,7 +33,7 @@
 /* --***-- */
 /* Add nav bar responsiveness */
 @media screen and (max-width: 600px) {
-    .bottom-nav a:not(first-child) {display: none}
+    .bottom-nav a:not(:first-child) {display: none;}
     .bottom-nav a.icon {
         float: right;
         display: block;
