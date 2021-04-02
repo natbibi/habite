@@ -1,9 +1,18 @@
-footer {
-    display: flex;
-    justify-content: space-around;
+body{
+    font-family: 'Allerta', sans-serif;
 }
 
+footer {
+    display: flex;
+}
+
+/* Fix nav bar at bottom */
 .bottom-nav {
+    background-color: grey;
+    display: flex;
+    justify-content: space-around;
+    overflow: hidden;
     position: fixed;
     bottom: 0;
+    width: 100%
 }
