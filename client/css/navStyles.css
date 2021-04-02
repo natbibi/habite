@@ -1,3 +1,19 @@
+/* Fix top nav bar to right hand side of page */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+}
+
+.nav-bar {
+    font-size: 30px;
+    margin: 1px 3px 1px 3px;
+}
+
+.nav-bar a:hover {
+    background-color: lightgrey;
+}
+
 /* Fix nav bar at bottom */
 .bottom-nav {
     background-color: grey;
