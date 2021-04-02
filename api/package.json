@@ -13,7 +13,7 @@
     "test": "jest --setupFiles ./tests/integration/config.js --watchAll --detectOpenHandles --runInBand --verbose",
     "unitTests": "jest --testPathPattern=/unit/ --watchAll --verbose",
     "coverage": "jest --testPathPattern=/unit/ --coverage",
-    "secret": "node ../_scripts/secret_key.js"
+    "secret": "node secret_key.js"
   },
   "keywords": [],
   "author": "",
