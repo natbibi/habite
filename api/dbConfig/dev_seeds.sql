@@ -1,8 +1,8 @@
 INSERT INTO users (username, password) 
 VALUES
-('DouglasAdams', 'hefuyew87fy79'),
-('LeoTolstoy', 'hefuyew87fy79'),
-('PatriciaFinney', 'hefuyew87fy79');
+('duckfliesagain', 'tu9ibtoi4tbh2hhuet' ),
+('healthman', 'h4hoeuba3r3tbaeu' ),
+('notanotherhabittracker', 'ahudnthpdohbapbb243' );
 
 INSERT INTO habits (name) 
 VALUES
