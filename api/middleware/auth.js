@@ -5,7 +5,8 @@ function verifyToken(req, res, next){
     if (header) {
         const token = header.split(' ')[1];
         jwt.verify(token, process.env.SECRET, async (err, data) => {
-            console.log(data);
+            //set a response local variables for user specific authentication
+            res.locals.user = data.username
             if(err){
                 res.status(403).json({ err: 'Invalid token' })
             } else {

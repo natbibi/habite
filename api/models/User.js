@@ -13,7 +13,6 @@ class User {
                 const result = await db.query(
                     SQL`SELECT * FROM users
                         WHERE username = ${username};`);
-
                 const user = new User(result.rows[0]);
                 resolve(user);
             } catch (error) {
