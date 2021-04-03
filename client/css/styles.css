@@ -3,6 +3,9 @@ body{
 }
 
 .heading {
+    background-color: pink;
+    border-radius: 15%;
+    padding-top: 3rem;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
