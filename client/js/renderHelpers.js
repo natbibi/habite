@@ -1,3 +1,27 @@
+function renderNavBar() {
+    // Create anchor for registration icon
+    const regLink = document.createElement('a');
+    regLink.id = "register";
+    regLink.href = "#register";
+    // Create anchor for login icon
+    const loginLink = document.createElement('a');
+    loginLink.id = "login";
+    loginLink.href = "#login";
+    loginLink.className = "active";
+    // Create register icon
+    const regIcon = document.createElement('i');
+    regIcon.className = "fas fa-user-plus";
+    // Create login icon
+    const loginIcon = document.createElement('i');
+    loginIcon.className = "fas fa-sign-in-alt";
+    // Append icons to anchor tags
+    regLink.appendChild(regIcon);
+    loginLink.appendChild(loginIcon);
+    // Append anchor tags to nav
+    nav.appendChild(regLink);
+    nav.appendChild(loginLink);
+}
+
 function renderHeading() {
     const header = document.querySelector('header');
 
