@@ -1,6 +1,7 @@
 // Landing Page flow
 
 function renderLandingPage() {
+    renderNavBar();
     renderHeading();
     renderAuthBtns();
     renderLoginForm();
