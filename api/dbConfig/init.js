@@ -1,7 +1,9 @@
 const { Pool } = require("pg");
+const connectionString = process.env.CONSTRING
 
-const pool = new Pool();
-
+const pool = new Pool({
+    connectionString,
+})
 module.exports = {
   async query(text, params) {
     const start = Date.now();
