@@ -12,10 +12,9 @@ CREATE TABLE user_habits (
     frequency int
 );
 
-DROP TABLE IF EXISTS habit_entry;
-CREATE TABLE habit_entry (
+DROP TABLE IF EXISTS habit_entries;
+CREATE TABLE habit_entries (
     id serial PRIMARY KEY,
-    user_id int references users(id),
     user_habit_id int references user_habits(id),
-    completed varchar(100)
+    completed boolean
 );
