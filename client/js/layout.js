@@ -17,6 +17,10 @@ function updateMain(path) {
                 renderRegistrationForm(); break;
             case '#profile':
                 renderProfile(); break;
+            case '#more':
+                renderMenuMessage(); break;
+            case '#top':
+                break;
             default:
                 render404(); break;
         } 
