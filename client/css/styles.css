@@ -1,0 +1,18 @@
+body{
+    font-family: 'Allerta', sans-serif;
+}
+
+.heading {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+#title-icon {
+    font-size: 100px;
+
+}
+
+footer {
+    display: flex;
+}

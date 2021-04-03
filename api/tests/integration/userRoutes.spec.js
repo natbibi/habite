@@ -1,4 +1,4 @@
-describe('books endpoints', () => {
+describe('user endpoints', () => {
     let api;
     beforeEach(async () => {
         await resetTestDB()

@@ -12,19 +12,24 @@
     "seedDev": "node dbConfig/seedDev.js",
     "test": "jest --setupFiles ./tests/integration/config.js --watchAll --detectOpenHandles --runInBand --verbose",
     "unitTests": "jest --testPathPattern=/unit/ --watchAll --verbose",
-    "coverage": "jest --testPathPattern=/unit/ --coverage"
+    "coverage": "jest --testPathPattern=/unit/ --coverage",
+    "secret": "node secret_key.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "jest": "^26.4.2",
-    "nodemon": "^2.0.4",
-    "supertest": "^4.0.2"
+    "jest": "^26.6.3",
+    "nodemon": "^2.0.7",
+    "supertest": "^6.1.3"
   },
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "pg": "^8.3.3"
+    "jsonwebtoken": "^8.5.1",
+    "pg": "^8.5.1",
+    "sql-template-strings": "^2.2.2"
   }
 }

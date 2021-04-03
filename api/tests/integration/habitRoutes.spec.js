@@ -1,4 +1,4 @@
-describe('author endpoints', () => {
+describe('habit endpoints', () => {
     let api;
     beforeEach(async () => {
         await resetTestDB()
