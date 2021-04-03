@@ -40,9 +40,9 @@ function renderAuthBtns() {
     loginBtn.className = 'login-btn';
     loginBtn.textContent = 'login';
 
-    const regRef = document.createElement('a');
-    regRef.href = '#register';
-    regRef.appendChild(regBtn);
+    const regBtn = document.createElement('button');
+    regBtn.className = 'register-btn';
+    regBtn.textContent = 'register';
 
     authBtns.appendChild(loginBtn);
     authBtns.appendChild(regBtn);

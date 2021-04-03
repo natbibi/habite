@@ -10,6 +10,7 @@ function renderLandingPage() {
 
 //Registration flow
 function renderRegistrationForm() {
+    
 }
 
 function renderProfile() {
