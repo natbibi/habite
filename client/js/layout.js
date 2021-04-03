@@ -14,13 +14,13 @@ function updateMain(path) {
     if (path) {
         switch(path) {
             case '#login':
-                renderLoginForm(); break;
+                renderLandingPage(); break;
             case '#register':
-                renderRegistrationForm(); break;
+                renderLandingPage(); renderRegistrationForm(); break;
             case '#profile':
                 renderProfile(); break;
             case '#more':
-                renderMenuMessage(); break;
+                renderLandingPage(); renderMenuMessage(); break;
             case '#top':
                 break;
             default:
