@@ -1,4 +1,5 @@
-const heading = document.getElementsByClassName('heading');
+const nav = document.querySelector('nav');
+const heading = document.querySelector('header');
 const main = document.querySelector('main');
 
 const publicRoutes = ['#', '#login', '#register'];
@@ -7,6 +8,7 @@ const privateRoutes = ['#profile'];
 window.addEventListener('hashchange', updateContent);
 
 function updateMain(path) {
+    nav.innerHTML = '';
     heading.innerHTML = '';
     main.innerHTML = '';
     if (path) {
