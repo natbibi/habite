@@ -8,7 +8,6 @@ server.use(express.json());
 // basic rate limiting to prevent brute forcing
 // app.set('trust proxy', 1); // enable in production
 const rateLimit = require("express-rate-limit");
-
 const limiter = rateLimit({
   windowMs: 5 * 60 * 1000, // 5 minutes
   max: 3, // limit each IP/username combo to 3 requests per windowMs
@@ -18,7 +17,6 @@ const limiter = rateLimit({
       return req.ip + req.body.username
   }
 });
-
 const totalLimiter = rateLimit({
     windowMs: 24 * 60 * 60 * 1000, // 1 day
     max: 100, // limit each IP to 100 requests per windowMs
@@ -28,14 +26,12 @@ const totalLimiter = rateLimit({
         return req.ip
     }
   });
-
 // apply to all routes
 server.use(totalLimiter)
 // apply to only login requests
 server.use("/auth/login", limiter);
-
-server.get('/reset', (req, res) => {
-        req.body.username
+// reset limit for ip username combo - on captcha completed or some other process
+server.post('/reset', (req, res) => {
         res.send(`reset limit for ${req.ip + req.body.username}`)
         limiter.resetKey(req.ip + req.body.username)
     }
