@@ -1,8 +1,8 @@
 INSERT INTO users (username, password) 
 VALUES
-('duckfliesagain', 'tu9ibtoi4tbh2hhuet' ),
-('healthman', 'h4hoeuba3r3tbaeu' ),
-('notanotherhabittracker', 'ahudnthpdohbapbb243' );
+('duckfliesagain', '$2b$10$s7fRx4nL9T1oO2SHyN4jqOYu70lo3wJrqSNuBnZ2zwYYQ3YJ1bSK.' ),
+('admin', '$2b$10$s7fRx4nL9T1oO2SHyN4jqOYu70lo3wJrqSNuBnZ2zwYYQ3YJ1bSK.' ),
+('notanotherhabittracker', '$2b$10$s7fRx4nL9T1oO2SHyN4jqOYu70lo3wJrqSNuBnZ2zwYYQ3YJ1bSK.' );
 
 INSERT INTO habits (name) 
 VALUES
