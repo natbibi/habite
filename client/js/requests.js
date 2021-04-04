@@ -31,3 +31,5 @@ async function getAllUsers() {
         console.warn(err);
     }
 }
+
+module.exports = { getAllHabits, getAllUsers }
