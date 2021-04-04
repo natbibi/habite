@@ -14,10 +14,6 @@ INSERT INTO user_habits (user_id, habit_id, frequency)
 VALUES
 (1,1,5),(1,2,8),(2,1,8),(3,3,8);
 
-INSERT INTO user_habits (user_id, habit_id, frequency) 
-VALUES
-(1,1,5),(1,2,8),(2,1,8),(3,3,8);
-
 INSERT INTO  habit_entries (user_habit_id, completed)
 VALUES
 (1,TRUE),(1,TRUE),(1,TRUE),(1,FALSE),(2,TRUE),(2,TRUE),(3,FALSE),(3,FALSE);
