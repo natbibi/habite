@@ -12,4 +12,8 @@ describe('user endpoints', () => {
         console.log('Gracefully stopping test server')
         await api.close()
     })
+
+    it('should ...', async () => {
+    
+    });
 })
