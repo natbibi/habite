@@ -6,34 +6,41 @@ server.use(cors());
 server.use(express.json());
 
 // basic rate limiting to prevent brute forcing
+// app.set('trust proxy', 1); // enable in production
 const rateLimit = require("express-rate-limit");
 
-const limiter = () => rateLimit({
+const limiter = rateLimit({
   windowMs: 5 * 60 * 1000, // 5 minutes
   max: 3, // limit each IP/username combo to 3 requests per windowMs
   skipSuccessfulRequests: true, // dont limit on successful requests
   message: 'too many login attempts',
   keyGenerator: function(req,res){
-      console.log(req.ip + req.body.username)
       return req.ip + req.body.username
   }
 });
 
-const totalLimiter = () => rateLimit({
+const totalLimiter = rateLimit({
     windowMs: 24 * 60 * 60 * 1000, // 1 day
     max: 100, // limit each IP to 100 requests per windowMs
     skipSuccessfulRequests: true, // dont limit on successful requests
     message: 'too many failed requests - try again later',
     keyGenerator: function(req,res){
-        console.log(req.ip + req.body.username)
         return req.ip
     }
   });
 
 // apply to all routes
-server.use(totalLimiter())
+server.use(totalLimiter)
 // apply to only login requests
-server.use("/auth/login", limiter());
+server.use("/auth/login", limiter);
+
+server.get('/reset', (req, res) => {
+        req.body.username
+        res.send(`reset limit for ${req.ip + req.body.username}`)
+        limiter.resetKey(req.ip + req.body.username)
+    }
+);
+
 
 const usersRoutes = require('./routes/users');
 const habitsRoutes = require('./routes/habits');
