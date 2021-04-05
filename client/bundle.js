@@ -1,25 +1,82 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+const jwt_decode = require('jwt-decode')
 
-},{}],2:[function(require,module,exports){
+const hostURL = "http://localhost:3000"; // Should this be an ENV variable?
+
+async function requestLogin(e){
+    e.preventDefault();
+    try {
+        const options = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(Object.fromEntries(new FormData(e.target)))
+        }
+        const r = await fetch(`${hostURL}/auth/login`, options)
+        const data = await r.json()
+        if (!data.success) { throw new Error('Login not authorised'); }
+        login(data.token);
+    } catch (err) {
+        console.warn(err);
+    }
+}
+
+async function requestRegistration(e) {
+    e.preventDefault();
+    try {
+        const options = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(Object.fromEntries(new FormData(e.target)))
+        }
+        const r = await fetch(`${hostURL}/auth/register`, options)
+        const data = await r.json()
+        if (data.err){ throw Error(data.err) }
+        requestLogin(e);
+    } catch (err) {
+        console.warn(err);
+    }
+}
+
+function login(token){
+    const user = jwt_decode(token);
+    localStorage.setItem("token", token);
+    localStorage.setItem("username", user.username);
+    window.location.hash = '#profile';
+}
+
+function logout(){
+    localStorage.clear();
+    window.location.hash = '#login';
+}
+
+function currentUser(){
+    const username = localStorage.getItem('username')
+    return username;
+}
+
+module.exports = {
+    requestLogin,
+    requestRegistration,
+    currentUser,
+    logout
+}
+},{"jwt-decode":8}],2:[function(require,module,exports){
 const rHelpers = require('./renderHelpers');
+const forms = require('./forms');
 
 const nav = document.querySelector('nav');
 const heading = document.querySelector('header');
 const main = document.querySelector('main');
 
 // Landing Page flow
-
 function renderLandingPage() {
     rHelpers.renderHeading();
-    rHelpers.renderAuthBtns();
-    rHelpers.renderLoginForm();
+    // rHelpers.renderAuthBtns();
+    forms.renderLoginForm();
+    forms.renderRegisterLink();
 }
 
 // *******************************************************************
-
-//Registration flow
-function renderRegistrationForm() {
-}
 
 function renderProfile() {
     const showFooter = document.getElementById('footer')
@@ -40,7 +97,134 @@ function render404() {
 }
 
 module.exports = { renderProfile, renderLandingPage, render404 }
-},{"./renderHelpers":5}],3:[function(require,module,exports){
+},{"./forms":3,"./renderHelpers":6}],3:[function(require,module,exports){
+const auth = require("./auth");
+const main = document.querySelector('main');
+
+function renderAuthBtns() {
+    const authBtns = document.createElement('div');
+    authBtns.className = 'auth-btns';
+
+    const loginBtn = document.createElement('button');
+    loginBtn.className = 'login-btn';
+    loginBtn.textContent = 'login';
+
+    const regBtn = document.createElement('button');
+    regBtn.className = 'register-btn';
+    regBtn.textContent = 'register';
+
+    authBtns.appendChild(loginBtn);
+    authBtns.appendChild(regBtn);
+    main.appendChild(authBtns);
+}
+
+function renderLoginForm() {
+    // Define form fields
+    const authFields = [
+        { tag: 'label', attributes: { id: 'username-label', for: 'username' } },
+        { tag: 'input', attributes: { id: 'username', name: 'username', placeholder: 'Enter your username', } },
+        { tag: 'label', attributes: { id: 'password-label', for: 'password' } },
+        { tag: 'input', attributes: { id: 'password', type: 'password', name: 'password', placeholder: 'Enter your password', } },
+        { tag: 'input', attributes: { id: 'robot-check', type: 'checkbox', name: 'robot-check', } },
+        { tag: 'label', attributes: { id: 'robot-label', for: 'robot-check' } },
+        { tag: 'input', attributes: { id: 'login-sbmt', type: 'submit', name: 'login-sbmt', value: 'Login', } }
+    ];
+
+    const form = createForm(authFields)
+    form.classList.add("login-form");
+    form.addEventListener('submit', auth.requestLogin);
+    main.appendChild(form);
+}
+
+function renderRegisterForm() {
+    const authFields = [
+        { tag: 'label', attributes: { id: 'username-label', for: 'username' } },
+        { tag: 'input', attributes: { id: 'username', name: 'username', placeholder: 'Enter your username', } },
+        { tag: 'label', attributes: { id: 'password-label', for: 'password' } },
+        { tag: 'input', attributes: { id: 'password', type: 'password', name: 'password', placeholder: 'Enter your password', } },
+        { tag: 'input', attributes: { id: 'password-check', type: 'password', name: 'password', placeholder: 'Confirm password', } },
+        { tag: 'input', attributes: { id: 'robot-check', type: 'checkbox', name: 'robot-check', } },
+        { tag: 'label', attributes: { id: 'robot-label', for: 'robot-check' } },
+        { tag: 'input', attributes: { id: 'register-sbmt', type: 'submit', name: 'register-sbmt', value: 'Register', } }
+    ];
+    const form = createForm(authFields)
+    form.classList.add("register-form");
+    form.addEventListener('submit', auth.requestRegistration);
+    main.appendChild(form);
+}
+
+
+function createForm(authFields) {
+    // Create new form element with auth-form class name
+    const form = document.createElement('form');
+    form.method = "post";
+    form.className = 'auth-form';
+    // Create form elements
+    authFields.forEach(f => {
+        let field = document.createElement(f.tag);
+        // Add text content to relevant tags
+        let fieldId = f.attributes.id;
+        switch (fieldId) {
+            case 'username-label':
+                field.textContent = "username"; break;
+            case 'password-label':
+                field.textContent = "password"; break;
+            case 'robot-label':
+                field.textContent = "I am not a robot!"; break;
+            default:
+                field.textContent = ''; break;
+        }
+        // Add relevant attributes to each html tag and append to form
+        Object.entries(f.attributes).forEach(([att, val]) => {
+            field.setAttribute(att, val);
+        })
+        form.appendChild(field);
+    })
+    return form;
+}
+
+
+function renderRegisterLink() {
+    const registerPageBtn = document.createElement('button');
+    const registerText = document.createElement('p');
+    const registerElement = document.createElement('div');
+
+    registerPageBtn.textContent = "Register";
+    registerPageBtn.id = "register-link";
+    
+    registerText.textContent = "Don't have an account? Click here to create one!"
+
+    registerElement.appendChild(registerText);
+    registerElement.appendChild(registerPageBtn);
+
+    main.appendChild(registerElement);
+}
+
+function renderLoginLink() {
+    const registerPageBtn = document.createElement('button');
+    const registerText = document.createElement('p');
+    const registerElement = document.createElement('div');
+
+    registerPageBtn.textContent = "Login";
+    registerPageBtn.id = "login-link";
+    
+    registerText.textContent = "Already have an account? Click here to login!"
+
+    registerElement.appendChild(registerText);
+    registerElement.appendChild(registerPageBtn);
+
+    main.appendChild(registerElement);
+}
+
+module.exports = {
+    renderAuthBtns,
+    renderLoginForm,
+    renderLoginLink,
+    renderRegisterForm,
+    renderRegisterLink
+    
+}
+},{"./auth":1}],4:[function(require,module,exports){
 // Import js files
 // Rendering
 const layout = require('./layout');
@@ -50,24 +234,44 @@ const content = require('./content');
 const auth = require('./auth');
 const requests = require('./requests')
 
-
-
 // Create initial bindings
 function initBindings() {
     // e.preventDefault();
     // Initial bindings
     console.log('You found our javaScript')
 
-
-    //Initiate rendering process
     layout.updateContent();
+    
+    window.addEventListener('hashchange', layout.updateContent);
 
-    const profile = document.getElementById('profile')
-    profile.addEventListener('click', navFunc)
+    // Click event delegation
+    const main = document.querySelector('main');
+    const profile = document.getElementById('profile');
+    const bottomNav = document.getElementById('bottom-nav-bar');
 
-
+    main.addEventListener('click', formHandler);
+    profile.addEventListener('click', navFunc);
+    bottomNav.addEventListener('click', navHandler);
 }
 
+function formHandler(e) {
+    const target = e.target.id;
+    switch(target) {
+        case 'register-link': window.location.hash = 'register'; break;
+        case 'login-link': window.location.hash = 'login'; break;
+        default: break;
+    }
+}
+
+function navHandler(e) {
+    const target = e.target.id;
+    switch(target) {
+        case 'logout': auth.logout(); break;
+        case 'add-habit': /*TODO add page*/ break;
+        case 'show-habits': window.location.hash = 'profile'; break;
+        default: break;
+    }
+}
 
 function navFunc() {
     let x = document.getElementById('bottom-nav-bar');
@@ -81,30 +285,35 @@ function navFunc() {
 initBindings();
 
 
-},{"./auth":1,"./content":2,"./layout":4,"./requests":6}],4:[function(require,module,exports){
+},{"./auth":1,"./content":2,"./layout":5,"./requests":7}],5:[function(require,module,exports){
 const content = require('./content')
-
+const rHelpers = require('./renderHelpers');
+const forms = require('./forms')
+const auth = require('./auth');
 const nav = document.querySelector('nav');
 const heading = document.querySelector('header');
 const main = document.querySelector('main');
 
 const publicRoutes = ['#', '#login', '#register'];
-const privateRoutes = []; // add #profile
-
-window.addEventListener('hashchange', updateContent);
+const privateRoutes = ['#profile']; // add #profile
 
 function updateMain(path) {
     console.log("hello updating main")
 
     nav.innerHTML = '';
-    heading.innerHTML = '';
     main.innerHTML = '';
+    heading.innerHTML = '';
     if (path) {
+        rHelpers.renderHeading()
         switch (path) {
             case '#login':
-                content.renderLandingPage(); break;
+                forms.renderLoginForm();
+                forms.renderRegisterLink(); 
+                break;
             case '#register':
-                content.renderLandingPage(); content.renderRegistrationForm(); break;
+                forms.renderRegisterForm(); 
+                forms.renderLoginLink();
+                break;
             case '#profile':
                 content.renderProfile(); break;
             // case '':
@@ -123,15 +332,19 @@ function updateMain(path) {
 
 function updateContent() {
     const path = window.location.hash;
-    if (privateRoutes.includes(path) && !currentUser()) {
-        window.location.hash = '#'
+    if (privateRoutes.includes(path) && !auth.currentUser()) {
+        window.location.hash = ''
+    } else if (!privateRoutes.includes(path) && auth.currentUser()) {
+        window.location.hash = 'profile';
     } else {
         updateMain(path);
     }
 }
 
 module.exports = { updateContent };
-},{"./content":2}],5:[function(require,module,exports){
+},{"./auth":1,"./content":2,"./forms":3,"./renderHelpers":6}],6:[function(require,module,exports){
+
+
 const nav = document.querySelector('nav');
 const heading = document.querySelector('header');
 const main = document.querySelector('main');
@@ -195,119 +408,13 @@ function renderHeading() {
     header.appendChild(heading);
 }
 
-function renderAuthBtns() {
-    const authBtns = document.createElement('div');
-    authBtns.className = 'auth-btns';
-
-    const loginBtn = document.createElement('button');
-    loginBtn.className = 'login-btn';
-    loginBtn.textContent = 'login';
-
-    const regBtn = document.createElement('button');
-    regBtn.className = 'register-btn';
-    regBtn.textContent = 'register';
-
-    authBtns.appendChild(loginBtn);
-    authBtns.appendChild(regBtn);
-    main.appendChild(authBtns);
-}
-
-function renderLoginForm() {
-    // Define form fields
-    const authFields = [
-        {
-            tag: 'label',
-            attributes: {
-                id: 'username-label',
-                for: 'username'
-            }
-        },
-        {
-            tag: 'input',
-            attributes: {
-                type: 'text',
-                id: 'username',
-                name: 'username',
-                placeholder: 'Enter your username',
-            }
-        },
-        {
-            tag: 'label',
-            attributes: {
-                id: 'password-label',
-                for: 'password'
-            }
-        },
-        {
-            tag: 'input',
-            attributes: {
-                type: 'text',
-                id: 'password',
-                name: 'password',
-                placeholder: 'Enter your password',
-            }
-        },
-        {
-            tag: 'input',
-            attributes: {
-                type: 'checkbox',
-                id: 'robot-check',
-                name: 'robot-check',
-            }
-        },
-        {
-            tag: 'label',
-            attributes: {
-                id: 'robot-label',
-                for: 'robot-check'
-            }
-        },
-        {
-            tag: 'input',
-            attributes: {
-                type: 'submit',
-                id: 'login-sbmt',
-                name: 'login-sbmt',
-                value: 'Go to profile ...',
-            }
-        }
-    ];
-    // Create new form element with auth-form class name
-    const form = document.createElement('form');
-    form.className = 'auth-form';
-    // Create form elements
-    authFields.forEach(f => {
-        // Create a new html tag based on authFields entry
-        let field = document.createElement(f.tag);
-        // Add text content to relevant tags
-        let fieldId = f.attributes.id;
-        switch (fieldId) {
-            case 'username-label':
-                field.textContent = "username"; break;
-            case 'password-label':
-                field.textContent = "password"; break;
-            case 'robot-label':
-                field.textContent = "I am not a robot!"; break;
-            default:
-                field.textContent = ''; break;
-        }
-        // Add relevant attributes to each html tag and append to form
-        Object.entries(f.attributes).forEach(([att, val]) => {
-            field.setAttribute(att, val);
-            form.appendChild(field);
-        })
-    })
-    // form.addEventListener('submit', requestLogin); <== Uncomment this once we have auth
-    main.appendChild(form);
-}
 
 module.exports = {
     renderNavBar,
     renderHeading,
-    renderAuthBtns,
-    renderLoginForm
+
 }
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 async function getAllHabits() {
     try {
         const options = {
@@ -343,4 +450,8 @@ async function getAllUsers() {
 }
 
 module.exports = { getAllHabits, getAllUsers }
-},{}]},{},[3]);
+},{}],8:[function(require,module,exports){
+"use strict";function e(e){this.message=e}e.prototype=new Error,e.prototype.name="InvalidCharacterError";var r="undefined"!=typeof window&&window.atob&&window.atob.bind(window)||function(r){var t=String(r).replace(/=+$/,"");if(t.length%4==1)throw new e("'atob' failed: The string to be decoded is not correctly encoded.");for(var n,o,a=0,i=0,c="";o=t.charAt(i++);~o&&(n=a%4?64*n+o:o,a++%4)?c+=String.fromCharCode(255&n>>(-2*a&6)):0)o="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".indexOf(o);return c};function t(e){var t=e.replace(/-/g,"+").replace(/_/g,"/");switch(t.length%4){case 0:break;case 2:t+="==";break;case 3:t+="=";break;default:throw"Illegal base64url string!"}try{return function(e){return decodeURIComponent(r(e).replace(/(.)/g,(function(e,r){var t=r.charCodeAt(0).toString(16).toUpperCase();return t.length<2&&(t="0"+t),"%"+t})))}(t)}catch(e){return r(t)}}function n(e){this.message=e}function o(e,r){if("string"!=typeof e)throw new n("Invalid token specified");var o=!0===(r=r||{}).header?0:1;try{return JSON.parse(t(e.split(".")[o]))}catch(e){throw new n("Invalid token specified: "+e.message)}}n.prototype=new Error,n.prototype.name="InvalidTokenError";const a=o;a.default=o,a.InvalidTokenError=n,module.exports=a;
+
+
+},{}]},{},[4]);
