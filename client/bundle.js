@@ -6,7 +6,7 @@ const rHelpers = require('./renderHelpers');
 const nav = document.querySelector('nav');
 const heading = document.querySelector('header');
 const main = document.querySelector('main');
-
+// const newDiv = document.createElement('div').cloneNode();
 // Landing Page flow
 
 function renderLandingPage() {
@@ -28,7 +28,7 @@ function renderProfile() {
     greeting.textContent = `Hi there, ${localStorage.getItem('username')}!`;
     heading.appendChild(greeting);
 
-    const streaks = newDiv
+    const streaks = document.createElement('div')
     streaks.className = "streaks-list"
     const streaksHeading = document.createElement('h2')
     streaksHeading.className = "streaks-heading"
@@ -59,7 +59,11 @@ function renderProfile() {
 function renderAddHabitsPage() {
     const showFooter = document.getElementById('footer')
     showFooter.style.display = 'block';
+    const greeting = document.createElement('h1')
+    greeting.textContent = "Let's get started..."
+    heading.appendChild(greeting)
 
+    // getAllHabits -> name and put into options value / dropdown 
 
 }
 
