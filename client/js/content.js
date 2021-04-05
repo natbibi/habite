@@ -1,23 +1,19 @@
 const rHelpers = require('./renderHelpers');
+const forms = require('./forms');
 
 const nav = document.querySelector('nav');
 const heading = document.querySelector('header');
 const main = document.querySelector('main');
 
 // Landing Page flow
-
 function renderLandingPage() {
     rHelpers.renderHeading();
-    rHelpers.renderAuthBtns();
-    rHelpers.renderLoginForm();
+    // rHelpers.renderAuthBtns();
+    forms.renderLoginForm();
+    forms.renderRegisterLink();
 }
 
 // *******************************************************************
-
-//Registration flow
-function renderRegistrationForm() {
-    
-}
 
 function renderProfile() {
     const showFooter = document.getElementById('footer')
