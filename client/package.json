@@ -13,7 +13,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "concurrently \"watchify ./js/index.js -o bundle.js\" \"python -m http.server\""
+    "dev": "concurrently \"watchify ./js/index.js -o bundle.js\" \"http-server\""
   },
   "keywords": [],
   "author": "",
