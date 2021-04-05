@@ -349,7 +349,8 @@ const nav = document.querySelector('nav');
 const heading = document.querySelector('header');
 const main = document.querySelector('main');
 
-function renderNavBar() {
+// currently not in use!
+function renderNavBar() { 
     nav.style.visibility = "show"
     // Create anchor for registration icon
     const regLink = document.createElement('a');
