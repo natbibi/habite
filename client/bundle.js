@@ -10,7 +10,6 @@ const main = document.querySelector('main');
 // Landing Page flow
 
 function renderLandingPage() {
-    // rHelpers.renderNavBar();
     rHelpers.renderHeading();
     rHelpers.renderAuthBtns();
     rHelpers.renderLoginForm();
@@ -138,6 +137,7 @@ const heading = document.querySelector('header');
 const main = document.querySelector('main');
 
 function renderNavBar() {
+    nav.style.visibility = "show"
     // Create anchor for registration icon
     const regLink = document.createElement('a');
     regLink.id = "register";

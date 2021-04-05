@@ -3,6 +3,7 @@ const heading = document.querySelector('header');
 const main = document.querySelector('main');
 
 function renderNavBar() {
+    nav.style.visibility = "show"
     // Create anchor for registration icon
     const regLink = document.createElement('a');
     regLink.id = "register";
