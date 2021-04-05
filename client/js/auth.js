@@ -1,4 +1,6 @@
-const hostURL = "http://localhost:3000" // Should this be an ENV variable?
+const jwt_decode = require('jwt-decode')
+
+const hostURL = "http://localhost:3000"; // Should this be an ENV variable?
 
 async function requestLogin(e){
     e.preventDefault();
@@ -49,4 +51,11 @@ function logout(){
 function currentUser(){
     const username = localStorage.getItem('username')
     return username;
+}
+
+module.exports = {
+    requestLogin,
+    requestRegistration,
+    currentUser,
+    logout
 }
