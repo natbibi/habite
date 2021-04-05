@@ -16,15 +16,15 @@
 }
 
 /* Fix nav bar at bottom */
-.bottom-nav {
+/* .bottom-nav {
     background-color: grey;
     overflow: hidden;
     bottom: 0;
     width: 100%;
-}
+} */
 
 /* Style nav bar links */
-.bottom-nav a {
+/* .bottom-nav a {
     float: left;
     display: block;
     color: honeydew;
@@ -49,7 +49,7 @@
 
 /* --***-- */
 /* Add nav bar responsiveness */
-@media screen and (max-width: 600px) {
+/* @media screen and (max-width: 600px) {
     .bottom-nav a:not(:first-child) {display: none;}
     .bottom-nav a.icon {
         float: right;
@@ -69,4 +69,4 @@
         text-align: left;
     }
 }
-/* --***-- */
+--***-- */ 
