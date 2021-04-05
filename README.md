@@ -14,6 +14,9 @@ Clone this repo and navigate to the root directory of this repo.
 To start docker compose with client, server and database containers  
 `bash _scripts/startDev.sh`    
 
+To run dB in shell 
+`bash _scripts/psql.sh`
+
 **Clientside:** localhost:8080   
 **API:** localhost:3000
 
