@@ -66,8 +66,7 @@ footer {
     }
 
     .bottom-nav.responsive .icon {
-        position: absolute;
-        right: 0;
+        order: 5;
     }  
     
     .bottom-nav.responsive a {
