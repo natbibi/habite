@@ -36,4 +36,4 @@ function render404() {
     main.appendChild(error);
 }
 
-module.exports = { renderLandingPage, render404 }
+module.exports = { renderProfile, renderLandingPage, render404 }
