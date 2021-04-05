@@ -6,7 +6,7 @@ server.use(cors());
 server.use(express.json());
 
 // basic rate limiting to prevent brute forcing
-// app.set('trust proxy', 1); // enable in production
+app.set('trust proxy', 1); // enable in production
 const rateLimit = require("express-rate-limit");
 const limiter = rateLimit({
   windowMs: 5 * 60 * 1000, // 5 minutes
