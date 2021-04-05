@@ -3,7 +3,6 @@ const rHelpers = require('./renderHelpers');
 const nav = document.querySelector('nav');
 const heading = document.querySelector('header');
 const main = document.querySelector('main');
-const newDiv = document.createElement('div')
 
 // Landing Page flow
 
@@ -22,8 +21,7 @@ function renderRegistrationForm() {
 function renderProfile() {
     const showFooter = document.getElementById('footer')
     showFooter.style.display = 'block';
-
-    const greeting = newDiv
+    const greeting = document.createElement('h1')
     greeting.textContent = `Hi there, ${localStorage.getItem('username')}!`;
     heading.appendChild(greeting);
 
@@ -32,7 +30,7 @@ function renderProfile() {
     const streaksHeading = document.createElement('h2')
     streaksHeading.className = "streaks-heading"
     streaksHeading.textContent = "🔥 Streaks"
-    const streaksBody = newDiv
+    const streaksBody = document.createElement('div')
     streaksBody.className = "streaks-body"
     // insert GET request for habit completed here
 
@@ -40,12 +38,12 @@ function renderProfile() {
     streaks.appendChild(streaksHeading)
     streaks.appendChild(streaksBody)
 
-    const habits = newDiv
+    const habits = document.createElement('div')
     habits.className = "habits-list"
     const habitsHeading = document.createElement('h2')
     habitsHeading.className = "habits-heading"
     habitsHeading.textContent = "💙 My Habits"
-    const habitsBody = newDiv
+    const habitsBody = document.createElement('div')
     habitsBody.className = "habits-body"
     // insert GET request for user habits here
 
