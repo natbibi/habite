@@ -1,13 +1,19 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 
 },{}],2:[function(require,module,exports){
+const rHelpers = require('./renderHelpers');
+
+const nav = document.querySelector('nav');
+const heading = document.querySelector('header');
+const main = document.querySelector('main');
+
 // Landing Page flow
 
 function renderLandingPage() {
-    renderNavBar();
-    renderHeading();
-    renderAuthBtns();
-    renderLoginForm();
+    // rHelpers.renderNavBar();
+    rHelpers.renderHeading();
+    rHelpers.renderAuthBtns();
+    rHelpers.renderLoginForm();
 }
 
 // *******************************************************************
@@ -33,28 +39,52 @@ function render404() {
     error.textContent = "Oops, we can't find that page!  Try looking elsewhere ...";
     main.appendChild(error);
 }
-},{}],3:[function(require,module,exports){
+
+module.exports = { renderLandingPage, render404 }
+},{"./renderHelpers":5}],3:[function(require,module,exports){
 // Import js files
-    // Rendering
-    const layout = require('./layout');
-    const content = require('./content');
-    const rHelpers = require('./renderHelpers');
-    const navResponse = require('./navResponse');
-    // Authentication
-    const auth = require('./auth');
-    const requests = require('./requests')
+// Rendering
+const layout = require('./layout');
+const content = require('./content');
+// const navResponse = require('./navResponse');
+// Authentication
+const auth = require('./auth');
+const requests = require('./requests')
+
+
 
 // Create initial bindings
-function initBindings(e) {
-    e.preventDefault();
+function initBindings() {
+    // e.preventDefault();
     // Initial bindings
-    
+    console.log('You found our javaScript')
+
+
     //Initiate rendering process
     layout.updateContent();
+
+    const settings = document.getElementById('settings')
+    settings.addEventListener('click', navFunc())
+
+
 }
 
-initBindings(e);
-},{"./auth":1,"./content":2,"./layout":4,"./navResponse":5,"./renderHelpers":6,"./requests":7}],4:[function(require,module,exports){
+
+function navFunc() {
+    let x = document.getElementById('bottom-nav-bar');
+    if (x.className === "bottom-nav") {
+        x.className += " responsive";
+    } else {
+        x.className = "bottom-nav";
+    }
+};
+
+initBindings();
+
+
+},{"./auth":1,"./content":2,"./layout":4,"./requests":6}],4:[function(require,module,exports){
+const content = require('./content')
+
 const nav = document.querySelector('nav');
 const heading = document.querySelector('header');
 const main = document.querySelector('main');
@@ -65,32 +95,36 @@ const privateRoutes = ['#profile'];
 window.addEventListener('hashchange', updateContent);
 
 function updateMain(path) {
+    console.log("hello updating main")
+
     nav.innerHTML = '';
     heading.innerHTML = '';
     main.innerHTML = '';
     if (path) {
-        switch(path) {
+        switch (path) {
             case '#login':
-                renderLandingPage(); break;
+                content.renderLandingPage(); break;
             case '#register':
-                renderLandingPage(); renderRegistrationForm(); break;
+                content.renderLandingPage(); rcontent.enderRegistrationForm(); break;
             case '#profile':
-                renderProfile(); break;
-            case '#more':
-                renderLandingPage(); renderMenuMessage(); break;
-            case '#top':
-                break;
+                content.renderProfile(); break;
+            case '':
+                content.renderLandingPage(); break;
+            // case '#more':
+            //     renderLandingPage(); renderMenuMessage(); break;
+            // case '#top':
+            //     break;
             default:
-                render404(); break;
-        } 
+                content.render404(); break;
+        }
     } else {
-        renderLandingPage();
+        content.renderLandingPage();
     }
 }
 
 function updateContent() {
     const path = window.location.hash;
-    if(privateRoutes.includes(path) && !currentUser()) {
+    if (privateRoutes.includes(path) && !currentUser()) {
         window.location.hash = '#'
     } else {
         updateMain(path);
@@ -98,16 +132,11 @@ function updateContent() {
 }
 
 module.exports = { updateContent };
-},{}],5:[function(require,module,exports){
-function navFunc() {
-    let x = document.getElementById('bottom-nav-bar');
-    if (x.className === "bottom-nav") {
-        x.className += " responsive";
-    } else {
-        x.className = "bottom-nav";
-    }
-};
-},{}],6:[function(require,module,exports){
+},{"./content":2}],5:[function(require,module,exports){
+const nav = document.querySelector('nav');
+const heading = document.querySelector('header');
+const main = document.querySelector('main');
+
 function renderNavBar() {
     // Create anchor for registration icon
     const regLink = document.createElement('a');
@@ -141,7 +170,7 @@ function renderHeading() {
     const iconDiv = document.createElement('div');
     iconDiv.id = "title-icon";
 
-    const icon  = document.createElement('i');
+    const icon = document.createElement('i');
     icon.className = "fas fa-fist-raised";
     icon.id = "title-icon";
     iconDiv.appendChild(icon);
@@ -169,7 +198,7 @@ function renderHeading() {
 function renderAuthBtns() {
     const authBtns = document.createElement('div');
     authBtns.className = 'auth-btns';
-    
+
     const loginBtn = document.createElement('button');
     loginBtn.className = 'login-btn';
     loginBtn.textContent = 'login';
@@ -186,15 +215,15 @@ function renderAuthBtns() {
 function renderLoginForm() {
     // Define form fields
     const authFields = [
-        { 
-            tag: 'label', 
+        {
+            tag: 'label',
             attributes: {
                 id: 'username-label',
                 for: 'username'
             }
         },
-        { 
-            tag: 'input', 
+        {
+            tag: 'input',
             attributes: {
                 type: 'text',
                 id: 'username',
@@ -202,15 +231,15 @@ function renderLoginForm() {
                 placeholder: 'Enter your username',
             }
         },
-        { 
-            tag: 'label', 
+        {
+            tag: 'label',
             attributes: {
                 id: 'password-label',
                 for: 'password'
             }
         },
-        { 
-            tag: 'input', 
+        {
+            tag: 'input',
             attributes: {
                 type: 'text',
                 id: 'password',
@@ -218,23 +247,23 @@ function renderLoginForm() {
                 placeholder: 'Enter your password',
             }
         },
-        { 
-            tag: 'input', 
+        {
+            tag: 'input',
             attributes: {
                 type: 'checkbox',
                 id: 'robot-check',
                 name: 'robot-check',
             }
         },
-        { 
-            tag: 'label', 
+        {
+            tag: 'label',
             attributes: {
                 id: 'robot-label',
                 for: 'robot-check'
             }
         },
-        { 
-            tag: 'input', 
+        {
+            tag: 'input',
             attributes: {
                 type: 'submit',
                 id: 'login-sbmt',
@@ -263,15 +292,22 @@ function renderLoginForm() {
                 field.textContent = ''; break;
         }
         // Add relevant attributes to each html tag and append to form
-        Object.entries(f.attributes).forEach( ([att, val]) => {
-            field.setAttribute(att,val);
+        Object.entries(f.attributes).forEach(([att, val]) => {
+            field.setAttribute(att, val);
             form.appendChild(field);
         })
     })
     // form.addEventListener('submit', requestLogin); <== Uncomment this once we have auth
     main.appendChild(form);
 }
-},{}],7:[function(require,module,exports){
+
+module.exports = {
+    renderNavBar,
+    renderHeading,
+    renderAuthBtns,
+    renderLoginForm
+}
+},{}],6:[function(require,module,exports){
 async function getAllHabits() {
     try {
         const options = {

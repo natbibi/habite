@@ -1,3 +1,5 @@
+const content = require('./content')
+
 const nav = document.querySelector('nav');
 const heading = document.querySelector('header');
 const main = document.querySelector('main');
@@ -8,32 +10,36 @@ const privateRoutes = ['#profile'];
 window.addEventListener('hashchange', updateContent);
 
 function updateMain(path) {
+    console.log("hello updating main")
+
     nav.innerHTML = '';
     heading.innerHTML = '';
     main.innerHTML = '';
     if (path) {
-        switch(path) {
+        switch (path) {
             case '#login':
-                renderLandingPage(); break;
+                content.renderLandingPage(); break;
             case '#register':
-                renderLandingPage(); renderRegistrationForm(); break;
+                content.renderLandingPage(); rcontent.enderRegistrationForm(); break;
             case '#profile':
-                renderProfile(); break;
-            case '#more':
-                renderLandingPage(); renderMenuMessage(); break;
-            case '#top':
-                break;
+                content.renderProfile(); break;
+            case '':
+                content.renderLandingPage(); break;
+            // case '#more':
+            //     renderLandingPage(); renderMenuMessage(); break;
+            // case '#top':
+            //     break;
             default:
-                render404(); break;
-        } 
+                content.render404(); break;
+        }
     } else {
-        renderLandingPage();
+        content.renderLandingPage();
     }
 }
 
 function updateContent() {
     const path = window.location.hash;
-    if(privateRoutes.includes(path) && !currentUser()) {
+    if (privateRoutes.includes(path) && !currentUser()) {
         window.location.hash = '#'
     } else {
         updateMain(path);
