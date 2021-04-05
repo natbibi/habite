@@ -1,26 +1,31 @@
 const content = require('./content')
-
+const rHelpers = require('./renderHelpers');
+const forms = require('./forms')
+const auth = require('./auth');
 const nav = document.querySelector('nav');
 const heading = document.querySelector('header');
 const main = document.querySelector('main');
 
 const publicRoutes = ['#', '#login', '#register'];
-const privateRoutes = []; // add #profile
-
-
+const privateRoutes = ['#profile']; // add #profile
 
 function updateMain(path) {
     console.log("hello updating main")
 
     nav.innerHTML = '';
-    heading.innerHTML = '';
     main.innerHTML = '';
+    heading.innerHTML = '';
     if (path) {
+        rHelpers.renderHeading()
         switch (path) {
             case '#login':
-                content.renderLandingPage(); break;
+                forms.renderLoginForm();
+                forms.renderRegisterLink(); 
+                break;
             case '#register':
-                content.renderLandingPage(); content.renderRegistrationForm(); break;
+                forms.renderRegisterForm(); 
+                forms.renderLoginLink();
+                break;
             case '#profile':
                 content.renderProfile(); break;
             // case '':
@@ -39,11 +44,13 @@ function updateMain(path) {
 
 function updateContent() {
     const path = window.location.hash;
-    if (privateRoutes.includes(path) && !currentUser()) {
-        window.location.hash = '#'
+    if (privateRoutes.includes(path) && !auth.currentUser()) {
+        window.location.hash = ''
+    } else if (!privateRoutes.includes(path) && auth.currentUser()) {
+        window.location.hash = 'profile';
     } else {
         updateMain(path);
     }
 }
 
-// module.exports = { updateContent };
+module.exports = { updateContent };
