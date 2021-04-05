@@ -24,6 +24,12 @@ function renderRegistrationForm() {
 function renderProfile() {
     const showFooter = document.getElementById('footer')
     showFooter.style.display = 'block';
+
+    const profileTitle = document.querySelector('header#top')
+    const greeting = document.createElement('h3');
+    greeting.textContent = `Hi there, ${localStorage.getItem('username')}!`;
+    profileTitle.appendChild(greeting);
+
 }
 
 function renderMenuMessage() {
@@ -136,7 +142,8 @@ const nav = document.querySelector('nav');
 const heading = document.querySelector('header');
 const main = document.querySelector('main');
 
-function renderNavBar() {
+// currently not in use!
+function renderNavBar() { 
     nav.style.visibility = "show"
     // Create anchor for registration icon
     const regLink = document.createElement('a');
