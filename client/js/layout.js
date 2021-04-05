@@ -7,8 +7,6 @@ const main = document.querySelector('main');
 const publicRoutes = ['#', '#login', '#register'];
 const privateRoutes = ['#profile'];
 
-window.addEventListener('load', updateContent);
-window.addEventListener('hashchange', updateContent);
 
 
 function updateMain(path) {
@@ -22,7 +20,7 @@ function updateMain(path) {
             case '#login':
                 content.renderLandingPage(); break;
             case '#register':
-                content.renderLandingPage(); rcontent.enderRegistrationForm(); break;
+                content.renderLandingPage(); content.enderRegistrationForm(); break;
             case '#profile':
                 content.renderProfile(); break;
             case '':

@@ -15,12 +15,14 @@ function initBindings() {
     // Initial bindings
     console.log('You found our javaScript')
 
-
+    window.addEventListener('load', updateContent);
+    window.addEventListener('hashchange', updateContent);
+    
     //Initiate rendering process
     layout.updateContent();
 
     const settings = document.getElementById('settings')
-    settings.addEventListener('click', navFunc())
+    settings.addEventListener('click', navFunc)
 
 
 }
