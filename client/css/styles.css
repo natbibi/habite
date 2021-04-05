@@ -5,6 +5,11 @@ body{
     margin: 0 auto;
 }
 
+header {
+    min-height: 100px;
+    text-align: center;
+}
+
 .heading {
     background-color: pink;
     border-radius: 15%;
@@ -16,6 +21,25 @@ body{
 
 #title-icon {
     font-size: 100px;
+}
+
+.container {
+    border: solid 2px red;
+    min-height: 100vh;
+}
+
+.streaks-list {
+    border: lightblue 2px solid;
+    margin: 5px;
+}
+
+.habits-list {
+    border: lightblue 2px solid;
+    margin: 5px;
+}
+
+.streaks-heading, .habits-heading {
+    padding: 5px;
 }
 
 footer {
