@@ -12,7 +12,8 @@
     "seedDev": "node dbConfig/seedDev.js",
     "test": "jest --setupFiles ./tests/integration/config.js --testPathPattern=/integration/ --watchAll --detectOpenHandles --runInBand --verbose",
     "unitTests": "jest --testPathPattern=/unit/ --watchAll --verbose",
-    "coverage": "jest --setupFiles ./tests/integration/config.js --testPathPattern=/integration/ --coverage"
+    "coverage": "jest --testPathPattern=/unit/ --coverage",
+    "secret": "node secret_key.js"
   },
   "keywords": [],
   "author": "",
@@ -29,7 +30,6 @@
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "pg": "^8.5.1",
-    "sql-template-strings": "^2.2.2",
-    "express-rate-limit": "^5.2.6"
+    "sql-template-strings": "^2.2.2"
   }
 }

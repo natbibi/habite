@@ -1,14 +1,18 @@
 INSERT INTO users (username, password) 
 VALUES
-('duckfliesagain', '$2b$10$s7fRx4nL9T1oO2SHyN4jqOYu70lo3wJrqSNuBnZ2zwYYQ3YJ1bSK.' ),
-('admin', '$2b$10$s7fRx4nL9T1oO2SHyN4jqOYu70lo3wJrqSNuBnZ2zwYYQ3YJ1bSK.' ),
-('notanotherhabittracker', '$2b$10$s7fRx4nL9T1oO2SHyN4jqOYu70lo3wJrqSNuBnZ2zwYYQ3YJ1bSK.' );
+('duckfliesagain', 'tu9ibtoi4tbh2hhuet' ),
+('healthman', 'h4hoeuba3r3tbaeu' ),
+('notanotherhabittracker', 'ahudnthpdohbapbb243' );
 
 INSERT INTO habits (name) 
 VALUES
 ('drink water'),
 ('exercise'),
 ('sleep eight hours');
+
+INSERT INTO user_habits (user_id, habit_id, frequency) 
+VALUES
+(1,1,5),(1,2,8),(2,1,8),(3,3,8);
 
 INSERT INTO user_habits (user_id, habit_id, frequency) 
 VALUES

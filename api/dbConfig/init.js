@@ -1,11 +1,8 @@
 const { Pool } = require("pg");
-const connectionString = process.env.DATABASE_URL
+const connectionString = process.env.CONSTRING
 
 const pool = new Pool({
     connectionString,
-    ssl: {
-      rejectUnauthorized: false
-    }
 })
 module.exports = {
   async query(text, params) {
