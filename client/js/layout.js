@@ -5,7 +5,7 @@ const heading = document.querySelector('header');
 const main = document.querySelector('main');
 
 const publicRoutes = ['#', '#login', '#register'];
-const privateRoutes = []; // add #profile
+const privateRoutes = []; // add #profile and #addhabits
 
 window.addEventListener('hashchange', updateContent);
 
