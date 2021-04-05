@@ -5,7 +5,9 @@ const main = document.querySelector('main');
 const publicRoutes = ['#', '#login', '#register'];
 const privateRoutes = ['#profile'];
 
+window.addEventListener('load', updateContent);
 window.addEventListener('hashchange', updateContent);
+
 
 function updateMain(path) {
     nav.innerHTML = '';
@@ -40,4 +42,4 @@ function updateContent() {
     }
 }
 
-module.exports = { updateContent };
+// module.exports = { updateContent };
