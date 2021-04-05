@@ -1,5 +1,6 @@
 /* Fix top nav bar to right hand side of page */
 .nav-bar {
+    visibility: hidden;
     background: rgba(160, 154, 154, 0.4);
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);

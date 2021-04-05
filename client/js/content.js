@@ -7,7 +7,6 @@ const main = document.querySelector('main');
 // Landing Page flow
 
 function renderLandingPage() {
-    // rHelpers.renderNavBar();
     rHelpers.renderHeading();
     rHelpers.renderAuthBtns();
     rHelpers.renderLoginForm();
