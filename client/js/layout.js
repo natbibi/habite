@@ -5,7 +5,7 @@ const heading = document.querySelector('header');
 const main = document.querySelector('main');
 
 const publicRoutes = ['#', '#login', '#register'];
-const privateRoutes = ['#profile'];
+const privateRoutes = []; // add #profile
 
 
 
@@ -20,11 +20,11 @@ function updateMain(path) {
             case '#login':
                 content.renderLandingPage(); break;
             case '#register':
-                content.renderLandingPage(); content.enderRegistrationForm(); break;
+                content.renderLandingPage(); content.renderRegistrationForm(); break;
             case '#profile':
                 content.renderProfile(); break;
-            case '':
-                content.renderLandingPage(); break;
+            // case '':
+            //     content.renderLandingPage(); break;
             // case '#more':
             //     renderLandingPage(); renderMenuMessage(); break;
             // case '#top':

@@ -39,7 +39,7 @@ function render404() {
     main.appendChild(error);
 }
 
-module.exports = { renderLandingPage, render404 }
+module.exports = { renderProfile, renderLandingPage, render404 }
 },{"./renderHelpers":5}],3:[function(require,module,exports){
 // Import js files
 // Rendering
@@ -62,8 +62,8 @@ function initBindings() {
     //Initiate rendering process
     layout.updateContent();
 
-    const settings = document.getElementById('settings')
-    settings.addEventListener('click', navFunc())
+    const profile = document.getElementById('profile')
+    profile.addEventListener('click', navFunc)
 
 
 }
@@ -89,7 +89,7 @@ const heading = document.querySelector('header');
 const main = document.querySelector('main');
 
 const publicRoutes = ['#', '#login', '#register'];
-const privateRoutes = ['#profile'];
+const privateRoutes = []; // add #profile
 
 window.addEventListener('hashchange', updateContent);
 
@@ -104,11 +104,11 @@ function updateMain(path) {
             case '#login':
                 content.renderLandingPage(); break;
             case '#register':
-                content.renderLandingPage(); rcontent.enderRegistrationForm(); break;
+                content.renderLandingPage(); content.renderRegistrationForm(); break;
             case '#profile':
                 content.renderProfile(); break;
-            case '':
-                content.renderLandingPage(); break;
+            // case '':
+            //     content.renderLandingPage(); break;
             // case '#more':
             //     renderLandingPage(); renderMenuMessage(); break;
             // case '#top':

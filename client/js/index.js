@@ -21,8 +21,8 @@ function initBindings() {
     //Initiate rendering process
     layout.updateContent();
 
-    const settings = document.getElementById('settings')
-    settings.addEventListener('click', navFunc)
+    const profile = document.getElementById('profile')
+    profile.addEventListener('click', navFunc)
 
 
 }
