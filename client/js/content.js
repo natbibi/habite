@@ -56,6 +56,10 @@ function renderProfile() {
 
 }
 
+function renderAddHabitsPage() {
+
+}
+
 function renderMenuMessage() {
     const menuMessage = document.createElement('p');
     menuMessage.textContent = "Click or tap on the burger bar for more options";
@@ -69,4 +73,4 @@ function render404() {
     main.appendChild(error);
 }
 
-module.exports = { renderProfile, renderLandingPage, render404 }
+module.exports = { renderProfile, renderAddHabitsPage, renderLandingPage, render404 }
