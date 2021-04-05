@@ -14,12 +14,11 @@ function renderLandingPage() {
 
 //Registration flow
 function renderRegistrationForm() {
-
 }
 
 function renderProfile() {
-    const showFooter = document.querySelector('footer')
-    showFooter.display = "block"
+    const showFooter = document.getElementById('footer')
+    showFooter.style.display = 'block';
 }
 
 function renderMenuMessage() {
