@@ -23,8 +23,8 @@ function updateMain(path) {
                 content.renderLandingPage(); content.renderRegistrationForm(); break;
             case '#profile':
                 content.renderProfile(); break;
-            // case '':
-            //     content.renderLandingPage(); break;
+            case '#addhabits':
+                content.renderAddHabitsPage(); break;
             // case '#more':
             //     renderLandingPage(); renderMenuMessage(); break;
             // case '#top':
