@@ -14,8 +14,8 @@ Clone this repo and navigate to the root directory of this repo.
 To start docker compose with client, server and database containers  
 `bash _scripts/startDev.sh`    
 
-To run dB in shell 
-`bash _scripts/psql.sh`
+To run dB in shell   
+`bash _scripts/psql.sh`  
 
 **Clientside:** localhost:8080   
 **API:** localhost:3000
@@ -26,7 +26,7 @@ To teardown docker compose completely
 # Technologies
 
 ## Dependencies:
-**Server:** cors, express
+**Server:** cors, express, bcrypt, dotenv, jsonwebtoken, pg, sql-template-strings, express-rate-limit  
 
 **Client:** 
 
@@ -41,7 +41,12 @@ To teardown docker compose completely
 2. Set up Docker Compose containers for Client, Server, Database  
 3. Set up file structure 
 4. Server up and running, database seeds and schema created, client skeleton added 
-5. Deploy Client to Netlify and API to Heroku 
+5. Deploy Client to Netlify and API to Heroku with Heroku Postgres database add-on  
+
+### API
+
+### Client 
+- Write layout tests
 
 
 # Wins & Challenges 
