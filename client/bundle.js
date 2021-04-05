@@ -26,9 +26,36 @@ function renderProfile() {
     showFooter.style.display = 'block';
 
     const profileTitle = document.querySelector('header#top')
-    const greeting = document.createElement('h3');
+    const greeting = document.createElement('h1');
     greeting.textContent = `Hi there, ${localStorage.getItem('username')}!`;
     profileTitle.appendChild(greeting);
+
+    const mainContainer = document.querySelector('.container')
+    const streaks = document.createElement('div')
+    streaks.className = "streaks-list"
+    const streaksHeading = document.createElement('h2')
+    streaksHeading.className = "streaks-heading"
+    streaksHeading.textContent = "🔥 Streaks"
+    const streaksBody = document.createElement('div')
+    streaksBody.className = "streaks-body"
+    // insert GET request for habit completed here
+
+    mainContainer.appendChild(streaks)
+    streaks.appendChild(streaksHeading)
+    streaks.appendChild(streaksBody)
+
+    const habits = document.createElement('div')
+    habits.className = "habits-list"
+    const habitsHeading = document.createElement('h2')
+    habitsHeading.className = "habits-heading"
+    habitsHeading.textContent = "💙 My Habits"
+    const habitsBody = document.createElement('div')
+    habitsBody.className = "habits-body"
+    // insert GET request for user habits here
+
+    mainContainer.append(habits)
+    habits.appendChild(habitsHeading)
+    habits.appendChild(habitsBody)
 
 }
 
