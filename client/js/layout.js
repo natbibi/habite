@@ -40,4 +40,4 @@ function updateContent() {
     }
 }
 
-updateContent();
+module.exports = { updateContent };
