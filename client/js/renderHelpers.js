@@ -1,3 +1,7 @@
+const nav = document.querySelector('nav');
+const heading = document.querySelector('header');
+const main = document.querySelector('main');
+
 function renderNavBar() {
     // Create anchor for registration icon
     const regLink = document.createElement('a');
@@ -31,7 +35,7 @@ function renderHeading() {
     const iconDiv = document.createElement('div');
     iconDiv.id = "title-icon";
 
-    const icon  = document.createElement('i');
+    const icon = document.createElement('i');
     icon.className = "fas fa-fist-raised";
     icon.id = "title-icon";
     iconDiv.appendChild(icon);
@@ -59,7 +63,7 @@ function renderHeading() {
 function renderAuthBtns() {
     const authBtns = document.createElement('div');
     authBtns.className = 'auth-btns';
-    
+
     const loginBtn = document.createElement('button');
     loginBtn.className = 'login-btn';
     loginBtn.textContent = 'login';
@@ -76,15 +80,15 @@ function renderAuthBtns() {
 function renderLoginForm() {
     // Define form fields
     const authFields = [
-        { 
-            tag: 'label', 
+        {
+            tag: 'label',
             attributes: {
                 id: 'username-label',
                 for: 'username'
             }
         },
-        { 
-            tag: 'input', 
+        {
+            tag: 'input',
             attributes: {
                 type: 'text',
                 id: 'username',
@@ -92,15 +96,15 @@ function renderLoginForm() {
                 placeholder: 'Enter your username',
             }
         },
-        { 
-            tag: 'label', 
+        {
+            tag: 'label',
             attributes: {
                 id: 'password-label',
                 for: 'password'
             }
         },
-        { 
-            tag: 'input', 
+        {
+            tag: 'input',
             attributes: {
                 type: 'text',
                 id: 'password',
@@ -108,23 +112,23 @@ function renderLoginForm() {
                 placeholder: 'Enter your password',
             }
         },
-        { 
-            tag: 'input', 
+        {
+            tag: 'input',
             attributes: {
                 type: 'checkbox',
                 id: 'robot-check',
                 name: 'robot-check',
             }
         },
-        { 
-            tag: 'label', 
+        {
+            tag: 'label',
             attributes: {
                 id: 'robot-label',
                 for: 'robot-check'
             }
         },
-        { 
-            tag: 'input', 
+        {
+            tag: 'input',
             attributes: {
                 type: 'submit',
                 id: 'login-sbmt',
@@ -153,11 +157,18 @@ function renderLoginForm() {
                 field.textContent = ''; break;
         }
         // Add relevant attributes to each html tag and append to form
-        Object.entries(f.attributes).forEach( ([att, val]) => {
-            field.setAttribute(att,val);
+        Object.entries(f.attributes).forEach(([att, val]) => {
+            field.setAttribute(att, val);
             form.appendChild(field);
         })
     })
     // form.addEventListener('submit', requestLogin); <== Uncomment this once we have auth
     main.appendChild(form);
+}
+
+module.exports = {
+    renderNavBar,
+    renderHeading,
+    renderAuthBtns,
+    renderLoginForm
 }

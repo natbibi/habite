@@ -1,22 +1,27 @@
+const rHelpers = require('./renderHelpers');
+
+const nav = document.querySelector('nav');
+const heading = document.querySelector('header');
+const main = document.querySelector('main');
+
 // Landing Page flow
 
 function renderLandingPage() {
-    renderNavBar();
-    renderHeading();
-    renderAuthBtns();
-    renderLoginForm();
+    // rHelpers.renderNavBar();
+    rHelpers.renderHeading();
+    rHelpers.renderAuthBtns();
+    rHelpers.renderLoginForm();
 }
 
 // *******************************************************************
 
 //Registration flow
 function renderRegistrationForm() {
-
 }
 
 function renderProfile() {
-    const showFooter = document.querySelector('footer')
-    showFooter.display = "block"
+    const showFooter = document.getElementById('footer')
+    showFooter.style.display = 'block';
 }
 
 function renderMenuMessage() {
@@ -31,3 +36,5 @@ function render404() {
     error.textContent = "Oops, we can't find that page!  Try looking elsewhere ...";
     main.appendChild(error);
 }
+
+module.exports = { renderLandingPage, render404 }
