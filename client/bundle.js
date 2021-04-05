@@ -6,7 +6,7 @@ const rHelpers = require('./renderHelpers');
 const nav = document.querySelector('nav');
 const heading = document.querySelector('header');
 const main = document.querySelector('main');
-
+// const newDiv = document.createElement('div').cloneNode();
 // Landing Page flow
 
 function renderLandingPage() {
@@ -24,13 +24,10 @@ function renderRegistrationForm() {
 function renderProfile() {
     const showFooter = document.getElementById('footer')
     showFooter.style.display = 'block';
-
-    const profileTitle = document.querySelector('header#top')
-    const greeting = document.createElement('h1');
+    const greeting = document.createElement('h1')
     greeting.textContent = `Hi there, ${localStorage.getItem('username')}!`;
-    profileTitle.appendChild(greeting);
+    heading.appendChild(greeting);
 
-    const mainContainer = document.querySelector('.container')
     const streaks = document.createElement('div')
     streaks.className = "streaks-list"
     const streaksHeading = document.createElement('h2')
@@ -40,7 +37,7 @@ function renderProfile() {
     streaksBody.className = "streaks-body"
     // insert GET request for habit completed here
 
-    mainContainer.appendChild(streaks)
+    main.appendChild(streaks)
     streaks.appendChild(streaksHeading)
     streaks.appendChild(streaksBody)
 
@@ -53,9 +50,20 @@ function renderProfile() {
     habitsBody.className = "habits-body"
     // insert GET request for user habits here
 
-    mainContainer.append(habits)
+    main.append(habits)
     habits.appendChild(habitsHeading)
     habits.appendChild(habitsBody)
+
+}
+
+function renderAddHabitsPage() {
+    const showFooter = document.getElementById('footer')
+    showFooter.style.display = 'block';
+    const greeting = document.createElement('h1')
+    greeting.textContent = "Let's get started..."
+    heading.appendChild(greeting)
+
+    // getAllHabits -> name and put into options value / dropdown 
 
 }
 
@@ -72,7 +80,7 @@ function render404() {
     main.appendChild(error);
 }
 
-module.exports = { renderProfile, renderLandingPage, render404 }
+module.exports = { renderProfile, renderAddHabitsPage, renderLandingPage, render404 }
 },{"./renderHelpers":5}],3:[function(require,module,exports){
 // Import js files
 // Rendering
@@ -122,7 +130,7 @@ const heading = document.querySelector('header');
 const main = document.querySelector('main');
 
 const publicRoutes = ['#', '#login', '#register'];
-const privateRoutes = []; // add #profile
+const privateRoutes = []; // add #profile and #addhabits
 
 window.addEventListener('hashchange', updateContent);
 
@@ -140,8 +148,8 @@ function updateMain(path) {
                 content.renderLandingPage(); content.renderRegistrationForm(); break;
             case '#profile':
                 content.renderProfile(); break;
-            // case '':
-            //     content.renderLandingPage(); break;
+            case '#addhabits':
+                content.renderAddHabitsPage(); break;
             // case '#more':
             //     renderLandingPage(); renderMenuMessage(); break;
             // case '#top':
