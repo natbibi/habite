@@ -49,6 +49,8 @@ To teardown docker compose completely
 ## Wins 
 
 ## Challenges 
+- Setting up Heroku Postgres - issues with SSL and database credentials
+- Writing a lot of js before bundling 
 
 
 Should have:
