@@ -1,53 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/navStyles.css">
+    <link rel="stylesheet" href="css/auth-form.css">
     <!-- Import Allerta fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Allerta&display=swap" rel="stylesheet">
     <!-- Add icon library -->
     <script src="https://kit.fontawesome.com/490bacaf0b.js" crossorigin="anonymous"></script>
     <link rel="icon" href="./images/grabbit-icon.jpg" />
-    <title>Cohabit</title>
+    <!-- <script defer src="bundle.js"></script> -->
+    <title>Habite</title>
 </head>
+
 <body>
-    <header id="top">
-        <section class="top-bar">
-            <button class="dark-mode-btn">Switch to dark mode</button>
-            <nav class="nav-bar">            
-                <a class="active" id="register"><i class="fas fa-user-plus"></i></a>
-                <a id="login"><i class="fas fa-sign-in-alt"></i></a>
-            </nav>
-        </section>
+    <nav class="nav-bar"></nav>
 
-
-        <div class="heading">
-            <div id="title-icon">
-                <i class="fas fa-fist-raised" id="title-icon"></i>
-            </div>
-            <div id="title">
-                <h1 id="app-name">grabbit</h1>
-                <h5 id="tagline">habbit your way</h3>
-            </div>            
-        </div>
-    </header>
+    <header id="top"></header>
 
     <main>
-        <div class="auth-btns">
-            <button class="login-btn">login</button>
-            <button class="register-btn">register</button>            
-        </div>
-
-        <form class="auth-form">
-            <label for="username">username</label>
-            <input type="text" id="username" name="username" placeholder="Enter your username"><br><br>
-            <label for="password">password</label>
-            <input type="text" id="password" name="password" placeholder="Enter your password"><br><br>
-        </form>
         <!-- <p>Top</p>
         <p>Whitespace</p>
         <p>Whitespace</p>
@@ -88,15 +64,22 @@
     </main>
     <footer>
         <div class="bottom-nav" id="bottom-nav-bar">
-            <a href="#bottomMenu" class="active">More <i class="fas fa-arrow-circle-right"></i></a>
-            <a href="https://github.com/natbibi/co-habiters.git">About</a>
-            <a href="https://github.com/natbibi/co-habiters.git">Support</a>
-            <a href="https://github.com/natbibi/co-habiters.git">Contact</a>
-            <a href="#top">Back to top</a>
-            <a href="javascript:void(0);" class="icon" onclick="navFunc()">&#9776;</a>
+            <!-- <a id="more" href="#more" class="active">More <i class="fas fa-arrow-circle-right"></i></a> -->
+            <a id="add-habit"><i class="fas fa-plus"></i></a>
+            <a id="show-habits"><i class="fas fa-list"></i></a>
+            <a href="javascript:void(0);" class="icon" onclick="navFunc()"><i class="fas fa-cog"></i></a>
+            <a id="about" href="https://github.com/natbibi/co-habiters.git"><i class="fab fa-github"></i></a>
+            <a id="contact" href="https://github.com/natbibi/co-habiters.git"><i class="fas fa-info"></i></a>
+            <!-- <a id="back" href="#top">Back to top</a> -->
         </div>
     </footer>
 
     <script src="./js/navResponse.js"></script>
+    <script src="./js/renderHelpers.js"></script>
+    <script src="./js/content.js"></script>
+    <script src="./js/layout.js"></script>
+
+
 </body>
+
 </html>
