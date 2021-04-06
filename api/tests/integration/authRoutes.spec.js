@@ -110,7 +110,7 @@ describe("auth endpoints", () => {
         .post("/auth/login")
         .send({ username: "user2", password: "fail" });
       expect(res2.statusCode).toEqual(401);
-    });
+    }, 10000);
     it("should alow user to reset and attempt login again", async () => {
       for (let i = 0; i < 3; i++) {
         await request(api)
@@ -122,7 +122,7 @@ describe("auth endpoints", () => {
         .post("/auth/login")
         .send({ username: "user1", password: "password" });
       expect(res.statusCode).toEqual(200);
-    });
+    }, 10000);
     it("should lock users after 100 failed requests in general", async () => {
       for (let i = 0; i < 100; i++) {
         await request(api).get("/users/admin");
