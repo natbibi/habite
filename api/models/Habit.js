@@ -1,9 +1,11 @@
 const db = require('../dbConfig/init');
 const SQL = require('sql-template-strings');
+const User = require('./User')
 
 class Habit {
   constructor(data) {
-    this.habitName = data.name;
+    this.name = data.name;
+    this.id = data.id
   }
 
   static get all() {
@@ -30,10 +32,10 @@ class Habit {
     });
   }
 
-  static create(habitName) {
+  static create(data) {
     return new Promise (async (resolve,reject) => {
       try{
-        const result = await db.query(SQL`INSERT INTO habits (name) VALUES (${habitName}) RETURNING *;`);
+        const result = await db.query(SQL`INSERT INTO habits (name) VALUES (${data.name}) RETURNING *;`);
         const habit = new Habit(result.rows[0]);
         resolve(habit)
       } catch (error) {
@@ -49,10 +51,11 @@ class UserHabit extends Habit {
     this.frequency = data.frequency
   }
 
-  static createUserHabit(user_habit_data) {
+  static createUserHabit(data, username) {
     return new Promise (async (resolve,reject) => {
       try{
-        const result = await db.query(SQL`INSERT INTO user_habits (habit_id, user_id, frequency) VALUES (${user_habit_data.habit_id}, ${user_habit_data.user_id}, ${user_habit_data.frequency}) RETURNING *;`);
+        const user = await User.find(username)
+        const result = await db.query(SQL`INSERT INTO user_habits (habit_id, user_id, frequency) VALUES (${data.habit_id}, ${user.id}, ${data.frequency}) RETURNING *;`);
         const newUserHabit = result.rows[0];
         resolve(newUserHabit)
       } catch (error) {

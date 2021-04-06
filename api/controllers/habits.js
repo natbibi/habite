@@ -25,7 +25,7 @@ async function createUserHabit(req, res){
   try {
       //check if valid jwt is for the requested user
       // if (res.locals.user !== req.params.username) throw err
-      const userHabit = await UserHabit.createUserHabit({...req.body});
+      const userHabit = await UserHabit.createUserHabit({...req.body}, req.params.username);
       res.json(userHabit)
   } catch (err) {
       res.status(403).send({err: err})
