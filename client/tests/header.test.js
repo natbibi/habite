@@ -16,7 +16,7 @@ describe('header', () => {
     describe('content', () => {
         it('contains an icon', () => {
             let heading = header.getElementbyClassName('heading');
-            let iconDiv = heading.getElementbyID('title-icon');
+            let iconDiv = heading.getElementbyID('icon-div');
             expect(iconDiv.querySelector('i')).toBeTruthy();  
 
         });
