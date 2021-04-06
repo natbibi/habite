@@ -19,7 +19,7 @@ function renderRegistrationForm() {
 }
 
 // render profile page, main page:
-function renderStreaks() {
+/* aysnc */ function renderStreaks() {
     const showFooter = document.getElementById('footer')
     showFooter.style.display = 'block';
     const greeting = document.createElement('h1')
