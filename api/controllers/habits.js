@@ -33,6 +33,17 @@ async function createUserHabit(req, res){
   }
 }
 
+async function getUserHabits(req, res){
+  try {
+      //check if valid jwt is for the requested user
+      // if (res.locals.user !== req.params.username) throw err
+      const userHabits = await UserHabit.getUserHabits(req.params.username)
+      res.json(userHabits)
+  } catch (err) {
+      res.status(403).send({err: err})
+  }
+}
+
 async function createHabitEntry(req, res){
   try {
       //check if valid jwt is for the requested user
@@ -44,11 +55,11 @@ async function createHabitEntry(req, res){
   }
 }
 
-async function getUserHabits(req, res){
+async function getUserHabitEntries(req, res){
   try {
       //check if valid jwt is for the requested user
       // if (res.locals.user !== req.params.username) throw err
-      const userHabits = await UserHabit.getUserHabits(req.params.username)
+      const userHabits = await UserHabit.getUserHabitEntries(req.params.username)
       const streakData = streak(userHabits)
       res.json({data: userHabits, streakData: streakData})
   } catch (err) {
@@ -56,11 +67,23 @@ async function getUserHabits(req, res){
   }
 }
 
-const schedule = require('node-schedule');
+async function autoFillHabitEntries(req, res){
+  try {
+      //check if valid jwt is for the requested user
+      // if (res.locals.user !== req.params.username) throw err
+      const userHabits = await UserHabit.getAllUserHabitsCount()
+      console.log(userHabits)
+      res.json(userHabits)
+  } catch (err) {
+      res.status(403).send({err: err})
+  }
+}
 
-const job = schedule.scheduleJob(`*/1 * * * *`, function(){
-  console.log('The answer to life, the universe, and everything!');
-});
+// const schedule = require('node-schedule');
+
+// const job = schedule.scheduleJob(`*/1 * * * *`, function(){
+//   console.log('The answer to life, the universe, and everything!');
+// });
 
 
-module.exports = { showAllHabits, createHabit, createUserHabit, getUserHabits, createHabitEntry };
+module.exports = { showAllHabits, createHabit, createUserHabit, getUserHabits, getUserHabitEntries, createHabitEntry, autoFillHabitEntries };
