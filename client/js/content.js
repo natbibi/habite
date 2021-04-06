@@ -45,8 +45,8 @@ function renderStreaks() {
 
 
 async function renderMyHabits() {
-    const getHabits = await requests.getAllHabits();
-    if (getHabits.err) { return }
+    const habitsList = await requests.getAllHabits();
+    if (habitsList.err) { return }
 
     const habits = document.createElement('div')
     habits.className = "habits-list"
@@ -56,19 +56,18 @@ async function renderMyHabits() {
     const habitsBody = document.createElement('div')
     habitsBody.className = "habits-body"
     // insert GET request for user habits here
-    const habitList = getHabits.map(habit => {
-        return habit.name
-    })
-    let list = document.createElement('ul')
-    habitList.forEach(habit => {
-        let item = document.createElement('li')
-        item.className = "list-habits"
-        item.textContent = habit
-        list.appendChild(item)
+
+    let habitContainer = document.createElement('div')
+    habitContainer.className = "habit-container"
+    habitsList.forEach(habit => {
+        let item = document.createElement('div')
+        item.className = "habits-item"
+        item.textContent = habit.name
+        habitContainer.appendChild(item)
     })
     main.append(habits)
     habits.appendChild(habitsHeading)
-    habitsBody.appendChild(list)
+    habitsBody.appendChild(habitContainer)
     habits.appendChild(habitsBody)
 }
 
