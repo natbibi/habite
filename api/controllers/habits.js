@@ -78,10 +78,11 @@ async function autoFillHabitEntries(req, res){
   }
 }
 
-// const schedule = require('node-schedule');
+const schedule = require('node-schedule');
 
-// const job = schedule.scheduleJob(`*/1 * * * *`, function(){
-//   console.log('The answer to life, the universe, and everything!');
+// const job = schedule.scheduleJob(`*/1 * * * *`, function () {
+//     UserHabit.autoFillHabitEntries();
+//     console.log('habit_entires auto completed')
 // });
 
 

@@ -118,13 +118,13 @@ class UserHabit extends Habit {
     return new Promise (async (resolve,reject) => {
       try{
         const res = await db.query(SQL`
-        SELECT users.username, user_habits.id AS user_habit_id, user_habits.frequency, count(*), to_char(completed_at, 'DD-MON-YYYY') as date
+        SELECT users.username, user_habits.id AS user_habit_id, user_habits.frequency, count(*), to_char(completed_at, 'DD-MON-YYYY') AS date
         FROM user_habits 
         JOIN users ON user_habits.user_id = users.id
-        JOIN habit_entries ON user_habits.id = habit_entries.user_habit_id
+        LEFT JOIN habit_entries ON user_habits.id = habit_entries.user_habit_id
         GROUP BY users.username, date, user_habits.id;
         `)
-        const data = res.rows.map(row => ({user_habit_id: row.user_habit_id, diff: row.frequency - row.count}))
+        const data = res.rows.map(row => ({user_habit_id: row.user_habit_id, diff: row.date === null ? row.frequency : row.frequency - row.count}))
         resolve(data)
       } catch (error) {
         reject(`Could not retrieve habit`);
