@@ -7,7 +7,9 @@ const heading = document.querySelector('header');
 const main = document.querySelector('main');
 
 const publicRoutes = ['#', '#login', '#register'];
-const privateRoutes = ['#profile']; // add #profile
+const privateRoutes = ['#profile']; // add #profile and #addhabits
+
+window.addEventListener('hashchange', updateContent);
 
 function updateMain(path) {
     console.log("hello updating main")
@@ -27,9 +29,9 @@ function updateMain(path) {
                 forms.renderLoginLink();
                 break;
             case '#profile':
-                content.renderProfile(); break;
-            // case '':
-            //     content.renderLandingPage(); break;
+                content.renderStreaks(); content.renderMyHabits(); break;
+            case '#addhabits':
+                content.renderAddHabitsPage(); break;
             // case '#more':
             //     renderLandingPage(); renderMenuMessage(); break;
             // case '#top':
