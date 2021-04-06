@@ -80,7 +80,8 @@ function renderLandingPage() {
 // *******************************************************************
 
 // render profile page, main page:
-/* aysnc */ function renderStreaks() {
+// aysnc  
+function renderStreaks() {
     const showFooter = document.getElementById('footer')
     showFooter.style.display = 'block';
     const greeting = document.createElement('h1')
@@ -90,35 +91,40 @@ function renderLandingPage() {
     // const getHabits = await getAllHabits();
     // if (getHabits.err) { return }
     // const renderHabit = habitData => {
-        const streaks = document.createElement('div')
-        streaks.className = "streaks-list"
-        const streaksHeading = document.createElement('h2')
-        streaksHeading.className = "streaks-heading"
-        streaksHeading.textContent = "🔥 Streaks"
-        const streaksBody = document.createElement('div')
-        streaksBody.className = "streaks-body"
-        // insert GET request for habit completed here
+    const streaks = document.createElement('div')
+    streaks.className = "streaks-list"
+    const streaksHeading = document.createElement('h2')
+    streaksHeading.className = "streaks-heading"
+    streaksHeading.textContent = "🔥 Streaks"
+    const streaksBody = document.createElement('div')
+    streaksBody.className = "streaks-body"
+    // insert GET request for habit completed here
 
-        main.appendChild(streaks)
-        streaks.appendChild(streaksHeading)
-        streaks.appendChild(streaksBody)
-        // streaks.appendChild(getHabits)
+    main.appendChild(streaks)
+    streaks.appendChild(streaksHeading)
+    streaks.appendChild(streaksBody)
+    // streaks.appendChild(getHabits)
+}
+
+
+async function renderMyHabits() {
+    const getHabits = await getAllHabits();
+    if (getHabits.err) { return }
+    const renderHabit = habitData => {
+        const habits = document.createElement('div')
+        habits.className = "habits-list"
+        const habitsHeading = document.createElement('h2')
+        habitsHeading.className = "habits-heading"
+        habitsHeading.textContent = "💙 My Habits"
+        const habitsBody = document.createElement('div')
+        habitsBody.className = "habits-body"
+        // insert GET request for user habits here
+
+        main.append(habits)
+        habits.appendChild(habitsHeading)
+        habits.appendChild(habitsBody)
+        habits.appendChild(getHabits)
     }
-// }
-
-function renderMyHabits() {
-    const habits = document.createElement('div')
-    habits.className = "habits-list"
-    const habitsHeading = document.createElement('h2')
-    habitsHeading.className = "habits-heading"
-    habitsHeading.textContent = "💙 My Habits"
-    const habitsBody = document.createElement('div')
-    habitsBody.className = "habits-body"
-    // insert GET request for user habits here
-
-    main.append(habits)
-    habits.appendChild(habitsHeading)
-    habits.appendChild(habitsBody)
 }
 
 function renderAddHabitsPage() {
@@ -144,6 +150,7 @@ function render404() {
     error.textContent = "Oops, we can't find that page!  Try looking elsewhere ...";
     main.appendChild(error);
 }
+
 
 module.exports = { renderStreaks, renderMyHabits, renderAddHabitsPage, renderLandingPage, render404 }
 },{"./forms":3,"./renderHelpers":6}],3:[function(require,module,exports){
@@ -344,7 +351,7 @@ const heading = document.querySelector('header');
 const main = document.querySelector('main');
 
 const publicRoutes = ['#', '#login', '#register'];
-const privateRoutes = ['#profile']; // add #profile and #addhabits
+const privateRoutes = []; // add #profile and #addhabits
 
 window.addEventListener('hashchange', updateContent);
 
@@ -359,10 +366,10 @@ function updateMain(path) {
         switch (path) {
             case '#login':
                 forms.renderLoginForm();
-                forms.renderRegisterLink(); 
+                forms.renderRegisterLink();
                 break;
             case '#register':
-                forms.renderRegisterForm(); 
+                forms.renderRegisterForm();
                 forms.renderLoginLink();
                 break;
             case '#profile':
@@ -385,8 +392,8 @@ function updateContent() {
     const path = window.location.hash;
     if (privateRoutes.includes(path) && !auth.currentUser()) {
         window.location.hash = ''
-    } else if (!privateRoutes.includes(path) && auth.currentUser()) {
-        window.location.hash = 'profile';
+        // } else if (!privateRoutes.includes(path) && auth.currentUser()) {
+        //     window.location.hash = 'profile';
     } else {
         updateMain(path);
     }
@@ -472,7 +479,8 @@ async function getAllHabits() {
         const options = {
             headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
         }
-        const response = await fetch('https://habit-your-way.herokuapp.com/habits', options);
+        const response = await fetch('http://localhost:3000/habits', options);
+        // https://habit-your-way.herokuapp.com/habits 
         const data = await response.json();
         if (data.err) {
             console.warn(data.err);

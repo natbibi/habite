@@ -16,7 +16,8 @@ function renderLandingPage() {
 // *******************************************************************
 
 // render profile page, main page:
-/* aysnc */ function renderStreaks() {
+// aysnc  
+function renderStreaks() {
     const showFooter = document.getElementById('footer')
     showFooter.style.display = 'block';
     const greeting = document.createElement('h1')
@@ -26,35 +27,40 @@ function renderLandingPage() {
     // const getHabits = await getAllHabits();
     // if (getHabits.err) { return }
     // const renderHabit = habitData => {
-        const streaks = document.createElement('div')
-        streaks.className = "streaks-list"
-        const streaksHeading = document.createElement('h2')
-        streaksHeading.className = "streaks-heading"
-        streaksHeading.textContent = "🔥 Streaks"
-        const streaksBody = document.createElement('div')
-        streaksBody.className = "streaks-body"
-        // insert GET request for habit completed here
+    const streaks = document.createElement('div')
+    streaks.className = "streaks-list"
+    const streaksHeading = document.createElement('h2')
+    streaksHeading.className = "streaks-heading"
+    streaksHeading.textContent = "🔥 Streaks"
+    const streaksBody = document.createElement('div')
+    streaksBody.className = "streaks-body"
+    // insert GET request for habit completed here
 
-        main.appendChild(streaks)
-        streaks.appendChild(streaksHeading)
-        streaks.appendChild(streaksBody)
-        // streaks.appendChild(getHabits)
+    main.appendChild(streaks)
+    streaks.appendChild(streaksHeading)
+    streaks.appendChild(streaksBody)
+    // streaks.appendChild(getHabits)
+}
+
+
+async function renderMyHabits() {
+    const getHabits = await getAllHabits();
+    if (getHabits.err) { return }
+    const renderHabit = habitData => {
+        const habits = document.createElement('div')
+        habits.className = "habits-list"
+        const habitsHeading = document.createElement('h2')
+        habitsHeading.className = "habits-heading"
+        habitsHeading.textContent = "💙 My Habits"
+        const habitsBody = document.createElement('div')
+        habitsBody.className = "habits-body"
+        // insert GET request for user habits here
+
+        main.append(habits)
+        habits.appendChild(habitsHeading)
+        habits.appendChild(habitsBody)
+        habits.appendChild(getHabits)
     }
-// }
-
-function renderMyHabits() {
-    const habits = document.createElement('div')
-    habits.className = "habits-list"
-    const habitsHeading = document.createElement('h2')
-    habitsHeading.className = "habits-heading"
-    habitsHeading.textContent = "💙 My Habits"
-    const habitsBody = document.createElement('div')
-    habitsBody.className = "habits-body"
-    // insert GET request for user habits here
-
-    main.append(habits)
-    habits.appendChild(habitsHeading)
-    habits.appendChild(habitsBody)
 }
 
 function renderAddHabitsPage() {
@@ -80,5 +86,6 @@ function render404() {
     error.textContent = "Oops, we can't find that page!  Try looking elsewhere ...";
     main.appendChild(error);
 }
+
 
 module.exports = { renderStreaks, renderMyHabits, renderAddHabitsPage, renderLandingPage, render404 }
