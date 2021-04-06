@@ -145,22 +145,22 @@ module.exports = { renderStreaks, renderMyHabits, renderAddHabitsPage, renderLan
 const auth = require("./auth");
 const main = document.querySelector('main');
 
-function renderAuthBtns() {
-    const authBtns = document.createElement('div');
-    authBtns.className = 'auth-btns';
+// function renderAuthBtns() {
+//     const authBtns = document.createElement('div');
+//     authBtns.className = 'auth-btns';
 
-    const loginBtn = document.createElement('button');
-    loginBtn.className = 'login-btn';
-    loginBtn.textContent = 'login';
+//     const loginBtn = document.createElement('button');
+//     loginBtn.className = 'login-btn';
+//     loginBtn.textContent = 'login';
 
-    const regBtn = document.createElement('button');
-    regBtn.className = 'register-btn';
-    regBtn.textContent = 'register';
+//     const regBtn = document.createElement('button');
+//     regBtn.className = 'register-btn';
+//     regBtn.textContent = 'register';
 
-    authBtns.appendChild(loginBtn);
-    authBtns.appendChild(regBtn);
-    main.appendChild(authBtns);
-}
+//     authBtns.appendChild(loginBtn);
+//     authBtns.appendChild(regBtn);
+//     main.appendChild(authBtns);
+// }
 
 function renderLoginForm() {
     // Define form fields
@@ -245,28 +245,28 @@ function renderRegisterLink() {
 }
 
 function renderLoginLink() {
-    const registerPageBtn = document.createElement('button');
-    const registerText = document.createElement('p');
-    const registerElement = document.createElement('div');
+    const loginPageBtn = document.createElement('button');
+    const loginText = document.createElement('p');
+    const loginElement = document.createElement('div');
 
-    registerPageBtn.textContent = "Login";
-    registerPageBtn.id = "login-link";
+    loginPageBtn.textContent = "Login";
+    loginPageBtn.id = "login-link";
     
-    registerText.textContent = "Already have an account? Click here to login!"
+    loginText.textContent = "Already have an account? Click here to login!"
 
-    registerElement.appendChild(registerText);
-    registerElement.appendChild(registerPageBtn);
+    loginElement.appendChild(loginText);
+    loginElement.appendChild(loginPageBtn);
 
-    main.appendChild(registerElement);
+    main.appendChild(loginElement);
 }
 
 module.exports = {
-    renderAuthBtns,
+    // renderAuthBtns,
     renderLoginForm,
     renderLoginLink,
     renderRegisterForm,
-    renderRegisterLink
-    
+    renderRegisterLink,
+    createForm
 }
 },{"./auth":1}],4:[function(require,module,exports){
 // Import js files
