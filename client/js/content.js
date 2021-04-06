@@ -18,7 +18,9 @@ function renderLandingPage() {
 function renderRegistrationForm() {
 }
 
-function renderProfile() {
+// render profile page, main page:
+
+function renderStreaks() {
     const showFooter = document.getElementById('footer')
     showFooter.style.display = 'block';
     const greeting = document.createElement('h1')
@@ -37,7 +39,9 @@ function renderProfile() {
     main.appendChild(streaks)
     streaks.appendChild(streaksHeading)
     streaks.appendChild(streaksBody)
+}
 
+function renderMyHabits() {
     const habits = document.createElement('div')
     habits.className = "habits-list"
     const habitsHeading = document.createElement('h2')
@@ -50,7 +54,6 @@ function renderProfile() {
     main.append(habits)
     habits.appendChild(habitsHeading)
     habits.appendChild(habitsBody)
-
 }
 
 function renderAddHabitsPage() {
@@ -77,4 +80,4 @@ function render404() {
     main.appendChild(error);
 }
 
-module.exports = { renderProfile, renderAddHabitsPage, renderLandingPage, render404 }
+module.exports = { renderStreaks, renderMyHabits, renderAddHabitsPage, renderLandingPage, render404 }
