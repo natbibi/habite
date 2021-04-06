@@ -133,25 +133,17 @@ async function renderMyHabits() {
         let habitName = document.createElement('p')
         habitName.textContent = habit.habit_name
 
-        let habitCurrentFrequency = document.createElement('p')
-        habitCurrentFrequency.textContent = habit.frequency
-
-        let habitMaxFrequency = document.createElement('p')
-        habitMaxFrequency.textContent = habit.frequency
+        let habitFrequency = document.createElement('progress')
+        habitFrequency.setAttribute('max', `${habit.frequency}`)
+        habitFrequency.setAttribute('value', `${habit.frequency}`)
 
         let habitIncreaseFrequency = document.createElement('i')
         habitIncreaseFrequency.className = "fas fa-plus-circle increase-freq-btn"
 
         habitsContainer.appendChild(habitContainer)
         habitContainer.appendChild(habitName)
-        habitContainer.appendChild(habitCurrentFrequency)
-        habitContainer.appendChild(habitMaxFrequency)
+        habitContainer.appendChild(habitFrequency)
         habitContainer.appendChild(habitIncreaseFrequency)
-
-        // function getFrequency
-
-
-
     })
 
     habits.appendChild(habitsHeading)

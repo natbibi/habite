@@ -44,21 +44,21 @@ header {
 
 .habit-container{
     display: grid;
-    grid-template-columns: 3fr 1fr 1fr 1fr;
-    grid-gap: 10px;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 20px;
+    /* justify-content: center; */
     align-items: center;
     margin: 10px;
-   
+}
+
+progress {
+    height: 30px
 }
 
 .increase-freq-btn {
   font-size: 25px;
   cursor: pointer;
-}
-
-/* remove */
-p {
-    border: 2px solid orange
+  text-align: center;
 }
 
 footer {
