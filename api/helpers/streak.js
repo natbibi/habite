@@ -12,8 +12,8 @@ function streak(data) {
   }
 
   for (let habit in data) {
-      const jsDate = new Date(data[habit].timestamp);
-      const date = [jsDate.getMonth() + 1, jsDate.getDate()];
+    //   const jsDate = new Date(data[habit].timestamp);
+    //   const date = [jsDate.getMonth() + 1, jsDate.getDate()];
       if (data[habit].completed) {
         resObj[data[habit].name].current_streak++;
         if (
