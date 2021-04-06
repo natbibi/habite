@@ -9,8 +9,8 @@ class Habit {
   }
 
   static get all() {
-    return new Promise (async (resolve,reject) => {
-      try{
+    return new Promise(async (resolve, reject) => {
+      try {
         const result = await db.query(SQL`SELECT * FROM habits`);
         const habits = result.rows.map(habit => new Habit(habit))
         resolve(habits)
@@ -21,8 +21,8 @@ class Habit {
   }
 
   static find(id) {
-    return new Promise (async (resolve,reject) => {
-      try{
+    return new Promise(async (resolve, reject) => {
+      try {
         const result = await db.query(SQL`SELECT * FROM habits WHERE id = ${id};`);
         const habit = new Habit(result.rows[0]);
         resolve(habit)
@@ -33,8 +33,8 @@ class Habit {
   }
 
   static create(data) {
-    return new Promise (async (resolve,reject) => {
-      try{
+    return new Promise(async (resolve, reject) => {
+      try {
         const result = await db.query(SQL`INSERT INTO habits (name) VALUES (${data.name}) RETURNING *;`);
         const habit = new Habit(result.rows[0]);
         resolve(habit)
@@ -52,8 +52,8 @@ class UserHabit extends Habit {
   }
 
   static createUserHabit(data, username) {
-    return new Promise (async (resolve,reject) => {
-      try{
+    return new Promise(async (resolve, reject) => {
+      try {
         const user = await User.find(username)
         const result = await db.query(SQL`INSERT INTO user_habits (habit_id, user_id, frequency) VALUES (${data.habit_id}, ${user.id}, ${data.frequency}) RETURNING *;`);
         const newUserHabit = result.rows[0];
@@ -65,8 +65,8 @@ class UserHabit extends Habit {
   }
 
   static getUserHabits(username) {
-    return new Promise (async (resolve,reject) => {
-      try{
+    return new Promise(async (resolve, reject) => {
+      try {
         const result = await db.query(SQL`
         select users.username, users.id AS user_id, habits.id AS habit_id, habits.name AS habit_name, user_habits.frequency FROM user_habits
         JOIN
@@ -74,7 +74,7 @@ class UserHabit extends Habit {
         JOIN 
         users on user_habits.user_id = users.id
         WHERE users.username = ${username};`);
-        const habits = result.rows.map(habit => ({habit_name: habit.habit_name, username: habit.username, habit_id: habit.habit_id, frequency: habit.frequency, user_id: habit.user_id }))
+        const habits = result.rows.map(habit => ({ habit_name: habit.habit_name, username: habit.username, habit_id: habit.habit_id, frequency: habit.frequency, user_id: habit.user_id }))
         resolve(habits)
       } catch (error) {
         reject(`Could not retrieve habit`);
@@ -83,8 +83,8 @@ class UserHabit extends Habit {
   }
 
   static createHabitEntry(data) {
-    return new Promise (async (resolve,reject) => {
-      try{
+    return new Promise(async (resolve, reject) => {
+      try {
         const result = await db.query(SQL`INSERT INTO habit_entries (user_habit_id, completed) VALUES (${data.user_habit_id}, ${data.completed}) RETURNING *;`);
         const newHabitEntry = result.rows[0];
         resolve(newHabitEntry)
@@ -95,15 +95,11 @@ class UserHabit extends Habit {
   }
 
   static autoFillHabitEntries() {
-    return new Promise (async (resolve,reject) => {
+    return new Promise(async (resolve, reject) => {
       try {
         const result = await UserHabit.getAllUserHabitsCount()
-<<<<<<< HEAD
-        const data = result.rows.map(row => ({user_id: row.user_id, habit_id: row.habit_id, diff: row.frequency - count}))
-        resolve(data)
-=======
         for (let i in result) {
-          for (let j=0; j<result[i].diff; j++) {
+          for (let j = 0; j < result[i].diff; j++) {
             await db.query(SQL`
             INSERT INTO habit_entries (user_habit_id, completed) 
             VALUES
@@ -112,26 +108,15 @@ class UserHabit extends Habit {
           }
         }
         resolve()
->>>>>>> 3b9b9297416db5cd47de4c6ececcda123d31d5d0
-      } catch(error) {
+      } catch (error) {
         reject('failed to autocomplete')
       }
     })
   }
 
   static getAllUserHabitsCount() {
-    return new Promise (async (resolve,reject) => {
-      try{
-<<<<<<< HEAD
-        const usersRes = await db.query(SQL`
-        SELECT users.username, user_habits.*, count(*), to_char(completed_at, 'DD-MON-YYYY') as date
-        FROM user_habits 
-        JOIN users ON user_habits.user_id = users.id
-        JOIN habit_entries ON user_habits.id = habit_entries.user_habit_id
-        GROUP BY users.username, date, user_habits.id;
-        `)
-        resolve(habits)
-=======
+    return new Promise(async (resolve, reject) => {
+      try {
         const res = await db.query(SQL`
         SELECT users.username, user_habits.id AS user_habit_id, user_habits.frequency, count(*), to_char(completed_at, 'DD-MON-YYYY') AS date
         FROM user_habits 
@@ -139,17 +124,16 @@ class UserHabit extends Habit {
         LEFT JOIN habit_entries ON user_habits.id = habit_entries.user_habit_id
         GROUP BY users.username, date, user_habits.id;
         `)
-        const data = res.rows.map(row => ({user_habit_id: row.user_habit_id, diff: row.date === null ? row.frequency : row.frequency - row.count}))
+        const data = res.rows.map(row => ({ user_habit_id: row.user_habit_id, diff: row.date === null ? row.frequency : row.frequency - row.count }))
         resolve(data)
->>>>>>> 3b9b9297416db5cd47de4c6ececcda123d31d5d0
       } catch (error) {
         reject(`Could not retrieve habit`);
       }
     });
   }
   static getUserHabitEntries(username) {
-    return new Promise (async (resolve,reject) => {
-      try{
+    return new Promise(async (resolve, reject) => {
+      try {
         const result = await db.query(SQL`
         select users.username, habits.name, habit_entries.completed, habit_entries.id, habit_entries.completed_at FROM habit_entries
         JOIN
@@ -159,7 +143,7 @@ class UserHabit extends Habit {
         JOIN
         habits on user_habits.habit_id = habits.id
         WHERE users.username = ${username};`);
-        const habits = result.rows.map(habit => ({name: habit.name, username: habit.username, completed: habit.completed, id: habit.id, timestamp: habit.completed_at }))
+        const habits = result.rows.map(habit => ({ name: habit.name, username: habit.username, completed: habit.completed, id: habit.id, timestamp: habit.completed_at }))
         resolve(habits)
       } catch (error) {
         reject(`Could not retrieve habit`);
@@ -182,18 +166,18 @@ class UserHabit extends Habit {
 
 
 
-//   static isComplete(completed) {
-//     return new Promise(async (resolve,reject) => {
-//       try{
-//         const result = await db.query(
-//           SQL`INSERT INTO habit_entries (completed) VALUES (${completed}) RETURNING *;`) // Have to add userhabitID?
-//         const progress = new isComplete(result.rows[0]);
-//         resolve(progress)
-//       } catch (error) {
-//         reject(`Could not determine progress: ${error}`);
-//       }
-//     })
-//   }
+  //   static isComplete(completed) {
+  //     return new Promise(async (resolve,reject) => {
+  //       try{
+  //         const result = await db.query(
+  //           SQL`INSERT INTO habit_entries (completed) VALUES (${completed}) RETURNING *;`) // Have to add userhabitID?
+  //         const progress = new isComplete(result.rows[0]);
+  //         resolve(progress)
+  //       } catch (error) {
+  //         reject(`Could not determine progress: ${error}`);
+  //       }
+  //     })
+  //   }
 }
 
-module.exports = {Habit, UserHabit};
+module.exports = { Habit, UserHabit };
