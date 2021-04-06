@@ -1,8 +1,19 @@
 body{
     font-family: 'Allerta', sans-serif;
+    max-width: 500px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+header {
+    min-height: 100px;
+    text-align: center;
 }
 
 .heading {
+    background-color: pink;
+    border-radius: 15%;
+    padding-top: 3rem;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
@@ -10,9 +21,99 @@ body{
 
 #title-icon {
     font-size: 100px;
+}
 
+.container {
+    border: solid 2px red;
+    min-height: 100vh;
+}
+
+.streaks-list {
+    border: lightblue 2px solid;
+    margin: 5px;
+}
+
+.habits-list {
+    border: lightblue 2px solid;
+    margin: 5px;
+}
+
+.streaks-heading, .habits-heading {
+    padding: 5px;
+}
+
+.habit-container{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 20px;
+    /* justify-content: center; */
+    align-items: center;
+    margin: 10px;
+}
+
+progress {
+    height: 30px
+}
+
+.increase-freq-btn {
+  font-size: 25px;
+  cursor: pointer;
+  text-align: center;
 }
 
 footer {
-    display: flex;
+    display: none;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    max-width: 500px;
 }
+
+.bottom-nav {
+    display: flex;
+    justify-content: space-evenly;
+    background-color: grey;
+}
+
+/* Style nav bar links */
+.bottom-nav a {
+    float: left;
+    display: block;
+    color: honeydew;
+    text-align: center;
+    padding: 1rem 1rem;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.bottom-nav a:hover {
+    background-color: #ddd;
+    color: black;
+  }
+
+.bottom-nav a.active {
+    background-color: black;
+}
+
+.bottom-nav .icon {
+    display: none;
+}
+
+    .bottom-nav a:not(:first-child, :nth-child(2)) {
+        display: none;
+    }
+
+    .bottom-nav a.icon {
+        float: right;
+        display: block;
+    }
+
+    .bottom-nav.responsive .icon {
+        order: 5;
+    }  
+    
+    .bottom-nav.responsive a {
+        float: none;
+        display: block;
+        text-align: left;
+    }

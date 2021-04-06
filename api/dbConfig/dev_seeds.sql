@@ -7,7 +7,17 @@ VALUES
 INSERT INTO habits (name) 
 VALUES
 ('drink water'),
-('exercise'),
+('workout'),
+('read book'),
+('eat breakfast'),
+('eat vegetables'),
+('meditate'),
+('stretch'),
+('study'),
+('nap'),
+('call parents'),
+('floss'),
+('write in journal'),
 ('sleep eight hours');
 
 INSERT INTO user_habits (user_id, habit_id, frequency) 
