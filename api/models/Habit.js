@@ -73,7 +73,7 @@ class UserHabit extends Habit {
     });
   }
 
-  static get all() {
+  static getUserHabits(username) {
     return new Promise (async (resolve,reject) => {
       try{
         const result = await db.query(SQL`
@@ -83,7 +83,8 @@ class UserHabit extends Habit {
         JOIN 
         users on user_habits.user_id = users.id
         JOIN
-        habits on user_habits.habit_id = habits.id;`);
+        habits on user_habits.habit_id = habits.id
+        WHERE users.username = ${username};`);
         const habits = result.rows.map(habit => ({name: habit.name, username: habit.username, completed: habit.completed, id: habit.id}))
         resolve(habits)
       } catch (error) {

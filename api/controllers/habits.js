@@ -43,15 +43,15 @@ async function createHabitEntry(req, res){
   }
 }
 
-async function getAllUserHabits(req, res){
+async function getUserHabits(req, res){
   try {
       //check if valid jwt is for the requested user
       // if (res.locals.user !== req.params.username) throw err
-      const userHabits = await UserHabit.all
+      const userHabits = await UserHabit.getUserHabits(req.params.username)
       res.json(userHabits)
   } catch (err) {
       res.status(403).send({err: err})
   }
 }
 
-module.exports = { showAllHabits, createHabit, createUserHabit, getAllUserHabits, createHabitEntry };
+module.exports = { showAllHabits, createHabit, createUserHabit, getUserHabits, createHabitEntry };
