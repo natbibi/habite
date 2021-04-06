@@ -36,7 +36,7 @@ function renderHeading() {
     heading.className = 'heading';
 
     const iconDiv = document.createElement('div');
-    iconDiv.id = "title-icon";
+    iconDiv.id = "icon-div";
 
     const icon = document.createElement('i');
     icon.className = "fas fa-fist-raised";
