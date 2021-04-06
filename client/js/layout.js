@@ -18,13 +18,14 @@ function updateMain(path) {
     main.innerHTML = '';
     heading.innerHTML = '';
     if (path) {
-        rHelpers.renderHeading()
         switch (path) {
             case '#login':
+                rHelpers.renderHeading()
                 forms.renderLoginForm();
                 forms.renderRegisterLink();
                 break;
             case '#register':
+                rHelpers.renderHeading()
                 forms.renderRegisterForm();
                 forms.renderLoginLink();
                 break;
@@ -32,10 +33,6 @@ function updateMain(path) {
                 content.renderStreaks(); content.renderMyHabits(); break;
             case '#addhabits':
                 content.renderAddHabitsPage(); break;
-            // case '#more':
-            //     renderLandingPage(); renderMenuMessage(); break;
-            // case '#top':
-            //     break;
             default:
                 content.render404(); break;
         }
