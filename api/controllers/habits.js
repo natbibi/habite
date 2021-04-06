@@ -80,10 +80,14 @@ async function autoFillHabitEntries(req, res){
 
 const schedule = require('node-schedule');
 
-// const job = schedule.scheduleJob(`*/1 * * * *`, function () {
-//     UserHabit.autoFillHabitEntries();
-//     console.log('habit_entires auto completed')
-// });
+const job = schedule.scheduleJob(`0 0 * * *`, async function () {
+  try {
+    const userHabits = await UserHabit.autoFillHabitEntries();
+    console.log('habit_entires auto completed')
+  } catch (err) {
+    console.log(err)
+  }
+});
 
 
 module.exports = { showAllHabits, createHabit, createUserHabit, getUserHabits, getUserHabitEntries, createHabitEntry, autoFillHabitEntries };
