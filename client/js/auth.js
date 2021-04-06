@@ -57,5 +57,6 @@ module.exports = {
     requestLogin,
     requestRegistration,
     currentUser,
+    login,
     logout
 }
