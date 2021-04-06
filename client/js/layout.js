@@ -7,7 +7,7 @@ const heading = document.querySelector('header');
 const main = document.querySelector('main');
 
 const publicRoutes = ['#', '#login', '#register'];
-const privateRoutes = ['#profile']; // add #profile and #addhabits
+const privateRoutes = []; // add #profile and #addhabits
 
 window.addEventListener('hashchange', updateContent);
 
@@ -22,10 +22,10 @@ function updateMain(path) {
         switch (path) {
             case '#login':
                 forms.renderLoginForm();
-                forms.renderRegisterLink(); 
+                forms.renderRegisterLink();
                 break;
             case '#register':
-                forms.renderRegisterForm(); 
+                forms.renderRegisterForm();
                 forms.renderLoginLink();
                 break;
             case '#profile':
@@ -48,8 +48,8 @@ function updateContent() {
     const path = window.location.hash;
     if (privateRoutes.includes(path) && !auth.currentUser()) {
         window.location.hash = ''
-    } else if (!privateRoutes.includes(path) && auth.currentUser()) {
-        window.location.hash = 'profile';
+        // } else if (!privateRoutes.includes(path) && auth.currentUser()) {
+        //     window.location.hash = 'profile';
     } else {
         updateMain(path);
     }
