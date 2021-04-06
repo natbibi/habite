@@ -48,11 +48,11 @@ function renderHeading() {
 
     const appName = document.createElement('h1');
     appName.id = "app-name";
-    appName.textContent = "grabbit";
+    appName.textContent = "habite";
 
     const tagline = document.createElement('h5');
     tagline.id = "tagline";
-    tagline.textContent = "habbit your way";
+    tagline.textContent = "habite your way";
 
     title.appendChild(appName);
     title.appendChild(tagline);
