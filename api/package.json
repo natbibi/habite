@@ -11,8 +11,9 @@
     "dev": "nodemon --legacy-watch index.js",
     "seedDev": "node dbConfig/seedDev.js",
     "test": "jest --setupFiles ./tests/integration/config.js --testPathPattern=/integration/ --watchAll --detectOpenHandles --runInBand --verbose",
-    "unitTests": "jest --testPathPattern=/unit/ --watchAll --verbose",
-    "coverage": "jest --setupFiles ./tests/integration/config.js --testPathPattern=/integration/ --coverage"
+    "unitTests": "jest --testPathPattern=/unit/",
+    "coverage": "jest --setupFiles ./tests/integration/config.js --testPathPattern=/integration/ --coverage",
+    "unitCoverage": "jest --testPathPattern=/unit/ --coverage"
   },
   "keywords": [],
   "author": "",
@@ -27,9 +28,10 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "express-rate-limit": "^5.2.6",
     "jsonwebtoken": "^8.5.1",
+    "node-schedule": "^2.0.0",
     "pg": "^8.5.1",
-    "sql-template-strings": "^2.2.2",
-    "express-rate-limit": "^5.2.6"
+    "sql-template-strings": "^2.2.2"
   }
 }

@@ -64,6 +64,24 @@ class UserHabit extends Habit {
     });
   }
 
+  static getUserHabits(username) {
+    return new Promise (async (resolve,reject) => {
+      try{
+        const result = await db.query(SQL`
+        select users.username, users.id AS user_id, habits.id AS habit_id, habits.name AS habit_name, user_habits.frequency FROM user_habits
+        JOIN
+        habits on user_habits.id = habits.id
+        JOIN 
+        users on user_habits.user_id = users.id
+        WHERE users.username = ${username};`);
+        const habits = result.rows.map(habit => ({habit_name: habit.habit_name, username: habit.username, habit_id: habit.habit_id, frequency: habit.frequency, user_id: habit.user_id }))
+        resolve(habits)
+      } catch (error) {
+        reject(`Could not retrieve habit`);
+      }
+    });
+  }
+
   static createHabitEntry(data) {
     return new Promise (async (resolve,reject) => {
       try{
@@ -76,7 +94,35 @@ class UserHabit extends Habit {
     });
   }
 
-  static getUserHabits(username) {
+  static autoFillHabitEntries() {
+    return new Promise (async (resolve,reject) => {
+      try {
+        const result = await UserHabit.getAllUserHabitsCount()
+        const data = result.rows.map(row => ({user_id: row.user_id, habit_id: row.habit_id, diff: row.frequency - count}))
+        resolve(data)
+      } catch(error) {
+        reject('failed to autocomplete')
+      }
+    })
+  }
+
+  static getAllUserHabitsCount() {
+    return new Promise (async (resolve,reject) => {
+      try{
+        const usersRes = await db.query(SQL`
+        SELECT users.username, user_habits.*, count(*), to_char(completed_at, 'DD-MON-YYYY') as date
+        FROM user_habits 
+        JOIN users ON user_habits.user_id = users.id
+        JOIN habit_entries ON user_habits.id = habit_entries.user_habit_id
+        GROUP BY users.username, date, user_habits.id;
+        `)
+        resolve(habits)
+      } catch (error) {
+        reject(`Could not retrieve habit`);
+      }
+    });
+  }
+  static getUserHabitEntries(username) {
     return new Promise (async (resolve,reject) => {
       try{
         const result = await db.query(SQL`

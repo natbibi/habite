@@ -1,6 +1,7 @@
 const { Habit, UserHabit} = require('../models/Habit');
 
 const express = require('express');
+const streak = require('../helpers/streak');
 const router = express.Router();
 
 async function showAllHabits(req, res){
@@ -32,17 +33,6 @@ async function createUserHabit(req, res){
   }
 }
 
-async function createHabitEntry(req, res){
-  try {
-      //check if valid jwt is for the requested user
-      // if (res.locals.user !== req.params.username) throw err
-      const habitEntry = await UserHabit.createHabitEntry({...req.body});
-      res.json(habitEntry)
-  } catch (err) {
-      res.status(403).send({err: err})
-  }
-}
-
 async function getUserHabits(req, res){
   try {
       //check if valid jwt is for the requested user
@@ -54,4 +44,46 @@ async function getUserHabits(req, res){
   }
 }
 
-module.exports = { showAllHabits, createHabit, createUserHabit, getUserHabits, createHabitEntry };
+async function createHabitEntry(req, res){
+  try {
+      //check if valid jwt is for the requested user
+      // if (res.locals.user !== req.params.username) throw err
+      const habitEntry = await UserHabit.createHabitEntry({...req.body});
+      res.json(habitEntry)
+  } catch (err) {
+      res.status(403).send({err: err})
+  }
+}
+
+async function getUserHabitEntries(req, res){
+  try {
+      //check if valid jwt is for the requested user
+      // if (res.locals.user !== req.params.username) throw err
+      const userHabits = await UserHabit.getUserHabitEntries(req.params.username)
+      const streakData = streak(userHabits)
+      res.json({data: userHabits, streakData: streakData})
+  } catch (err) {
+      res.status(403).send({err: err})
+  }
+}
+
+async function autoFillHabitEntries(req, res){
+  try {
+      //check if valid jwt is for the requested user
+      // if (res.locals.user !== req.params.username) throw err
+      const userHabits = await UserHabit.getAllUserHabitsCount()
+      console.log(userHabits)
+      res.json(userHabits)
+  } catch (err) {
+      res.status(403).send({err: err})
+  }
+}
+
+// const schedule = require('node-schedule');
+
+// const job = schedule.scheduleJob(`*/1 * * * *`, function(){
+//   console.log('The answer to life, the universe, and everything!');
+// });
+
+
+module.exports = { showAllHabits, createHabit, createUserHabit, getUserHabits, getUserHabitEntries, createHabitEntry, autoFillHabitEntries };
