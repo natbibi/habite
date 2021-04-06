@@ -1,5 +1,6 @@
 const rHelpers = require('./renderHelpers');
 const forms = require('./forms');
+const requests = require('./requests')
 
 const nav = document.querySelector('nav');
 const heading = document.querySelector('header');
@@ -44,23 +45,31 @@ function renderStreaks() {
 
 
 async function renderMyHabits() {
-    const getHabits = await getAllHabits();
+    const getHabits = await requests.getAllHabits();
     if (getHabits.err) { return }
-    const renderHabit = habitData => {
-        const habits = document.createElement('div')
-        habits.className = "habits-list"
-        const habitsHeading = document.createElement('h2')
-        habitsHeading.className = "habits-heading"
-        habitsHeading.textContent = "💙 My Habits"
-        const habitsBody = document.createElement('div')
-        habitsBody.className = "habits-body"
-        // insert GET request for user habits here
 
-        main.append(habits)
-        habits.appendChild(habitsHeading)
-        habits.appendChild(habitsBody)
-        habits.appendChild(getHabits)
-    }
+    const habits = document.createElement('div')
+    habits.className = "habits-list"
+    const habitsHeading = document.createElement('h2')
+    habitsHeading.className = "habits-heading"
+    habitsHeading.textContent = "💙 My Habits"
+    const habitsBody = document.createElement('div')
+    habitsBody.className = "habits-body"
+    // insert GET request for user habits here
+    const habitList = getHabits.map(habit => {
+        return habit.name
+    })
+    let list = document.createElement('ul')
+    habitList.forEach(habit => {
+        let item = document.createElement('li')
+        item.className = "list-habits"
+        item.textContent = habit
+        list.appendChild(item)
+    })
+    main.append(habits)
+    habits.appendChild(habitsHeading)
+    habitsBody.appendChild(list)
+    habits.appendChild(habitsBody)
 }
 
 function renderAddHabitsPage() {
