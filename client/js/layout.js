@@ -22,7 +22,7 @@ function updateMain(path) {
             case '#register':
                 content.renderLandingPage(); content.renderRegistrationForm(); break;
             case '#profile':
-                content.renderProfile(); break;
+                content.renderStreaks(); content.renderMyHabits(); break;
             case '#addhabits':
                 content.renderAddHabitsPage(); break;
             // case '#more':
