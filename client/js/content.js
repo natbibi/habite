@@ -53,22 +53,26 @@ async function renderMyHabits() {
     const habitsHeading = document.createElement('h2')
     habitsHeading.className = "habits-heading"
     habitsHeading.textContent = "💙 My Habits"
-    const habitsBody = document.createElement('div')
-    habitsBody.className = "habits-body"
+    const habitsContainer = document.createElement('div')
+    habitsContainer.className = "habits-container"
+    main.append(habits)
     // insert GET request for user habits here
 
-    let habitContainer = document.createElement('div')
-    habitContainer.className = "habit-container"
     habitsList.forEach(habit => {
+
+        // function getHabitList
         let item = document.createElement('div')
-        item.className = "habits-item"
-        item.textContent = habit.name
-        habitContainer.appendChild(item)
+        item.className = "habit-item"
+        item.textContent = habit.habit_name
+        habitsContainer.appendChild(item)
+       
+        // function getFrequency
+
+
     })
-    main.append(habits)
+
     habits.appendChild(habitsHeading)
-    habitsBody.appendChild(habitContainer)
-    habits.appendChild(habitsBody)
+    habits.appendChild(habitsContainer)
 }
 
 function renderAddHabitsPage() {
