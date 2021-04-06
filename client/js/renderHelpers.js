@@ -1,11 +1,10 @@
-
-
-const nav = document.querySelector('nav');
-const heading = document.querySelector('header');
-const main = document.querySelector('main');
+let nav;
+let header;
 
 // currently not in use!
-function renderNavBar() { 
+function renderNavBar() {
+    nav = document.querySelector('nav');
+
     nav.style.visibility = "show"
     // Create anchor for registration icon
     const regLink = document.createElement('a');
@@ -31,13 +30,13 @@ function renderNavBar() {
 }
 
 function renderHeading() {
-    const header = document.querySelector('header');
+    header = document.querySelector('header');
 
     const heading = document.createElement('div');
     heading.className = 'heading';
 
     const iconDiv = document.createElement('div');
-    iconDiv.id = "title-icon";
+    iconDiv.id = "icon-div";
 
     const icon = document.createElement('i');
     icon.className = "fas fa-fist-raised";
@@ -49,11 +48,11 @@ function renderHeading() {
 
     const appName = document.createElement('h1');
     appName.id = "app-name";
-    appName.textContent = "grabbit";
+    appName.textContent = "habite";
 
     const tagline = document.createElement('h5');
     tagline.id = "tagline";
-    tagline.textContent = "habbit your way";
+    tagline.textContent = "habite your way";
 
     title.appendChild(appName);
     title.appendChild(tagline);
@@ -67,6 +66,5 @@ function renderHeading() {
 
 module.exports = {
     renderNavBar,
-    renderHeading,
-
+    renderHeading
 }

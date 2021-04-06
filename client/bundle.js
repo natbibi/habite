@@ -64,6 +64,7 @@ module.exports = {
 },{"jwt-decode":8}],2:[function(require,module,exports){
 const rHelpers = require('./renderHelpers');
 const forms = require('./forms');
+const requests = require('./requests')
 
 const nav = document.querySelector('nav');
 const heading = document.querySelector('header');
@@ -80,7 +81,7 @@ function renderLandingPage() {
 // *******************************************************************
 
 // render profile page, main page:
-
+// aysnc  
 function renderStreaks() {
     const showFooter = document.getElementById('footer')
     showFooter.style.display = 'block';
@@ -88,6 +89,9 @@ function renderStreaks() {
     greeting.textContent = `Hi there, ${localStorage.getItem('username')}!`;
     heading.appendChild(greeting);
 
+    // const getHabits = await getAllHabits();
+    // if (getHabits.err) { return }
+    // const renderHabit = habitData => {
     const streaks = document.createElement('div')
     streaks.className = "streaks-list"
     const streaksHeading = document.createElement('h2')
@@ -100,21 +104,50 @@ function renderStreaks() {
     main.appendChild(streaks)
     streaks.appendChild(streaksHeading)
     streaks.appendChild(streaksBody)
+    // streaks.appendChild(getHabits)
 }
 
-function renderMyHabits() {
+
+async function renderMyHabits() {
+    const habitsList = await requests.getAllHabits();
+    if (habitsList.err) { return }
+
     const habits = document.createElement('div')
     habits.className = "habits-list"
     const habitsHeading = document.createElement('h2')
     habitsHeading.className = "habits-heading"
     habitsHeading.textContent = "💙 My Habits"
-    const habitsBody = document.createElement('div')
-    habitsBody.className = "habits-body"
+    const habitsContainer = document.createElement('div')
+    habitsContainer.className = "habits-container"
+    main.append(habits)
     // insert GET request for user habits here
 
-    main.append(habits)
+    // let habitContainer = document.createElement('div')
+    // habitContainer.className = "habit-container"
+    habitsList.forEach(habit => {
+
+        // function getHabitList
+        let habitContainer = document.createElement('div')
+        habitContainer.className = "habit-container"
+
+        let habitName = document.createElement('p')
+        habitName.textContent = habit.habit_name
+
+        let habitFrequency = document.createElement('progress')
+        habitFrequency.setAttribute('max', `${habit.frequency}`)
+        habitFrequency.setAttribute('value', `${habit.frequency}`)
+
+        let habitIncreaseFrequency = document.createElement('i')
+        habitIncreaseFrequency.className = "fas fa-plus-circle increase-freq-btn"
+
+        habitsContainer.appendChild(habitContainer)
+        habitContainer.appendChild(habitName)
+        habitContainer.appendChild(habitFrequency)
+        habitContainer.appendChild(habitIncreaseFrequency)
+    })
+
     habits.appendChild(habitsHeading)
-    habits.appendChild(habitsBody)
+    habits.appendChild(habitsContainer)
 }
 
 function renderAddHabitsPage() {
@@ -141,8 +174,9 @@ function render404() {
     main.appendChild(error);
 }
 
+
 module.exports = { renderStreaks, renderMyHabits, renderAddHabitsPage, renderLandingPage, render404 }
-},{"./forms":3,"./renderHelpers":6}],3:[function(require,module,exports){
+},{"./forms":3,"./renderHelpers":6,"./requests":7}],3:[function(require,module,exports){
 const auth = require("./auth");
 const main = document.querySelector('main');
 
@@ -340,7 +374,7 @@ const heading = document.querySelector('header');
 const main = document.querySelector('main');
 
 const publicRoutes = ['#', '#login', '#register'];
-const privateRoutes = ['#profile']; // add #profile and #addhabits
+const privateRoutes = []; // add #profile and #addhabits
 
 window.addEventListener('hashchange', updateContent);
 
@@ -351,24 +385,21 @@ function updateMain(path) {
     main.innerHTML = '';
     heading.innerHTML = '';
     if (path) {
-        rHelpers.renderHeading()
         switch (path) {
             case '#login':
+                rHelpers.renderHeading()
                 forms.renderLoginForm();
-                forms.renderRegisterLink(); 
+                forms.renderRegisterLink();
                 break;
             case '#register':
-                forms.renderRegisterForm(); 
+                rHelpers.renderHeading()
+                forms.renderRegisterForm();
                 forms.renderLoginLink();
                 break;
             case '#profile':
                 content.renderStreaks(); content.renderMyHabits(); break;
             case '#addhabits':
                 content.renderAddHabitsPage(); break;
-            // case '#more':
-            //     renderLandingPage(); renderMenuMessage(); break;
-            // case '#top':
-            //     break;
             default:
                 content.render404(); break;
         }
@@ -381,8 +412,8 @@ function updateContent() {
     const path = window.location.hash;
     if (privateRoutes.includes(path) && !auth.currentUser()) {
         window.location.hash = ''
-    } else if (!privateRoutes.includes(path) && auth.currentUser()) {
-        window.location.hash = 'profile';
+        // } else if (!privateRoutes.includes(path) && auth.currentUser()) {
+        //     window.location.hash = 'profile';
     } else {
         updateMain(path);
     }
@@ -390,14 +421,13 @@ function updateContent() {
 
 module.exports = { updateContent };
 },{"./auth":1,"./content":2,"./forms":3,"./renderHelpers":6}],6:[function(require,module,exports){
-
-
-const nav = document.querySelector('nav');
-const heading = document.querySelector('header');
-const main = document.querySelector('main');
+let nav;
+let header;
 
 // currently not in use!
-function renderNavBar() { 
+function renderNavBar() {
+    nav = document.querySelector('nav');
+
     nav.style.visibility = "show"
     // Create anchor for registration icon
     const regLink = document.createElement('a');
@@ -423,13 +453,13 @@ function renderNavBar() {
 }
 
 function renderHeading() {
-    const header = document.querySelector('header');
+    header = document.querySelector('header');
 
     const heading = document.createElement('div');
     heading.className = 'heading';
 
     const iconDiv = document.createElement('div');
-    iconDiv.id = "title-icon";
+    iconDiv.id = "icon-div";
 
     const icon = document.createElement('i');
     icon.className = "fas fa-fist-raised";
@@ -441,11 +471,11 @@ function renderHeading() {
 
     const appName = document.createElement('h1');
     appName.id = "app-name";
-    appName.textContent = "grabbit";
+    appName.textContent = "habite";
 
     const tagline = document.createElement('h5');
     tagline.id = "tagline";
-    tagline.textContent = "habbit your way";
+    tagline.textContent = "habite your way";
 
     title.appendChild(appName);
     title.appendChild(tagline);
@@ -459,17 +489,23 @@ function renderHeading() {
 
 module.exports = {
     renderNavBar,
-    renderHeading,
-
+    renderHeading
 }
 },{}],7:[function(require,module,exports){
+const auth = require('./auth')
+const hostURL = "http://localhost:3000";
+
 async function getAllHabits() {
     try {
         const options = {
             headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
         }
-        const response = await fetch('https://habit-your-way.herokuapp.com/habits', options);
+        const username = auth.currentUser()
+        console.log(username)
+        const response = await fetch(`${hostURL}/users/${username}/habits`, options)
+        // https://habit-your-way.herokuapp.com/habits 
         const data = await response.json();
+
         if (data.err) {
             console.warn(data.err);
             logout();
@@ -498,7 +534,7 @@ async function getAllUsers() {
 }
 
 module.exports = { getAllHabits, getAllUsers }
-},{}],8:[function(require,module,exports){
+},{"./auth":1}],8:[function(require,module,exports){
 "use strict";function e(e){this.message=e}e.prototype=new Error,e.prototype.name="InvalidCharacterError";var r="undefined"!=typeof window&&window.atob&&window.atob.bind(window)||function(r){var t=String(r).replace(/=+$/,"");if(t.length%4==1)throw new e("'atob' failed: The string to be decoded is not correctly encoded.");for(var n,o,a=0,i=0,c="";o=t.charAt(i++);~o&&(n=a%4?64*n+o:o,a++%4)?c+=String.fromCharCode(255&n>>(-2*a&6)):0)o="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".indexOf(o);return c};function t(e){var t=e.replace(/-/g,"+").replace(/_/g,"/");switch(t.length%4){case 0:break;case 2:t+="==";break;case 3:t+="=";break;default:throw"Illegal base64url string!"}try{return function(e){return decodeURIComponent(r(e).replace(/(.)/g,(function(e,r){var t=r.charCodeAt(0).toString(16).toUpperCase();return t.length<2&&(t="0"+t),"%"+t})))}(t)}catch(e){return r(t)}}function n(e){this.message=e}function o(e,r){if("string"!=typeof e)throw new n("Invalid token specified");var o=!0===(r=r||{}).header?0:1;try{return JSON.parse(t(e.split(".")[o]))}catch(e){throw new n("Invalid token specified: "+e.message)}}n.prototype=new Error,n.prototype.name="InvalidTokenError";const a=o;a.default=o,a.InvalidTokenError=n,module.exports=a;
 
 
