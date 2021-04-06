@@ -58,6 +58,7 @@ module.exports = {
     requestLogin,
     requestRegistration,
     currentUser,
+    login,
     logout
 }
 },{"jwt-decode":8}],2:[function(require,module,exports){

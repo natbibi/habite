@@ -71,8 +71,7 @@ async function autoFillHabitEntries(req, res){
   try {
       //check if valid jwt is for the requested user
       // if (res.locals.user !== req.params.username) throw err
-      const userHabits = await UserHabit.getAllUserHabitsCount()
-      console.log(userHabits)
+      const userHabits = await UserHabit.autoFillHabitEntries()
       res.json(userHabits)
   } catch (err) {
       res.status(403).send({err: err})
