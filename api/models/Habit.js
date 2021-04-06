@@ -3,7 +3,6 @@ const SQL = require('sql-template-strings');
 
 class Habit {
   constructor(data) {
-    this.id = data.id;
     this.habitName = data.name;
   }
 
@@ -29,7 +28,40 @@ class Habit {
         reject(`Could not create habit`);
       }
     });
-    
   }
-  
 }
+
+class User_Habits {
+  constructor(data) {
+    this.frequency = data.frequency;
+    this.completed = data.completed;
+  }
+
+  static storeFrequency(frequency) {
+    return new Promise(async (resolve,reject) => {
+      try{
+        const result = await db.query(
+          SQL`INSERT INTO user_habits (frequency) VALUES (${frequency}) RETURNING *;`) // Have to add userID & HabitID?
+        const habitFrequency = new User_Habits(result.rows[0]);
+        resolve(habitFrequency)
+      } catch (error) {
+          reject(`Could not store frequency: ${error}`);
+      }
+    })
+  }
+
+  static isComplete(completed) {
+    return new Promise(async (resolve,reject) => {
+      try{
+        const result = await db.query(
+          SQL`INSERT INTO habit_entries (completed) VALUES (${completed}) RETURNING *;`) // Have to add userhabitID?
+        const progress = new isComplete(result.rows[0]);
+        resolve(progress)
+      } catch (error) {
+        reject(`Could not determine progress: ${error}`);
+      }
+    })
+  }
+}
+
+module.exports = {Habit, User_Habits};
