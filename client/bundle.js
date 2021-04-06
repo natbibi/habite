@@ -22,7 +22,6 @@ function renderRegistrationForm() {
 }
 
 // render profile page, main page:
-
 function renderStreaks() {
     const showFooter = document.getElementById('footer')
     showFooter.style.display = 'block';
@@ -30,19 +29,24 @@ function renderStreaks() {
     greeting.textContent = `Hi there, ${localStorage.getItem('username')}!`;
     heading.appendChild(greeting);
 
-    const streaks = document.createElement('div')
-    streaks.className = "streaks-list"
-    const streaksHeading = document.createElement('h2')
-    streaksHeading.className = "streaks-heading"
-    streaksHeading.textContent = "🔥 Streaks"
-    const streaksBody = document.createElement('div')
-    streaksBody.className = "streaks-body"
-    // insert GET request for habit completed here
+    // const getHabits = await getAllHabits();
+    // if (getHabits.err) { return }
+    // const renderHabit = habitData => {
+        const streaks = document.createElement('div')
+        streaks.className = "streaks-list"
+        const streaksHeading = document.createElement('h2')
+        streaksHeading.className = "streaks-heading"
+        streaksHeading.textContent = "🔥 Streaks"
+        const streaksBody = document.createElement('div')
+        streaksBody.className = "streaks-body"
+        // insert GET request for habit completed here
 
-    main.appendChild(streaks)
-    streaks.appendChild(streaksHeading)
-    streaks.appendChild(streaksBody)
-}
+        main.appendChild(streaks)
+        streaks.appendChild(streaksHeading)
+        streaks.appendChild(streaksBody)
+        // streaks.appendChild(getHabits)
+    }
+// }
 
 function renderMyHabits() {
     const habits = document.createElement('div')
