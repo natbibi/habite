@@ -98,8 +98,21 @@ class UserHabit extends Habit {
     return new Promise (async (resolve,reject) => {
       try {
         const result = await UserHabit.getAllUserHabitsCount()
+<<<<<<< HEAD
         const data = result.rows.map(row => ({user_id: row.user_id, habit_id: row.habit_id, diff: row.frequency - count}))
         resolve(data)
+=======
+        for (let i in result) {
+          for (let j=0; j<result[i].diff; j++) {
+            await db.query(SQL`
+            INSERT INTO habit_entries (user_habit_id, completed) 
+            VALUES
+            (${result[i].user_habit_id},false);
+          `)
+          }
+        }
+        resolve()
+>>>>>>> 3b9b9297416db5cd47de4c6ececcda123d31d5d0
       } catch(error) {
         reject('failed to autocomplete')
       }
@@ -109,6 +122,7 @@ class UserHabit extends Habit {
   static getAllUserHabitsCount() {
     return new Promise (async (resolve,reject) => {
       try{
+<<<<<<< HEAD
         const usersRes = await db.query(SQL`
         SELECT users.username, user_habits.*, count(*), to_char(completed_at, 'DD-MON-YYYY') as date
         FROM user_habits 
@@ -117,6 +131,17 @@ class UserHabit extends Habit {
         GROUP BY users.username, date, user_habits.id;
         `)
         resolve(habits)
+=======
+        const res = await db.query(SQL`
+        SELECT users.username, user_habits.id AS user_habit_id, user_habits.frequency, count(*), to_char(completed_at, 'DD-MON-YYYY') AS date
+        FROM user_habits 
+        JOIN users ON user_habits.user_id = users.id
+        LEFT JOIN habit_entries ON user_habits.id = habit_entries.user_habit_id
+        GROUP BY users.username, date, user_habits.id;
+        `)
+        const data = res.rows.map(row => ({user_habit_id: row.user_habit_id, diff: row.date === null ? row.frequency : row.frequency - row.count}))
+        resolve(data)
+>>>>>>> 3b9b9297416db5cd47de4c6ececcda123d31d5d0
       } catch (error) {
         reject(`Could not retrieve habit`);
       }

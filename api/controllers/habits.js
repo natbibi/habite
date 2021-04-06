@@ -71,19 +71,23 @@ async function autoFillHabitEntries(req, res){
   try {
       //check if valid jwt is for the requested user
       // if (res.locals.user !== req.params.username) throw err
-      const userHabits = await UserHabit.getAllUserHabitsCount()
-      console.log(userHabits)
+      const userHabits = await UserHabit.autoFillHabitEntries()
       res.json(userHabits)
   } catch (err) {
       res.status(403).send({err: err})
   }
 }
 
-// const schedule = require('node-schedule');
+const schedule = require('node-schedule');
 
-// const job = schedule.scheduleJob(`*/1 * * * *`, function(){
-//   console.log('The answer to life, the universe, and everything!');
-// });
+const job = schedule.scheduleJob(`0 0 * * *`, async function () {
+  try {
+    const userHabits = await UserHabit.autoFillHabitEntries();
+    console.log('habit_entires auto completed')
+  } catch (err) {
+    console.log(err)
+  }
+});
 
 
 module.exports = { showAllHabits, createHabit, createUserHabit, getUserHabits, getUserHabitEntries, createHabitEntry, autoFillHabitEntries };
