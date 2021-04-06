@@ -16,5 +16,6 @@ DROP TABLE IF EXISTS habit_entries;
 CREATE TABLE habit_entries (
     id serial PRIMARY KEY,
     user_habit_id int references user_habits(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    completed_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     completed boolean
 );

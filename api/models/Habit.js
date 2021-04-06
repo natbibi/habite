@@ -80,7 +80,7 @@ class UserHabit extends Habit {
     return new Promise (async (resolve,reject) => {
       try{
         const result = await db.query(SQL`
-        select users.username, habits.name, habit_entries.completed, habit_entries.id FROM habit_entries
+        select users.username, habits.name, habit_entries.completed, habit_entries.id, habit_entries.completed_at FROM habit_entries
         JOIN
         user_habits on habit_entries.user_habit_id = user_habits.id
         JOIN 
@@ -88,7 +88,7 @@ class UserHabit extends Habit {
         JOIN
         habits on user_habits.habit_id = habits.id
         WHERE users.username = ${username};`);
-        const habits = result.rows.map(habit => ({name: habit.name, username: habit.username, completed: habit.completed, id: habit.id}))
+        const habits = result.rows.map(habit => ({name: habit.name, username: habit.username, completed: habit.completed, id: habit.id, timestamp: habit.completed_at }))
         resolve(habits)
       } catch (error) {
         reject(`Could not retrieve habit`);

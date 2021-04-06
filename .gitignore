@@ -5,3 +5,4 @@ docker-compose.dev.yaml
 docker-compose.backend.yaml
 _scripts/float.sh
 
+client/jsconfig.json
