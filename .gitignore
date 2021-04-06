@@ -1,3 +1,7 @@
 node_modules
 .env
 coverage
+docker-compose.dev.yaml
+docker-compose.backend.yaml
+_scripts/float.sh
+
