@@ -5,6 +5,7 @@ class User {
     constructor(data) {
         this.username = data.username;
         this.passwordDigest = data.password;
+        this.id = data.id;
     }
 
     static find(username) {

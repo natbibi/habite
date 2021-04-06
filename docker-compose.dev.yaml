@@ -1,8 +1,7 @@
 services:
   client:
     container_name: dev_client
-    build: ./client
-    image: debug_client
+    image: node:12.18.4
     ports: 
       - 8080:8080
     working_dir: /code
