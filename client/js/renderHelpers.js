@@ -1,11 +1,10 @@
-
-
-const nav = document.querySelector('nav');
-const heading = document.querySelector('header');
-const main = document.querySelector('main');
+let nav;
+let header;
 
 // currently not in use!
-function renderNavBar() { 
+function renderNavBar() {
+    nav = document.querySelector('nav');
+
     nav.style.visibility = "show"
     // Create anchor for registration icon
     const regLink = document.createElement('a');
@@ -31,7 +30,7 @@ function renderNavBar() {
 }
 
 function renderHeading() {
-    const header = document.querySelector('header');
+    header = document.querySelector('header');
 
     const heading = document.createElement('div');
     heading.className = 'heading';
@@ -67,6 +66,5 @@ function renderHeading() {
 
 module.exports = {
     renderNavBar,
-    renderHeading,
-
+    renderHeading
 }
