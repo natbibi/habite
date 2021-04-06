@@ -11,8 +11,9 @@
     "dev": "nodemon --legacy-watch index.js",
     "seedDev": "node dbConfig/seedDev.js",
     "test": "jest --setupFiles ./tests/integration/config.js --testPathPattern=/integration/ --watchAll --detectOpenHandles --runInBand --verbose",
-    "unitTests": "jest --testPathPattern=/unit/ --watchAll --verbose",
-    "coverage": "jest --setupFiles ./tests/integration/config.js --testPathPattern=/integration/ --coverage"
+    "unitTests": "jest --testPathPattern=/unit/",
+    "coverage": "jest --setupFiles ./tests/integration/config.js --testPathPattern=/integration/ --coverage",
+    "unitCoverage": "jest --testPathPattern=/unit/ --coverage"
   },
   "keywords": [],
   "author": "",

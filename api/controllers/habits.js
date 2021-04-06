@@ -1,6 +1,7 @@
 const { Habit, UserHabit} = require('../models/Habit');
 
 const express = require('express');
+const streak = require('../helpers/streak');
 const router = express.Router();
 
 async function showAllHabits(req, res){
@@ -48,7 +49,8 @@ async function getUserHabits(req, res){
       //check if valid jwt is for the requested user
       // if (res.locals.user !== req.params.username) throw err
       const userHabits = await UserHabit.getUserHabits(req.params.username)
-      res.json(userHabits)
+      const streakData = streak(userHabits)
+      res.json({data: userHabits, streakData: streakData})
   } catch (err) {
       res.status(403).send({err: err})
   }
