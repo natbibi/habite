@@ -73,6 +73,17 @@ async function createHabitEntry(req, res) {
   }
 }
 
+async function deleteHabitEntry(req, res) {
+  try {
+    //check if valid jwt is for the requested user
+    // if (res.locals.user !== req.params.username) throw err
+    const deleteHabit = await UserHabit.deleteHabitEntry(req.params.id);
+    res.json(deleteHabit)
+  } catch (err) {
+    res.status(403).send({ err: err })
+  }
+}
+
 async function getUserHabitEntries(req, res) {
   try {
       //check if valid jwt is for the requested user
@@ -109,4 +120,4 @@ const job = schedule.scheduleJob(`0 0 * * *`, async function () {
 });
 
 
-module.exports = { showAllHabits, createHabit, createUserHabit, getUserHabits, getUserHabitEntries, createHabitEntry, autoFillHabitEntries };
+module.exports = { showAllHabits, createHabit, createUserHabit, getUserHabits, getUserHabitEntries, createHabitEntry, deleteHabitEntry, autoFillHabitEntries };

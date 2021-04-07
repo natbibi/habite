@@ -114,6 +114,27 @@ class UserHabit extends Habit {
     });
   }
 
+  static deleteHabitEntry(id) {
+    return new Promise(async (resolve, reject) => {
+      try {
+          const result = await db.query(SQL`
+          DELETE
+          FROM habit_entries  
+          WHERE id IN (
+              SELECT id 
+              FROM habit_entries 
+              WHERE user_habit_id = ${id}
+              ORDER BY completed_at desc
+              LIMIT 1
+          );`);
+          resolve('deleted')
+      } catch (error) {
+        reject(`Could not delete habit`);
+      }
+    });
+  }
+
+
   static autoFillHabitEntries() {
     return new Promise(async (resolve, reject) => {
       try {
@@ -188,7 +209,7 @@ class UserHabit extends Habit {
         AND
         habit_entries.completed = true
         GROUP BY users.username, users.id, date, user_habits.id, habits.name, habit_entries.completed
-        ORDER BY habits.name ASC;`);
+        ORDER BY habits.name ASC, date DESC;`);
         const habits = result.rows.map((habit) => ({
           name: habit.name,
           username: habit.username,
@@ -209,32 +230,6 @@ class UserHabit extends Habit {
       }
     });
   }
-
-  // static storeFrequency(frequency) {
-  //   return new Promise(async (resolve,reject) => {
-  //     try{
-  //       const result = await db.query(
-  //         SQL`INSERT INTO user_habits (frequency) VALUES (${frequency}) RETURNING *;`) // Have to add userID & HabitID?
-  //       const habitFrequency = new User_Habits(result.rows[0]);
-  //       resolve(habitFrequency)
-  //     } catch (error) {
-  //         reject(`Could not store frequency: ${error}`);
-  //     }
-  //   })
-  // }
-
-  //   static isComplete(completed) {
-  //     return new Promise(async (resolve,reject) => {
-  //       try{
-  //         const result = await db.query(
-  //           SQL`INSERT INTO habit_entries (completed) VALUES (${completed}) RETURNING *;`) // Have to add userhabitID?
-  //         const progress = new isComplete(result.rows[0]);
-  //         resolve(progress)
-  //       } catch (error) {
-  //         reject(`Could not determine progress: ${error}`);
-  //       }
-  //     })
-  //   }
 }
 
 module.exports = { Habit, UserHabit };
