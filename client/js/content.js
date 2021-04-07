@@ -86,16 +86,6 @@ async function renderMyHabits() {
     habits.appendChild(habitsContainer)
 }
 
-function renderAddHabitsPage() {
-    const showFooter = document.getElementById('footer')
-    showFooter.style.display = 'block';
-    const greeting = document.createElement('h1')
-    greeting.textContent = "Let's get started..."
-    heading.appendChild(greeting)
-
-    // getAllHabits -> name and put into options value / dropdown 
-
-}
 
 function renderMenuMessage() {
     const menuMessage = document.createElement('p');
@@ -111,4 +101,4 @@ function render404() {
 }
 
 
-module.exports = { renderStreaks, renderMyHabits, renderAddHabitsPage, renderLandingPage, render404 }
+module.exports = { renderStreaks, renderMyHabits, renderLandingPage, render404 }
