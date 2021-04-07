@@ -76,7 +76,7 @@ class UserHabit extends Habit {
         const result = await db.query(SQL`
         select users.username, users.id AS user_id, habits.id AS habit_id, habits.name AS habit_name, user_habits.frequency FROM user_habits
         JOIN
-        habits on user_habits.id = habits.id
+        habits on user_habits.habit_id = habits.id
         JOIN 
         users on user_habits.user_id = users.id
         WHERE users.username = ${username};`);
@@ -137,6 +137,27 @@ class UserHabit extends Habit {
       }
     });
   }
+
+  static deleteHabitEntry(id) {
+    return new Promise(async (resolve, reject) => {
+      try {
+          const result = await db.query(SQL`
+          DELETE
+          FROM habit_entries  
+          WHERE id IN (
+              SELECT id 
+              FROM habit_entries 
+              WHERE user_habit_id = ${id} AND to_char(completed_at, 'DD-MON-YYYY') = to_char(current_date, 'DD-MON-YYYY')
+              ORDER BY completed_at desc
+              LIMIT 1
+          );`);
+          resolve(result.rowCount > 0 ? "deleted succesfully" : "could not delete")
+      } catch (error) {
+        reject(`Could not delete habit`);
+      }
+    });
+  }
+
 
   static autoFillHabitEntries() {
     return new Promise(async (resolve, reject) => {
@@ -199,7 +220,7 @@ class UserHabit extends Habit {
           timestamp: habit.completed_at,
         }));
         const result = await db.query(SQL`
-        SELECT users.username, users.id as user_id, habits.name, user_habits.id AS user_habit_id, user_habits.frequency, count(*) AS total_completed, to_char(completed_at, 'DD-MM-YYYY') AS date
+        SELECT users.username, users.id as user_id, habits.name, habit_entries.completed, user_habits.id AS user_habit_id, user_habits.frequency, count(*) AS total_completed, to_char(completed_at, 'DD-MM-YYYY') AS date
         FROM user_habits 
         JOIN users ON user_habits.user_id = users.id
         LEFT JOIN habits ON user_habits.habit_id = habits.id
@@ -212,7 +233,7 @@ class UserHabit extends Habit {
         AND
         habit_entries.completed = true
         GROUP BY users.username, users.id, date, user_habits.id, habits.name, habit_entries.completed
-        ORDER BY habits.name ASC;`);
+        ORDER BY habits.name ASC, date DESC;`);
         const habits = result.rows.map((habit) => ({
           name: habit.name,
           username: habit.username,
@@ -233,34 +254,6 @@ class UserHabit extends Habit {
       }
     });
   }
-
-  
-
-  // static storeFrequency(frequency) {
-  //   return new Promise(async (resolve,reject) => {
-  //     try{
-  //       const result = await db.query(
-  //         SQL`INSERT INTO user_habits (frequency) VALUES (${frequency}) RETURNING *;`) // Have to add userID & HabitID?
-  //       const habitFrequency = new User_Habits(result.rows[0]);
-  //       resolve(habitFrequency)
-  //     } catch (error) {
-  //         reject(`Could not store frequency: ${error}`);
-  //     }
-  //   })
-  // }
-
-  //   static isComplete(completed) {
-  //     return new Promise(async (resolve,reject) => {
-  //       try{
-  //         const result = await db.query(
-  //           SQL`INSERT INTO habit_entries (completed) VALUES (${completed}) RETURNING *;`) // Have to add userhabitID?
-  //         const progress = new isComplete(result.rows[0]);
-  //         resolve(progress)
-  //       } catch (error) {
-  //         reject(`Could not determine progress: ${error}`);
-  //       }
-  //     })
-  //   }
 }
 
 module.exports = { Habit, UserHabit };
