@@ -1,4 +1,55 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+const req  = require("./requests");
+const forms = require("./forms");
+const heading = document.querySelector('header');
+const main = document.querySelector('main');
+
+async function renderAddHabitsPage() {
+    const showFooter = document.getElementById('footer')
+    showFooter.style.display = 'block';
+    // add greeting
+    const greeting = document.createElement('h1')
+    greeting.textContent = "Let's get started..."
+    heading.appendChild(greeting)
+
+    const addHabitForm = document.createElement("div");
+    addHabitForm.className = "form-container";
+
+    // add habits to dropdown
+    const habitsDropdown = document.createElement("select");
+    const habits = await req.getAllHabits();
+
+    habits.forEach(habit => {
+        const option = document.createElement("option");
+        option.textContent = habit.name;
+        habitsDropdown.appendChild(option)
+    });
+
+    // create form
+    addHabitForm.innerHTML = `    
+    <form action="" method="POST" class="add-habit-form">
+        <div class="habits-dropdown"> 
+            <label for="habits">Choose a habit to track</label>
+            ${habitsDropdown.outerHTML}
+        </div>
+        <div class="add-habit-input">
+            <label for="new-habit">Or add a custom one!</label>
+            <input type="text" name="new-habit" id="new-habit">
+            <button><i class="fas fa-plus-circle"></i></button>
+        </div>
+        <div class="frequency-input">
+            <label for="frequency">How many times per day?</label>
+            <input type="number" name="frequency">
+        </div>
+        <input type="button" value="Start Tracking">
+    </form>
+    `
+    
+    main.appendChild(addHabitForm)
+}
+
+module.exports = {renderAddHabitsPage};
+},{"./forms":4,"./requests":8}],2:[function(require,module,exports){
 const jwt_decode = require('jwt-decode')
 
 const hostURL = "http://localhost:3000"; // Should this be an ENV variable?
@@ -61,7 +112,7 @@ module.exports = {
     login,
     logout
 }
-},{"jwt-decode":8}],2:[function(require,module,exports){
+},{"jwt-decode":9}],3:[function(require,module,exports){
 const rHelpers = require('./renderHelpers');
 const forms = require('./forms');
 const requests = require('./requests')
@@ -153,16 +204,6 @@ async function renderMyHabits() {
     habits.appendChild(habitsContainer)
 }
 
-function renderAddHabitsPage() {
-    const showFooter = document.getElementById('footer')
-    showFooter.style.display = 'block';
-    const greeting = document.createElement('h1')
-    greeting.textContent = "Let's get started..."
-    heading.appendChild(greeting)
-
-    // getAllHabits -> name and put into options value / dropdown 
-
-}
 
 function renderMenuMessage() {
     const menuMessage = document.createElement('p');
@@ -178,8 +219,8 @@ function render404() {
 }
 
 
-module.exports = { renderStreaks, renderMyHabits, renderAddHabitsPage, renderLandingPage, render404 }
-},{"./forms":3,"./renderHelpers":6,"./requests":7}],3:[function(require,module,exports){
+module.exports = { renderStreaks, renderMyHabits, renderLandingPage, render404 }
+},{"./forms":4,"./renderHelpers":7,"./requests":8}],4:[function(require,module,exports){
 const auth = require("./auth");
 const main = document.querySelector('main');
 
@@ -306,7 +347,7 @@ module.exports = {
     renderRegisterLink,
     createForm
 }
-},{"./auth":1}],4:[function(require,module,exports){
+},{"./auth":2}],5:[function(require,module,exports){
 // Import js files
 // Rendering
 const layout = require('./layout');
@@ -367,8 +408,9 @@ function navFunc() {
 initBindings();
 
 
-},{"./auth":1,"./content":2,"./layout":5,"./requests":7}],5:[function(require,module,exports){
+},{"./auth":2,"./content":3,"./layout":6,"./requests":8}],6:[function(require,module,exports){
 const content = require('./content')
+const addHabits = require('./addHabits');
 const rHelpers = require('./renderHelpers');
 const forms = require('./forms')
 const auth = require('./auth');
@@ -402,7 +444,11 @@ function updateMain(path) {
             case '#profile':
                 content.renderStreaks(); content.renderMyHabits(); break;
             case '#addhabits':
-                content.renderAddHabitsPage(); break;
+                addHabits.renderAddHabitsPage(); break;
+            // case '#more':
+            //     renderLandingPage(); renderMenuMessage(); break;
+            // case '#top':
+            //     break;
             default:
                 content.render404(); break;
         }
@@ -423,7 +469,7 @@ function updateContent() {
 }
 
 module.exports = { updateContent };
-},{"./auth":1,"./content":2,"./forms":3,"./renderHelpers":6}],6:[function(require,module,exports){
+},{"./addHabits":1,"./auth":2,"./content":3,"./forms":4,"./renderHelpers":7}],7:[function(require,module,exports){
 let nav;
 let header;
 
@@ -494,7 +540,7 @@ module.exports = {
     renderNavBar,
     renderHeading
 }
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 const auth = require('./auth')
 const hostURL = "http://localhost:3000";
 const username = auth.currentUser();
@@ -545,8 +591,8 @@ async function deleteUserHabit(habit_id){
 }
 
 module.exports = { getAllHabits, decrementHabit, deleteUserHabit }
-},{"./auth":1}],8:[function(require,module,exports){
+},{"./auth":2}],9:[function(require,module,exports){
 "use strict";function e(e){this.message=e}e.prototype=new Error,e.prototype.name="InvalidCharacterError";var r="undefined"!=typeof window&&window.atob&&window.atob.bind(window)||function(r){var t=String(r).replace(/=+$/,"");if(t.length%4==1)throw new e("'atob' failed: The string to be decoded is not correctly encoded.");for(var n,o,a=0,i=0,c="";o=t.charAt(i++);~o&&(n=a%4?64*n+o:o,a++%4)?c+=String.fromCharCode(255&n>>(-2*a&6)):0)o="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".indexOf(o);return c};function t(e){var t=e.replace(/-/g,"+").replace(/_/g,"/");switch(t.length%4){case 0:break;case 2:t+="==";break;case 3:t+="=";break;default:throw"Illegal base64url string!"}try{return function(e){return decodeURIComponent(r(e).replace(/(.)/g,(function(e,r){var t=r.charCodeAt(0).toString(16).toUpperCase();return t.length<2&&(t="0"+t),"%"+t})))}(t)}catch(e){return r(t)}}function n(e){this.message=e}function o(e,r){if("string"!=typeof e)throw new n("Invalid token specified");var o=!0===(r=r||{}).header?0:1;try{return JSON.parse(t(e.split(".")[o]))}catch(e){throw new n("Invalid token specified: "+e.message)}}n.prototype=new Error,n.prototype.name="InvalidTokenError";const a=o;a.default=o,a.InvalidTokenError=n,module.exports=a;
 
 
-},{}]},{},[4]);
+},{}]},{},[5]);

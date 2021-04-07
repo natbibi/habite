@@ -1,4 +1,5 @@
 const content = require('./content')
+const addHabits = require('./addHabits');
 const rHelpers = require('./renderHelpers');
 const forms = require('./forms')
 const auth = require('./auth');
@@ -32,7 +33,11 @@ function updateMain(path) {
             case '#profile':
                 content.renderStreaks(); content.renderMyHabits(); break;
             case '#addhabits':
-                content.renderAddHabitsPage(); break;
+                addHabits.renderAddHabitsPage(); break;
+            // case '#more':
+            //     renderLandingPage(); renderMenuMessage(); break;
+            // case '#top':
+            //     break;
             default:
                 content.render404(); break;
         }
