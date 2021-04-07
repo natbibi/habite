@@ -74,7 +74,7 @@ class UserHabit extends Habit {
     return new Promise(async (resolve, reject) => {
       try {
         const result = await db.query(SQL`
-        select users.username, users.id AS user_id, habits.id AS habit_id, habits.name AS habit_name, user_habits.frequency FROM user_habits
+        select users.username, user_habits.id AS id, users.id AS user_id, habits.id AS habit_id, habits.name AS habit_name, user_habits.frequency FROM user_habits
         JOIN
         habits on user_habits.habit_id = habits.id
         JOIN 
@@ -86,6 +86,7 @@ class UserHabit extends Habit {
           habit_id: habit.habit_id,
           frequency: habit.frequency,
           user_id: habit.user_id,
+          id: habit.id
         }));
         resolve(habits);
       } catch (error) {

@@ -22,7 +22,7 @@ function formatData(listInfo, dataInfo, streakInfo) {
       return {
         max_frequency: item.frequency,
         name: item.habit_name,
-        user_habit_id: item.habit_id,
+        user_habit_id: item.id,
         day_entries: [{
             date: getDate(0),
             total: 0
