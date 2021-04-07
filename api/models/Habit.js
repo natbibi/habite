@@ -123,11 +123,11 @@ class UserHabit extends Habit {
           WHERE id IN (
               SELECT id 
               FROM habit_entries 
-              WHERE user_habit_id = ${id}
+              WHERE user_habit_id = ${id} AND to_char(completed_at, 'DD-MON-YYYY') = to_char(current_date, 'DD-MON-YYYY')
               ORDER BY completed_at desc
               LIMIT 1
           );`);
-          resolve('deleted')
+          resolve(result.rowCount > 0 ? "deleted succesfully" : "could not delete")
       } catch (error) {
         reject(`Could not delete habit`);
       }
@@ -196,7 +196,7 @@ class UserHabit extends Habit {
           timestamp: habit.completed_at,
         }));
         const result = await db.query(SQL`
-        SELECT users.username, users.id as user_id, habits.name, user_habits.id AS user_habit_id, user_habits.frequency, count(*) AS total_completed, to_char(completed_at, 'DD-MM-YYYY') AS date
+        SELECT users.username, users.id as user_id, habits.name, habit_entries.completed, user_habits.id AS user_habit_id, user_habits.frequency, count(*) AS total_completed, to_char(completed_at, 'DD-MM-YYYY') AS date
         FROM user_habits 
         JOIN users ON user_habits.user_id = users.id
         LEFT JOIN habits ON user_habits.habit_id = habits.id
