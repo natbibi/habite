@@ -41,7 +41,7 @@ async function deleteUserHabit(habit_id){
             headers: new Headers({ 'Authorization': localStorage.getItem('token') }), 
         }
         await fetch(`${hostURL}/users/${username}/habits/${habit_id}`, options);
-        window.location.hash = `#addhabit`
+        window.location.hash = `#addhabits`
     } catch (err) {
         console.warn(err);
     }
@@ -63,6 +63,8 @@ async function get(path) {
         console.warn(err);
     }
 }
+
+const getUserHabits = () => get(`users/${username}/habits`); 
 
 async function addUserhabit(formData) {
     try {
@@ -116,4 +118,4 @@ async function createHabit(formData) {
 
 
 
-module.exports = { getAllHabits , get, addUserhabit, createHabit}
+module.exports = { getAllHabits, getUserHabits, get, addUserhabit, createHabit, deleteUserHabit}
