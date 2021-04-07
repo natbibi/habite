@@ -21,12 +21,12 @@ const main = document.querySelector('main');
 function renderLoginForm() {
     // Define form fields
     const authFields = [
-        { tag: 'label', attributes: { id: 'username-label', for: 'username' } },
+        { tag: 'label', attributes: { id: 'username-label', for: 'username' }, text: 'Username'},
         { tag: 'input', attributes: { id: 'username', name: 'username', placeholder: 'Enter your username', } },
-        { tag: 'label', attributes: { id: 'password-label', for: 'password' } },
+        { tag: 'label', attributes: { id: 'password-label', for: 'password' } , text: 'Password' },
         { tag: 'input', attributes: { id: 'password', type: 'password', name: 'password', placeholder: 'Enter your password', } },
-        { tag: 'input', attributes: { id: 'robot-check', type: 'checkbox', name: 'robot-check', } },
-        { tag: 'label', attributes: { id: 'robot-label', for: 'robot-check' } },
+        { tag: 'label', attributes: { id: 'robot-label', for: 'robot-check' }, text: 'Not a robot, (bzzt, dzzt).' },
+        { tag: 'input', attributes: { id: 'robot-check', type: 'checkbox', name: 'robot-check', } },       
         { tag: 'input', attributes: { id: 'login-sbmt', type: 'submit', name: 'login-sbmt', value: 'Login', } }
     ];
 
@@ -38,13 +38,13 @@ function renderLoginForm() {
 
 function renderRegisterForm() {
     const authFields = [
-        { tag: 'label', attributes: { id: 'username-label', for: 'username' } },
+        { tag: 'label', attributes: { id: 'username-label', for: 'username' }, text: 'Username' },
         { tag: 'input', attributes: { id: 'username', name: 'username', placeholder: 'Enter your username', } },
-        { tag: 'label', attributes: { id: 'password-label', for: 'password' } },
+        { tag: 'label', attributes: { id: 'password-label', for: 'password'}, text: 'Password'  },
         { tag: 'input', attributes: { id: 'password', type: 'password', name: 'password', placeholder: 'Enter your password', } },
         { tag: 'input', attributes: { id: 'password-check', type: 'password', name: 'password', placeholder: 'Confirm password', } },
+        { tag: 'label', attributes: { id: 'robot-label', for: 'robot-check' }, text: 'Not a robot, (bzzt, dzzt).' },
         { tag: 'input', attributes: { id: 'robot-check', type: 'checkbox', name: 'robot-check', } },
-        { tag: 'label', attributes: { id: 'robot-label', for: 'robot-check' } },
         { tag: 'input', attributes: { id: 'register-sbmt', type: 'submit', name: 'register-sbmt', value: 'Register', } }
     ];
     const form = createForm(authFields)
@@ -63,17 +63,18 @@ function createForm(authFields) {
     authFields.forEach(f => {
         let field = document.createElement(f.tag);
         // Add text content to relevant tags
-        let fieldId = f.attributes.id;
-        switch (fieldId) {
-            case 'username-label':
-                field.textContent = "username"; break;
-            case 'password-label':
-                field.textContent = "password"; break;
-            case 'robot-label':
-                field.textContent = "I am not a robot!"; break;
-            default:
-                field.textContent = ''; break;
-        }
+        field.textContent = f.text || "";
+        // let fieldId = f.attributes.id;
+        // switch (fieldId) {
+        //     case 'username-label':
+        //         field.textContent = "username"; break;
+        //     case 'password-label':
+        //         field.textContent = "password"; break;
+        //     case 'robot-label':
+        //         field.textContent = "I am not a robot!"; break;
+        //     default:
+        //         field.textContent = ''; break;
+        // }
         // Add relevant attributes to each html tag and append to form
         Object.entries(f.attributes).forEach(([att, val]) => {
             field.setAttribute(att, val);
