@@ -1,76 +1,107 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-const req  = require("./requests");
+const req = require("./requests");
 const forms = require("./forms");
 const heading = document.querySelector('header');
 const main = document.querySelector('main');
 
-async function renderAddHabitsPage() {
+function renderAddHabitsPage() {
     const showFooter = document.getElementById('footer')
     showFooter.style.display = 'block';
     // add greeting
     const greeting = document.createElement('h1')
     greeting.textContent = "Let's get started..."
     heading.appendChild(greeting)
-
-    const addHabitForm = document.createElement("div");
-    addHabitForm.className = "form-container";
-    // addHabitForm.appendChild(addHabitForm());
     
-     // add habits to dropdown
-     const habitsDropdown = document.createElement("select");
-     const habits = await req.get('habits');
-     
-     habits.forEach(habit => {
-         const option = document.createElement("option");
-         option.textContent = habit.name;
-         habitsDropdown.appendChild(option)
-     });
-     
+    // render add habit form
+    const addHabitForm = document.createElement("div");
+    addHabitForm.className = "form add-habit-form";
+    const addHabitFormHeading = document.createElement("h2");
+    addHabitFormHeading.textContent = "Track a habit";
 
-     const dropdown =  document.createElement("div");
-     const frequency = document.createElement("div");
-     const addHabitBtn = document.createElement("button");
-     // create form
-     addHabitForm.innerHTML = `    
-     <form action="" method="POST" class="add-habit-form">
-         <div class="habits-dropdown"> 
-             <label for="habits">Choose a habit to track</label>
-             ${habitsDropdown.outerHTML}
-         </div>
-  
-         <div class="frequency-input">
-             <label for="frequency">How many times per day?</label>
-             <input type="number" name="frequency">
-         </div>
-         <input type="button" value="Start Tracking">
-     </form>
-     `
+    addHabitForm.appendChild(addHabitFormHeading);
+    addHabitForm.appendChild(createAddHabitForm());
 
-     console.log(addHabitForm);
-    main.appendChild(addHabitForm)
+    // render create habit form
+    const newHabitForm = document.createElement("div");
+    newHabitForm.className = "form new-habit-form";
+    const newHabitFormHeading = document.createElement("h2");
+    newHabitFormHeading.textContent = "Create a new habit";
+
+    newHabitForm.appendChild(newHabitFormHeading);
+    newHabitForm.appendChild(createNewHabitForm());
+
+    main.appendChild(addHabitForm);
+    main.appendChild(newHabitForm);
 }
 
-async function addHabitForm() {
-   // add a new user habit from a list
-     
-     return addHabitForm;
+function createAddHabitForm() {
+    // form fields
+    fields = [
+        { tag: 'label', attributes: { class: 'add-habits-dropdown', for: 'habits-dropdown' }, text: 'I want to' },
+        { tag: 'select', attributes:{ class: 'add-habits-dropdown', name: 'habits-dropdown'} },
+        { tag: 'label', attributes: { class: 'add-habits-frequency', for: 'frequency' }, text: 'times per day' },
+        { tag: 'input', attributes: { class: 'add-habits-frequency', name: 'frequency', type: 'number', placeholder: '3', min: "1", max: "24" } },
+        { tag: 'input', attributes: { class: 'add-habits-btn', type: 'submit', name: 'habit-sbmt', value: 'Track Habit' } }
+    ];
+
+    const form = forms.createForm(fields);
+    const freqInput = form.querySelector("input[name=frequency]");
+    const habitsDropdown = form.querySelector("select");
+    
+    // add habits to dropdown     
+    req.get('habits')
+        .then(habits => {
+            habits.forEach(habit => {
+                const option = document.createElement("option");
+                option.textContent = habit.name;
+                option.setAttribute('data-id', habit.id);
+                habitsDropdown.appendChild(option)
+            })
+        });
+
+    // send
+    form.onsubmit = (e) => {
+        e.preventDefault();
+        const data = {
+            habit_id: habitsDropdown.getAttribute('data-id'),
+            frequency: freqInput.value
+        }
+        req.addUserhabit(data);
+    };
+
+    return form;
 }
 
-async function createNewHabitForm() {
-    // create a new habit and add it to habits list (POST) 
+function createNewHabitForm() {
+    fields = [
+        { tag: 'label', attributes: { class: 'new-habit-name', for: 'new-habit-name' }, text: 'Add a custom habit' },
+        { tag: 'input', attributes: { class: 'new-habit-name', name: 'new-habit-name', type: 'text', placeholder: 'use habite' }, text: 'Add a custom habit' },
+        { tag: 'input', attributes: { class: 'new-habit-btn', type: 'submit', name: 'new-habit-sbmt'} }
+    ];
 
-//     <div class="add-habit-input">
-//     <label for="new-habit">Or add a custom one!</label>
-//     <input type="text" name="new-habit" id="new-habit">
-//     <button><i class="fas fa-plus-circle"></i></button>
-// </div>
+    const form = forms.createForm(fields);
+    const nameInput = form.querySelector('input[type=text]');
+
+    form.onsubmit = (e) => {
+        e.preventDefault();
+        const data = {
+            name: nameInput.value
+        }
+        req.createHabit(data);
+    };
+
+    return form;
 }
 
-async function deleteHabitForm() {
+function createDeleteHabitForm() {
     // delete a user habit so it is no longer tracked
+    // const deleteUserHabitBtn = document.createElement('button');
+    // deleteUserHabitBtn.setAttribute('class', 'far fa-trash-alt delete-habit-btn')
+    // deleteUserHabitBtn.onclick = () => deleteUserHabit(habit_id);
+    // divWhereHabitIs.appendChild(deleteUserHabitBtn);
 }
 
-module.exports = {renderAddHabitsPage};
+module.exports = { renderAddHabitsPage };
 },{"./forms":4,"./requests":8}],2:[function(require,module,exports){
 const jwt_decode = require('jwt-decode')
 
@@ -246,54 +277,37 @@ module.exports = { renderStreaks, renderMyHabits, renderLandingPage, render404 }
 const auth = require("./auth");
 const main = document.querySelector('main');
 
-// function renderAuthBtns() {
-//     const authBtns = document.createElement('div');
-//     authBtns.className = 'auth-btns';
-
-//     const loginBtn = document.createElement('button');
-//     loginBtn.className = 'login-btn';
-//     loginBtn.textContent = 'login';
-
-//     const regBtn = document.createElement('button');
-//     regBtn.className = 'register-btn';
-//     regBtn.textContent = 'register';
-
-//     authBtns.appendChild(loginBtn);
-//     authBtns.appendChild(regBtn);
-//     main.appendChild(authBtns);
-// }
-
 function renderLoginForm() {
     // Define form fields
     const authFields = [
-        { tag: 'label', attributes: { id: 'username-label', for: 'username' } },
+        { tag: 'label', attributes: { id: 'username-label', for: 'username' }, text: 'Username'},
         { tag: 'input', attributes: { id: 'username', name: 'username', placeholder: 'Enter your username', } },
-        { tag: 'label', attributes: { id: 'password-label', for: 'password' } },
+        { tag: 'label', attributes: { id: 'password-label', for: 'password' } , text: 'Password' },
         { tag: 'input', attributes: { id: 'password', type: 'password', name: 'password', placeholder: 'Enter your password', } },
-        { tag: 'input', attributes: { id: 'robot-check', type: 'checkbox', name: 'robot-check', } },
-        { tag: 'label', attributes: { id: 'robot-label', for: 'robot-check' } },
+        { tag: 'label', attributes: { id: 'robot-label', for: 'robot-check' }, text: 'Not a robot, (bzzt, dzzt).' },
+        { tag: 'input', attributes: { id: 'robot-check', type: 'checkbox', name: 'robot-check', } },       
         { tag: 'input', attributes: { id: 'login-sbmt', type: 'submit', name: 'login-sbmt', value: 'Login', } }
     ];
 
     const form = createForm(authFields)
-    form.classList.add("login-form");
+    form.className = "login-form auth-form";
     form.addEventListener('submit', auth.requestLogin);
     main.appendChild(form);
 }
 
 function renderRegisterForm() {
     const authFields = [
-        { tag: 'label', attributes: { id: 'username-label', for: 'username' } },
+        { tag: 'label', attributes: { id: 'username-label', for: 'username' }, text: 'Username' },
         { tag: 'input', attributes: { id: 'username', name: 'username', placeholder: 'Enter your username', } },
-        { tag: 'label', attributes: { id: 'password-label', for: 'password' } },
+        { tag: 'label', attributes: { id: 'password-label', for: 'password'}, text: 'Password'  },
         { tag: 'input', attributes: { id: 'password', type: 'password', name: 'password', placeholder: 'Enter your password', } },
         { tag: 'input', attributes: { id: 'password-check', type: 'password', name: 'password', placeholder: 'Confirm password', } },
+        { tag: 'label', attributes: { id: 'robot-label', for: 'robot-check' }, text: 'Not a robot, (bzzt, dzzt).' },
         { tag: 'input', attributes: { id: 'robot-check', type: 'checkbox', name: 'robot-check', } },
-        { tag: 'label', attributes: { id: 'robot-label', for: 'robot-check' } },
         { tag: 'input', attributes: { id: 'register-sbmt', type: 'submit', name: 'register-sbmt', value: 'Register', } }
     ];
     const form = createForm(authFields)
-    form.classList.add("register-form");
+    form.className = "register-form auth-form";
     form.addEventListener('submit', auth.requestRegistration);
     main.appendChild(form);
 }
@@ -303,23 +317,13 @@ function createForm(authFields) {
     // Create new form element with auth-form class name
     const form = document.createElement('form');
     form.method = "post";
-    form.className = 'auth-form';
+    form.className = 'submit-form';
     // Create form elements
     authFields.forEach(f => {
         let field = document.createElement(f.tag);
         // Add text content to relevant tags
-        let fieldId = f.attributes.id;
-        switch (fieldId) {
-            case 'username-label':
-                field.textContent = "username"; break;
-            case 'password-label':
-                field.textContent = "password"; break;
-            case 'robot-label':
-                field.textContent = "I am not a robot!"; break;
-            default:
-                field.textContent = ''; break;
-        }
-        // Add relevant attributes to each html tag and append to form
+        field.textContent = f.text || "";
+
         Object.entries(f.attributes).forEach(([att, val]) => {
             field.setAttribute(att, val);
         })
@@ -627,16 +631,16 @@ async function get(path) {
     }
 }
 
-
-async function post(path, data) {
+async function addUserhabit(formData) {
     try {
         const options = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
+            headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
+            body: JSON.stringify(formData)
         }
-        const response = await fetch(`${hostURL}/${path}`, options)
+        const response = await fetch(`${hostURL}/users/${username}/habits`, options)
         const data = await response.json();
+        window.location.hash = "addhabits"
         // if (data.err) {
         //     console.warn(data.err);
         //     logout();
@@ -647,7 +651,30 @@ async function post(path, data) {
     }
 }
 
-module.exports = { getAllHabits , get}
+
+async function createHabit(formData) {
+    try {
+        const options = {
+            method: 'POST',
+            headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
+            body: JSON.stringify(formData)
+        }
+        const response = await fetch(`${hostURL}/users/${username}/habits`, options)
+        const data = await response.json();
+        window.location.hash = "addhabits"
+        // if (data.err) {
+        //     console.warn(data.err);
+        //     logout();
+        // }
+        return data;
+    } catch (err) {
+        console.warn(err);
+    }
+}
+
+
+
+module.exports = { getAllHabits , get, addUserhabit}
 
 },{"./auth":2}],9:[function(require,module,exports){
 "use strict";function e(e){this.message=e}e.prototype=new Error,e.prototype.name="InvalidCharacterError";var r="undefined"!=typeof window&&window.atob&&window.atob.bind(window)||function(r){var t=String(r).replace(/=+$/,"");if(t.length%4==1)throw new e("'atob' failed: The string to be decoded is not correctly encoded.");for(var n,o,a=0,i=0,c="";o=t.charAt(i++);~o&&(n=a%4?64*n+o:o,a++%4)?c+=String.fromCharCode(255&n>>(-2*a&6)):0)o="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".indexOf(o);return c};function t(e){var t=e.replace(/-/g,"+").replace(/_/g,"/");switch(t.length%4){case 0:break;case 2:t+="==";break;case 3:t+="=";break;default:throw"Illegal base64url string!"}try{return function(e){return decodeURIComponent(r(e).replace(/(.)/g,(function(e,r){var t=r.charCodeAt(0).toString(16).toUpperCase();return t.length<2&&(t="0"+t),"%"+t})))}(t)}catch(e){return r(t)}}function n(e){this.message=e}function o(e,r){if("string"!=typeof e)throw new n("Invalid token specified");var o=!0===(r=r||{}).header?0:1;try{return JSON.parse(t(e.split(".")[o]))}catch(e){throw new n("Invalid token specified: "+e.message)}}n.prototype=new Error,n.prototype.name="InvalidTokenError";const a=o;a.default=o,a.InvalidTokenError=n,module.exports=a;
