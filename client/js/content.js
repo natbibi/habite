@@ -56,8 +56,8 @@ async function renderMyHabits() {
     const habitsContainer = document.createElement('div')
     habitsContainer.className = "habits-container"
     main.append(habits)
-    // insert GET request for user habits here
 
+    // insert GET request for user habits here
     habitsList.forEach(habit => {
 
         // function getHabitList
@@ -84,24 +84,42 @@ async function renderMyHabits() {
         let habitSeeMore = document.createElement('button')
         habitSeeMore.innerHTML = `<i class="fas fa-ellipsis-h see-more-btn"></i>`
 
+
+        let habitExtrasContainer = document.createElement('div')
+
         habitSeeMore.addEventListener('click', () => {
-            let habitExtrasContainer = document.createElement('div')
             habitExtrasContainer.className = "habit-extras-container"
+            if (habitExtrasContainer.style.display === "grid") {
+                habitExtrasContainer.style.display = "none";
+            } else {
+                habitExtrasContainer.style.display = "grid";
+            }
 
             let habitExtrasDate = document.createElement('p')
             habitExtrasDate.className = "extras-date"
             habitExtrasDate.textContent = habit.day_entries[1].date
-            console.log(habit.day_entries[1].date)
 
             let habitExtrasFrequency = document.createElement('progress')
             habitExtrasFrequency.className = "extras-progress"
             habitExtrasFrequency.setAttribute('max', `${habit.max_frequency}`)
             habitExtrasFrequency.setAttribute('value', `${habit.day_entries[1].total}`)
 
+            // let habitExtrasDateTwo = document.createElement('p')
+            // habitExtrasDateTwo.className = "extras-date-two"
+            // habitExtrasDateTwo.textContent = habit.day_entries[2].date
+            // console.log(habit.day_entries[2].date)
+
+            // let habitExtrasFrequencyTwo = document.createElement('progress')
+            // habitExtrasFrequencyTwo.className = "extras-progress-two"
+            // habitExtrasFrequencyTwo.setAttribute('max', `${habit.max_frequency}`)
+            // habitExtrasFrequencyTwo.setAttribute('value', `${habit.day_entries[2].total}`)
+
+
             habitContainer.appendChild(habitExtrasContainer)
             habitExtrasContainer.appendChild(habitExtrasDate)
             habitExtrasContainer.appendChild(habitExtrasFrequency)
-
+            // habitExtrasContainer.appendChild(habitExtrasDateTwo)
+            // habitExtrasContainer.appendChild(habitExtrasFrequencyTwo)
         })
 
         habitsContainer.appendChild(habitContainer)
@@ -111,7 +129,6 @@ async function renderMyHabits() {
         habitContainer.appendChild(habitMinus)
         habitContainer.appendChild(habitIncreaseFrequency)
         habitContainer.appendChild(habitSeeMore)
-
     })
 
     habits.appendChild(habitsHeading)
