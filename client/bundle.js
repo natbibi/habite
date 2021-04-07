@@ -109,8 +109,7 @@ function renderStreaks() {
 
 
 async function renderMyHabits() {
-    const response = await requests.getAllHabits();
-    const habitsList = await response.data
+    const habitsList = await requests.getAllHabits();
     console.log(habitsList)
     if (habitsList.err) { return }
     const habits = document.createElement('div')
@@ -130,14 +129,15 @@ async function renderMyHabits() {
         habitContainer.className = "habit-container"
 
         let habitDate = document.createElement('p')
-        habitDate.textContent = habit.date
+        habitDate.textContent = habit.day_entries[0].date
+        console.log(habit.day_entries[0].date)
 
         let habitName = document.createElement('p')
         habitName.textContent = habit.name
 
         let habitFrequency = document.createElement('progress')
         habitFrequency.setAttribute('max', `${habit.max_frequency}`)
-        habitFrequency.setAttribute('value', `${habit.total_completed}`)
+        habitFrequency.setAttribute('value', `${habit.day_entries[0].total}`)
 
         let habitMinus = document.createElement('button')
         habitMinus.innerHTML = `<i class="fas fa-minus minus-btn"></i>`
@@ -148,6 +148,23 @@ async function renderMyHabits() {
         let habitSeeMore = document.createElement('button')
         habitSeeMore.innerHTML = `<i class="fas fa-ellipsis-h see-more-btn"></i>`
 
+        habitSeeMore.addEventListener('click', () => {
+            let habitExtrasContainer = document.createElement('div')
+            habitExtrasContainer.className = "habit-extras-container"
+
+            let habitExtrasDate = document.createElement('p')
+            habitExtrasDate.textContent = habit.day_entries[1].date
+            console.log(habit.day_entries[1].date)
+
+            let habitExtrasFrequency = document.createElement('progress')
+            habitExtrasFrequency.setAttribute('max', `${habit.max_frequency}`)
+            habitExtrasFrequency.setAttribute('value', `${habit.day_entries[1].total}`)
+
+            habitContainer.appendChild(habitExtrasContainer)
+            habitExtrasContainer.appendChild(habitExtrasDate)
+            habitsExtrasContainer.appendChild(habitExtrasFrequency)
+
+        })
 
         habitsContainer.appendChild(habitContainer)
         habitContainer.appendChild(habitDate)
