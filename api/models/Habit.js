@@ -70,6 +70,19 @@ class UserHabit extends Habit {
     });
   }
 
+  static deleteUserHabit(id) {
+    return new Promise (async (resolve,reject) => {
+      try{
+        const result = await db.query(SQL`
+        delete FROM user_habits
+        WHERE id = ${id};`)
+       resolve(result.rowCount > 0 ? "deleted succesfully" : "could not delete")
+      } catch (error) {
+        reject(`Could not delete habit`);
+      }
+    })
+  }
+
   static getUserHabits(username) {
     return new Promise(async (resolve, reject) => {
       try {
