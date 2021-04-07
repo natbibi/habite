@@ -91,7 +91,6 @@ async function getUserHabitEntries(req, res) {
       const userHabits = await UserHabit.getUserHabitEntries(req.params.username)
       const habitsList = await UserHabit.getUserHabits(req.params.username)
       const streakData = streak(userHabits.allEntries)
-      const habitsData = formatHabbit(habitsList, userHabits)
       res.json({list: habitsList, data: userHabits.habits, streakData: streakData})
   } catch (err) {
     res.status(403).send({ err: err })
