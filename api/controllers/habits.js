@@ -15,6 +15,24 @@ async function showAllHabits(req, res) {
 
 async function createHabit(req, res) {
   try {
+         /*
+      if (habit == 'hello') {
+        //continue
+        console.log('input is fine');
+        res.json(habit)
+      } else {
+        throw err;
+        console.log(err);
+      }
+      */
+      /*
+      if (habitName != 'hi') {
+        throw err
+      } else {
+        res.json(habit)
+        console.log('try executed')
+      }
+      */
     const habit = await Habit.create({ ...req.body });
     res.json(habit)
   } catch (err) {

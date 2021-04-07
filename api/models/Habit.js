@@ -85,9 +85,17 @@ class UserHabit extends Habit {
   static createHabitEntry(data) {
     return new Promise(async (resolve, reject) => {
       try {
-        const result = await db.query(SQL`INSERT INTO habit_entries (user_habit_id, completed) VALUES (${data.user_habit_id}, ${data.completed}) RETURNING *;`);
-        const newHabitEntry = result.rows[0];
-        resolve(newHabitEntry)
+        const checkMax = await db.query(SQL`SELECT COUNT(*) FROM habit_entries WHERE user_habit_id = ${data.user_habit_id} AND ${data.date} = current_date `)
+        const findFreq = await db.query(SQL`SELECT frequency FROM user_habits WHERE id = ${data.user_habit_id}`)
+        console.log(checkMax)
+        console.log(findFreq)
+        if (checkMax.rows[0].count < findFreq.rows[0].frequency) {
+          const result = await db.query(SQL`INSERT INTO habit_entries (user_habit_id, completed) VALUES (${data.user_habit_id}, ${data.completed}) RETURNING *;`);
+          const newHabitEntry = result.rows[0];
+          resolve(newHabitEntry)
+        } else  {
+          error('Too many habits')
+        } 
       } catch (error) {
         reject(`Could not create habit`);
       }
