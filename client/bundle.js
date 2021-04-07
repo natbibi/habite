@@ -45,7 +45,7 @@ function createAddHabitForm() {
     ];
 
     const form = forms.createForm(fields);
-    const freqInput = form.querySelector("input[name=frequency]");
+    const freqInput = form.querySelector("input[name='frequency']");
     const habitsDropdown = form.querySelector("select");
     
     // add habits to dropdown     
@@ -62,8 +62,9 @@ function createAddHabitForm() {
     // send
     form.onsubmit = (e) => {
         e.preventDefault();
+        const selected = habitsDropdown.options[habitsDropdown.selectedIndex].getAttribute('data-id');
         const data = {
-            habit_id: habitsDropdown.getAttribute('data-id'),
+            habit_id: selected,
             frequency: freqInput.value
         }
         req.addUserhabit(data);
@@ -74,7 +75,7 @@ function createAddHabitForm() {
 
 function createNewHabitForm() {
     fields = [
-        { tag: 'label', attributes: { class: 'new-habit-name', for: 'new-habit-name' }, text: 'Add a custom habit' },
+        { tag: 'label', attributes: { class: 'new-habit-name', for: 'new-habit-name'}, text: 'Add a custom habit' },
         { tag: 'input', attributes: { class: 'new-habit-name', name: 'new-habit-name', type: 'text', placeholder: 'use habite' }, text: 'Add a custom habit' },
         { tag: 'input', attributes: { class: 'new-habit-btn', type: 'submit', name: 'new-habit-sbmt'} }
     ];
@@ -640,16 +641,21 @@ async function addUserhabit(formData) {
     try {
         const options = {
             method: 'POST',
-            headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
+            headers: new Headers({
+                'Authorization': localStorage.getItem('token'),
+                'Content-Type': 'application/json' 
+                }),
             body: JSON.stringify(formData)
         }
-        const response = await fetch(`${hostURL}/users/${username}/habits`, options)
+        console.log((options.body));
+        const response = await fetch(`${hostURL}/users/${username}/habits`, options);
         const data = await response.json();
         window.location.hash = "addhabits"
         if (data.err) {
             console.warn(data.err);
             // logout();
         }
+        console.log("Added ");
         return data;
     } catch (err) {
         console.warn(err);
@@ -661,11 +667,14 @@ async function createHabit(formData) {
     try {
         const options = {
             method: 'POST',
-            headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
+            headers: new Headers({
+                 'Authorization': localStorage.getItem('token'),
+                 'Content-Type': 'application/json' 
+                }),
             body: JSON.stringify(formData)
         }
         const response = await fetch(`${hostURL}/habits`, options);
-        console.log(response);
+        
         const data = await response.json();
         window.location.hash = "addhabits"
         if (data.err) {
