@@ -64,16 +64,16 @@ async function get(path) {
     }
 }
 
-
-async function post(path, data) {
+async function addUserhabit(formData) {
     try {
         const options = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
+            headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
+            body: JSON.stringify(formData)
         }
-        const response = await fetch(`${hostURL}/${path}`, options)
+        const response = await fetch(`${hostURL}/users/${username}/habits`, options)
         const data = await response.json();
+        window.location.hash = "addhabits"
         // if (data.err) {
         //     console.warn(data.err);
         //     logout();
@@ -84,4 +84,27 @@ async function post(path, data) {
     }
 }
 
-module.exports = { getAllHabits , get}
+
+async function createHabit(formData) {
+    try {
+        const options = {
+            method: 'POST',
+            headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
+            body: JSON.stringify(formData)
+        }
+        const response = await fetch(`${hostURL}/users/${username}/habits`, options)
+        const data = await response.json();
+        window.location.hash = "addhabits"
+        // if (data.err) {
+        //     console.warn(data.err);
+        //     logout();
+        // }
+        return data;
+    } catch (err) {
+        console.warn(err);
+    }
+}
+
+
+
+module.exports = { getAllHabits , get, addUserhabit}
