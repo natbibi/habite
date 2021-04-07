@@ -36,9 +36,9 @@ function renderAddHabitsPage() {
 function createAddHabitForm() {
     // form fields
     fields = [
-        { tag: 'label', attributes: { class: 'add-habits-dropdown', for: 'habits-dropdown' }, text: 'I want to' },
+        { tag: 'label', attributes: { class: 'add-habits-dropdown', for: 'habits-dropdown' }, text: 'Choose a habit:' },
         { tag: 'select', attributes:{ class: 'add-habits-dropdown', name: 'habits-dropdown'} },
-        { tag: 'label', attributes: { class: 'add-habits-frequency', for: 'frequency' }, text: 'times per day' },
+        { tag: 'label', attributes: { class: 'add-habits-frequency', for: 'frequency' }, text: 'How often?' },
         { tag: 'input', attributes: { class: 'add-habits-frequency', name: 'frequency', type: 'number', placeholder: '3', min: "1", max: "24" } },
         { tag: 'input', attributes: { class: 'add-habits-btn', type: 'submit', name: 'habit-sbmt', value: 'Track Habit' } }
     ];
@@ -80,13 +80,13 @@ function createNewHabitForm() {
 
     const form = forms.createForm(fields);
     const nameInput = form.querySelector('input[type=text]');
-
-    form.onsubmit = (e) => {
+    
+    form.onsubmit = async (e) => {
         e.preventDefault();
         const data = {
             name: nameInput.value
         }
-        req.createHabit(data);
+        await req.createHabit(data);
     };
 
     return form;
