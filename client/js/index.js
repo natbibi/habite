@@ -34,16 +34,6 @@ function formHandler(e) {
     }
 }
 
-function navHandler(e) {
-    const target = e.target.id;
-    switch(target) {
-        case 'logout': auth.logout(); break;
-        case 'add-habit': window.location.hash = 'addhabits'; break;
-        case 'show-habits': window.location.hash = 'profile'; break;
-        default: break;
-    }
-}
-
 function navFunc() {
     let x = document.getElementById('bottom-nav-bar');
     if (x.className === "bottom-nav") {

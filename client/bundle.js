@@ -492,16 +492,6 @@ function formHandler(e) {
     }
 }
 
-function navHandler(e) {
-    const target = e.target.id;
-    switch(target) {
-        case 'logout': auth.logout(); break;
-        case 'add-habit': window.location.hash = 'addhabits'; break;
-        case 'show-habits': window.location.hash = 'profile'; break;
-        default: break;
-    }
-}
-
 function navFunc() {
     let x = document.getElementById('bottom-nav-bar');
     if (x.className === "bottom-nav") {
@@ -552,6 +542,8 @@ function updateMain(path) {
             case '#addhabits':
                 addHabits.renderAddHabitsPage();
                 break;
+            case '#logout':
+                auth.logout(); break;
             // case '#more':
             //     renderLandingPage(); renderMenuMessage(); break;
             // case '#top':
@@ -741,6 +733,34 @@ async function addUserhabit(formData) {
     }
 }
 
+
+async function createHabit(formData) {
+    try {
+        const options = {
+            method: 'POST',
+            headers: new Headers({
+                 'Authorization': localStorage.getItem('token'),
+                 'Content-Type': 'application/json' 
+                }),
+            body: JSON.stringify(formData)
+        }
+        const response = await fetch(`${hostURL}/habits`, options);
+        
+        const data = await response.json();
+        window.location.hash = "addhabits"
+        if (data.err) {
+            console.warn(data.err);
+            // logout();
+        }
+        return data;
+    } catch (err) {
+        console.warn(err);
+    }
+}
+
+
+
+module.exports = { getAllHabits, getUserHabits, get, addUserhabit, createHabit, deleteUserHabit}
 
 async function createHabit(formData) {
     try {
