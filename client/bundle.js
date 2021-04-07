@@ -1,8 +1,13 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 const req = require("./requests");
 const forms = require("./forms");
+const auth = require('./auth')
 const heading = document.querySelector('header');
 const main = document.querySelector('main');
+
+const hostURL = "http://localhost:3000";
+const username = auth.currentUser();
+
 
 function renderAddHabitsPage() {
     const showFooter = document.getElementById('footer')
@@ -72,13 +77,28 @@ function createAddHabitForm() {
     form.onsubmit = (e) => {
         e.preventDefault();
         const selected = habitsDropdown.options[habitsDropdown.selectedIndex].getAttribute('data-id');
+        const url = `${hostURL}/users/${username}/habits`
         const data = {
             habit_id: selected,
             frequency: freqInput.value
         }
-        req.addUserhabit(data);
+        req.postData(url, data);
         location.reload();
+        // window.location.hash = "#addhabits"
     };
+
+    // send
+    // form.onsubmit = (e) => {
+    //     e.preventDefault();
+    //     const selected = habitsDropdown.options[habitsDropdown.selectedIndex].getAttribute('data-id');
+    //     const url = `${hostURL}/users/${username}/habits`
+    //     const data = {
+    //         habit_id: selected,
+    //         frequency: freqInput.value
+    //     }
+    //     req.addUserhabit(data);
+    //     location.reload();
+    // };
 
     return form;
 }
@@ -95,11 +115,14 @@ function createNewHabitForm() {
 
     form.onsubmit = async (e) => {
         e.preventDefault();
-        const data = {
-            name: nameInput.value
-        }
-        await req.createHabit(data);
+        const url = `http://localhost:3000/users/${username}/habit`
+        const data = { name: nameInput.value }
+        req.postData(url, data);
         location.reload();
+        // window.location.hash = "#addhabits"
+        // if (data.err) {
+        //     console.warn(data.err);
+        // logout();
     };
 
     return form;
@@ -130,7 +153,8 @@ function createDeleteHabitForm() {
     form.onsubmit = async (e) => {
         e.preventDefault();
         const selected = userHabitsDropdown.options[userHabitsDropdown.selectedIndex].getAttribute('data-id');
-        await req.deleteUserHabit(selected);
+        const url = `${hostURL}/users/${username}/habits/${selected}`
+        req.deleteData(url, selected);
         location.reload();
     };
 
@@ -138,7 +162,8 @@ function createDeleteHabitForm() {
 }
 
 module.exports = { renderAddHabitsPage };
-},{"./forms":4,"./requests":8}],2:[function(require,module,exports){
+
+},{"./auth":2,"./forms":4,"./requests":8}],2:[function(require,module,exports){
 const jwt_decode = require('jwt-decode')
 
 const hostURL = "http://localhost:3000"; // Should this be an ENV variable?
@@ -205,7 +230,9 @@ module.exports = {
 const rHelpers = require('./renderHelpers');
 const forms = require('./forms');
 const requests = require('./requests')
+const auth = require('./auth')
 
+const username = auth.currentUser();
 const nav = document.querySelector('nav');
 const heading = document.querySelector('header');
 const main = document.querySelector('main');
@@ -283,16 +310,45 @@ async function renderMyHabits() {
         habitMinus.innerHTML = `<i class="fas fa-minus minus-btn"></i>`
 
         let habitIncreaseFrequency = document.createElement('button')
-        habitIncreaseFrequency.innerHTML = `<i class="fas fa-plus increase-freq-btn"></i>`
+        habitIncreaseFrequency.id = "increase-freq-btn"
+        habitIncreaseFrequency.innerHTML = `<i class="fas fa-plus"></i>`
 
         let habitSeeMore = document.createElement('button')
         habitSeeMore.innerHTML = `<i class="fas fa-ellipsis-h see-more-btn"></i>`
 
+        // POST: Increment habit 
+        habitIncreaseFrequency.addEventListener('click', () => {
+            console.log('w')
+            try {
+                console.log('hello')
+                // e.preventDefault();
+                const url = `http://localhost:3000/users/${username}/habit/entries`
+                const data = { user_habit_id: 1 }
+                requests.postData(url, data);
+                location.reload();
+            } catch (err) {
+                throw err
+            }
+        });
+
+        // DELETE: Decrement habit
+        habitMinus.addEventListener('click', () => {
+            console.log('byee')
+            try {
+                const url = `http://localhost:3000/users/${username}/habits/${habit_id}`
+                const selected = userHabitsDropdown.options[userHabitsDropdown.selectedIndex].getAttribute('data-id');
+                requests.deleteData(url, selected);
+                location.reload();
+            } catch (err) {
+                throw err
+            }
+        });
 
         let habitExtrasContainer = document.createElement('div')
+        habitExtrasContainer.className = "habit-extras-container"
 
         habitSeeMore.addEventListener('click', () => {
-            habitExtrasContainer.className = "habit-extras-container"
+
             if (habitExtrasContainer.style.display === "grid") {
                 habitExtrasContainer.style.display = "none";
             } else {
@@ -317,7 +373,6 @@ async function renderMyHabits() {
             // habitExtrasFrequencyTwo.className = "extras-progress-two"
             // habitExtrasFrequencyTwo.setAttribute('max', `${habit.max_frequency}`)
             // habitExtrasFrequencyTwo.setAttribute('value', `${habit.day_entries[2].total}`)
-
 
             habitContainer.appendChild(habitExtrasContainer)
             habitExtrasContainer.appendChild(habitExtrasDate)
@@ -355,7 +410,7 @@ function render404() {
 
 
 module.exports = { renderStreaks, renderMyHabits, renderLandingPage, render404 }
-},{"./forms":4,"./renderHelpers":7,"./requests":8}],4:[function(require,module,exports){
+},{"./auth":2,"./forms":4,"./renderHelpers":7,"./requests":8}],4:[function(require,module,exports){
 const auth = require("./auth");
 const main = document.querySelector('main');
 
@@ -663,27 +718,31 @@ async function getAllHabits() {
     }
 }
 
-async function decrementHabit(id){
+async function postData(url = '', formData = {}) {
     try {
-        const options = { 
-            method: 'DELETE',
-            headers: new Headers({ 'Authorization': localStorage.getItem('token') }), 
+        const options = {
+            method: 'POST',
+            headers: new Headers({
+                'Authorization': localStorage.getItem('token'),
+                'Content-Type': 'application/json'
+            }),
+            body: JSON.stringify(formData)
         }
-        await fetch(`${hostURL}/users/${username}/habits/entries/${id}`, options);
-        window.location.hash = `#profile`
+        const response = await fetch(url, options);
+        return response.json();
     } catch (err) {
         console.warn(err);
     }
 }
 
-async function deleteUserHabit(habit_id){
+async function deleteData(url = '', id) {
     try {
-        const options = { 
+        const options = {
             method: 'DELETE',
-            headers: new Headers({ 'Authorization': localStorage.getItem('token') }), 
+            headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
         }
-        await fetch(`${hostURL}/users/${username}/habits/${habit_id}`, options);
-        window.location.hash = `#addhabits`
+        await fetch(url, options);
+        location.reload();
     } catch (err) {
         console.warn(err);
     }
@@ -706,61 +765,48 @@ async function get(path) {
     }
 }
 
-const getUserHabits = () => get(`users/${username}/habits`); 
+const getUserHabits = () => get(`users/${username}/habits`);
 
-async function addUserhabit(formData) {
-    try {
-        const options = {
-            method: 'POST',
-            headers: new Headers({
-                'Authorization': localStorage.getItem('token'),
-                'Content-Type': 'application/json' 
-                }),
-            body: JSON.stringify(formData)
-        }
-        console.log((options.body));
-        const response = await fetch(`${hostURL}/users/${username}/habits`, options);
-        const data = await response.json();
-        window.location.hash = "addhabits"
-        if (data.err) {
-            console.warn(data.err);
-            // logout();
-        }
-        console.log("Added ");
-        return data;
-    } catch (err) {
-        console.warn(err);
-    }
-}
+// async function decrementHabit(id) {
+//     try {
+//         const options = {
+//             method: 'DELETE',
+//             headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
+//         }
+//         await fetch(`${hostURL}/users/${username}/habits/entries/${id}`, options);
+//         window.location.hash = `#profile`
+//     } catch (err) {
+//         console.warn(err);
+//     }
+// }
 
-
-async function createHabit(formData) {
-    try {
-        const options = {
-            method: 'POST',
-            headers: new Headers({
-                 'Authorization': localStorage.getItem('token'),
-                 'Content-Type': 'application/json' 
-                }),
-            body: JSON.stringify(formData)
-        }
-        const response = await fetch(`${hostURL}/habits`, options);
-        
-        const data = await response.json();
-        window.location.hash = "addhabits"
-        if (data.err) {
-            console.warn(data.err);
-            // logout();
-        }
-        return data;
-    } catch (err) {
-        console.warn(err);
-    }
-}
+// async function addUserhabit(formData) {
+//     try {
+//         const options = {
+//             method: 'POST',
+//             headers: new Headers({
+//                 'Authorization': localStorage.getItem('token'),
+//                 'Content-Type': 'application/json'
+//             }),
+//             body: JSON.stringify(formData)
+//         }
+//         console.log((options.body));
+//         const response = await fetch(`${hostURL}/users/${username}/habits`, options);
+//         const data = await response.json();
+//         window.location.hash = "addhabits"
+//         if (data.err) {
+//             console.warn(data.err);
+//             // logout();
+//         }
+//         console.log("Added ");
+//         return data;
+//     } catch (err) {
+//         console.warn(err);
+//     }
+// }
 
 
-
-module.exports = { getAllHabits, getUserHabits, get, addUserhabit, createHabit, deleteUserHabit}
+module.exports = { getAllHabits, getUserHabits, get, postData, deleteData }
 
 async function createHabit(formData) {
     try {
