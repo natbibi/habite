@@ -182,11 +182,11 @@ class UserHabit extends Habit {
         AND
         habit_entries.completed = true
         GROUP BY users.username, users.id, date, user_habits.id, habits.name, habit_entries.completed
-        ORDER BY date desc;`);
+        ORDER BY habits.name ASC;`);
         const habits = result.rows.map((habit) => ({
           name: habit.name,
           username: habit.username,
-          frequency: habit.frequency,
+          max_frequency: habit.frequency,
           total_completed: parseInt(habit.total_completed),
           completed: habit.completed,
           date: habit.date,
