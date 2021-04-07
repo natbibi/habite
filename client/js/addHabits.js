@@ -3,6 +3,9 @@ const forms = require("./forms");
 const heading = document.querySelector('header');
 const main = document.querySelector('main');
 
+const hostURL = "http://localhost:3000";
+const username = auth.currentUser();
+
 function renderAddHabitsPage() {
     const showFooter = document.getElementById('footer')
     showFooter.style.display = 'block';
@@ -71,12 +74,15 @@ function createAddHabitForm() {
     form.onsubmit = (e) => {
         e.preventDefault();
         const selected = habitsDropdown.options[habitsDropdown.selectedIndex].getAttribute('data-id');
+        const url = `${hostURL}/users/${username}/habits`
         const data = {
             habit_id: selected,
             frequency: freqInput.value
         }
-        req.addUserhabit(data);
-        location.reload();
+        req.postData(url, data);
+        // location.reload();
+        window.location.hash = "#addhabits"
+        console.log("Added ");
     };
 
     return form;

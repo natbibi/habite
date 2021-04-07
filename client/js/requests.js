@@ -66,30 +66,30 @@ async function get(path) {
 
 const getUserHabits = () => get(`users/${username}/habits`);
 
-async function addUserhabit(formData) {
-    try {
-        const options = {
-            method: 'POST',
-            headers: new Headers({
-                'Authorization': localStorage.getItem('token'),
-                'Content-Type': 'application/json'
-            }),
-            body: JSON.stringify(formData)
-        }
-        console.log((options.body));
-        const response = await fetch(`${hostURL}/users/${username}/habits`, options);
-        const data = await response.json();
-        window.location.hash = "addhabits"
-        if (data.err) {
-            console.warn(data.err);
-            // logout();
-        }
-        console.log("Added ");
-        return data;
-    } catch (err) {
-        console.warn(err);
-    }
-}
+// async function addUserhabit(formData) {
+//     try {
+//         const options = {
+//             method: 'POST',
+//             headers: new Headers({
+//                 'Authorization': localStorage.getItem('token'),
+//                 'Content-Type': 'application/json'
+//             }),
+//             body: JSON.stringify(formData)
+//         }
+//         console.log((options.body));
+//         const response = await fetch(`${hostURL}/users/${username}/habits`, options);
+//         const data = await response.json();
+//         window.location.hash = "addhabits"
+//         if (data.err) {
+//             console.warn(data.err);
+//             // logout();
+//         }
+//         console.log("Added ");
+//         return data;
+//     } catch (err) {
+//         console.warn(err);
+//     }
+// }
 
 
 async function postData(url = '', formData = {}) {
@@ -110,4 +110,4 @@ async function postData(url = '', formData = {}) {
 }
 
 
-module.exports = { getAllHabits, getUserHabits, get, addUserhabit, postData, deleteUserHabit }
+module.exports = { getAllHabits, getUserHabits, get, postData, deleteUserHabit }
