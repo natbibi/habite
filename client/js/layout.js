@@ -35,6 +35,8 @@ function updateMain(path) {
             case '#addhabits':
                 addHabits.renderAddHabitsPage();
                 break;
+            case '#logout':
+                auth.logout(); break;
             // case '#more':
             //     renderLandingPage(); renderMenuMessage(); break;
             // case '#top':
