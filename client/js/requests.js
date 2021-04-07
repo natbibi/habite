@@ -34,4 +34,17 @@ async function decrementHabit(id){
     }
 }
 
-module.exports = { getAllHabits, decrementHabit }
+async function deleteUserHabit(habit_id){
+    try {
+        const options = { 
+            method: 'DELETE',
+            headers: new Headers({ 'Authorization': localStorage.getItem('token') }), 
+        }
+        await fetch(`${hostURL}/users/${username}/habits/${habit_id}`, options);
+        window.location.hash = `#addhabit`
+    } catch (err) {
+        console.warn(err);
+    }
+}
+
+module.exports = { getAllHabits, decrementHabit, deleteUserHabit }
