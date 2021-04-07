@@ -44,7 +44,7 @@ header {
 
 .habit-container{
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 2fr 3fr 1fr 1fr;
     grid-gap: 20px;
     /* justify-content: center; */
     align-items: center;
@@ -55,10 +55,19 @@ progress {
     height: 30px
 }
 
-.increase-freq-btn {
+.increase-freq-btn .minus-btn {
   font-size: 25px;
   cursor: pointer;
-  text-align: center;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.increase-freq-btn:hover {
+    transform: scale(1.05);
+}
+
+.minus-btn:hover {
+    transform: scale(1.05);
 }
 
 footer {
