@@ -98,7 +98,7 @@ class UserHabit extends Habit {
   static createHabitEntry(data) {
     return new Promise(async (resolve, reject) => {
       try {
-        const checkMax = await db.query(SQL`SELECT COUNT(*) FROM habit_entries WHERE user_habit_id = ${data.user_habit_id} AND ${data.date} = current_date `)
+        const checkMax = await db.query(SQL`SELECT COUNT(*) FROM habit_entries WHERE user_habit_id = ${data.user_habit_id} AND completed_at::DATE = current_date `)
         const findFreq = await db.query(SQL`SELECT frequency FROM user_habits WHERE id = ${data.user_habit_id}`)
         console.log(checkMax)
         console.log(findFreq)
@@ -124,7 +124,7 @@ class UserHabit extends Habit {
           WHERE id IN (
               SELECT id 
               FROM habit_entries 
-              WHERE user_habit_id = ${id} AND to_char(completed_at, 'DD-MON-YYYY') = to_char(current_date, 'DD-MON-YYYY')
+              WHERE user_habit_id = ${id} AND completed_at::DATE = current_date
               ORDER BY completed_at desc
               LIMIT 1
           );`);
@@ -188,7 +188,8 @@ class UserHabit extends Habit {
         users on user_habits.user_id = users.id
         JOIN
         habits on user_habits.habit_id = habits.id
-        WHERE users.username = ${username};`);
+        WHERE users.username = ${username}
+        ORDER BY habit_entries.completed_at;`);
         const resultAllHabits = resultAll.rows.map((habit) => ({
           name: habit.name,
           username: habit.username,
@@ -196,6 +197,7 @@ class UserHabit extends Habit {
           id: habit.id,
           timestamp: habit.completed_at,
         }));
+        console.log(resultAllHabits)
         const result = await db.query(SQL`
         SELECT users.username, users.id as user_id, habits.name, habit_entries.completed, user_habits.id AS user_habit_id, user_habits.frequency, count(*) AS total_completed, to_char(completed_at, 'MM-DD-YYYY') AS date
         FROM user_habits 
@@ -224,7 +226,6 @@ class UserHabit extends Habit {
           allEntries: resultAllHabits,
           habits: habits,
         };
-        console.log(data);
         resolve(data);
       } catch (error) {
         reject(`Could not retrieve habit`);

@@ -23,6 +23,10 @@ function formatData(listInfo, dataInfo, streakInfo) {
         max_frequency: item.frequency,
         name: item.habit_name,
         user_habit_id: item.id,
+        streakData: {
+            current_streak: 0,
+            top_streak: 0
+          },
         day_entries: [{
             date: getDate(0),
             total: 0
