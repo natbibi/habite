@@ -10,7 +10,7 @@ const main = document.querySelector('main');
 const publicRoutes = ['#', '#login', '#register'];
 const privateRoutes = []; // add #profile and #addhabits
 
-window.addEventListener('hashchange', updateContent);
+// window.addEventListener('hashchange', updateContent);
 
 function updateMain(path) {
     console.log("hello updating main")

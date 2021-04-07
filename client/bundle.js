@@ -14,38 +14,56 @@ async function renderAddHabitsPage() {
 
     const addHabitForm = document.createElement("div");
     addHabitForm.className = "form-container";
-
-    // add habits to dropdown
-    const habitsDropdown = document.createElement("select");
-    const habits = await req.getAllHabits();
-
-    habits.forEach(habit => {
-        const option = document.createElement("option");
-        option.textContent = habit.name;
-        habitsDropdown.appendChild(option)
-    });
-
-    // create form
-    addHabitForm.innerHTML = `    
-    <form action="" method="POST" class="add-habit-form">
-        <div class="habits-dropdown"> 
-            <label for="habits">Choose a habit to track</label>
-            ${habitsDropdown.outerHTML}
-        </div>
-        <div class="add-habit-input">
-            <label for="new-habit">Or add a custom one!</label>
-            <input type="text" name="new-habit" id="new-habit">
-            <button><i class="fas fa-plus-circle"></i></button>
-        </div>
-        <div class="frequency-input">
-            <label for="frequency">How many times per day?</label>
-            <input type="number" name="frequency">
-        </div>
-        <input type="button" value="Start Tracking">
-    </form>
-    `
+    // addHabitForm.appendChild(addHabitForm());
     
+     // add habits to dropdown
+     const habitsDropdown = document.createElement("select");
+     const habits = await req.get('habits');
+     
+     habits.forEach(habit => {
+         const option = document.createElement("option");
+         option.textContent = habit.name;
+         habitsDropdown.appendChild(option)
+     });
+ 
+     // create form
+     addHabitForm.innerHTML = `    
+     <form action="" method="POST" class="add-habit-form">
+         <div class="habits-dropdown"> 
+             <label for="habits">Choose a habit to track</label>
+             ${habitsDropdown.outerHTML}
+         </div>
+  
+         <div class="frequency-input">
+             <label for="frequency">How many times per day?</label>
+             <input type="number" name="frequency">
+         </div>
+         <input type="button" value="Start Tracking">
+     </form>
+     `
+
+     console.log(addHabitForm);
     main.appendChild(addHabitForm)
+}
+
+async function addHabitForm() {
+   // add a new user habit from a list
+     
+     return addHabitForm;
+}
+
+async function createNewHabitForm() {
+    // create a new habit and add it to habits list (POST) 
+
+//     <div class="add-habit-input">
+//     <label for="new-habit">Or add a custom one!</label>
+//     <input type="text" name="new-habit" id="new-habit">
+//     <button><i class="fas fa-plus-circle"></i></button>
+// </div>
+}
+
+async function deleteHabitForm() {
+    // delete a user habit so it is no longer tracked
 }
 
 module.exports = {renderAddHabitsPage};
@@ -216,8 +234,8 @@ function render404() {
 }
 
 
-module.exports = { renderStreaks, renderMyHabits, renderAddHabitsPage, renderLandingPage, render404 }
-},{"./forms":3,"./renderHelpers":6,"./requests":7}],3:[function(require,module,exports){
+module.exports = { renderStreaks, renderMyHabits, renderLandingPage, render404 }
+},{"./forms":4,"./renderHelpers":7,"./requests":8}],4:[function(require,module,exports){
 const auth = require("./auth");
 const main = document.querySelector('main');
 
@@ -359,9 +377,7 @@ function initBindings() {
     // e.preventDefault();
     // Initial bindings
     console.log('You found our javaScript')
-
     layout.updateContent();
-    
     window.addEventListener('hashchange', layout.updateContent);
 
     // Click event delegation
@@ -387,7 +403,7 @@ function navHandler(e) {
     const target = e.target.id;
     switch(target) {
         case 'logout': auth.logout(); break;
-        case 'add-habit': /*TODO add page*/ break;
+        case 'add-habit': window.location.hash = 'addhabits'; break;
         case 'show-habits': window.location.hash = 'profile'; break;
         default: break;
     }
@@ -418,7 +434,7 @@ const main = document.querySelector('main');
 const publicRoutes = ['#', '#login', '#register'];
 const privateRoutes = []; // add #profile and #addhabits
 
-window.addEventListener('hashchange', updateContent);
+// window.addEventListener('hashchange', updateContent);
 
 function updateMain(path) {
     console.log("hello updating main")
@@ -467,11 +483,8 @@ function updateContent() {
 
 module.exports = { updateContent };
 },{"./addHabits":1,"./auth":2,"./content":3,"./forms":4,"./renderHelpers":7}],7:[function(require,module,exports){
-
-
-const nav = document.querySelector('nav');
-const heading = document.querySelector('header');
-const main = document.querySelector('main');
+let nav;
+let header;
 
 // currently not in use!
 function renderNavBar() {
@@ -540,7 +553,7 @@ module.exports = {
     renderNavBar,
     renderHeading
 }
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 const auth = require('./auth')
 const hostURL = "http://localhost:3000";
 
@@ -582,8 +595,47 @@ async function getAllUsers() {
     }
 }
 
-module.exports = { getAllHabits, getAllUsers }
-},{}],9:[function(require,module,exports){
+async function get(path) {
+    try {
+        const options = {
+            headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
+        }
+        const response = await fetch(`${hostURL}/${path}`, options)
+        const data = await response.json();
+        // if (data.err) {
+        //     console.warn(data.err);
+        //     logout();
+        // }
+        return data;
+    } catch (err) {
+        console.warn(err);
+    }
+}
+
+
+async function post(path, data) {
+    try {
+        const options = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        }
+        const response = await fetch(`${hostURL}/${path}`, options)
+        const data = await response.json();
+        // if (data.err) {
+        //     console.warn(data.err);
+        //     logout();
+        // }
+        return data;
+    } catch (err) {
+        console.warn(err);
+    }
+}
+
+
+
+module.exports = { getAllHabits, getAllUsers, get}
+},{"./auth":2}],9:[function(require,module,exports){
 "use strict";function e(e){this.message=e}e.prototype=new Error,e.prototype.name="InvalidCharacterError";var r="undefined"!=typeof window&&window.atob&&window.atob.bind(window)||function(r){var t=String(r).replace(/=+$/,"");if(t.length%4==1)throw new e("'atob' failed: The string to be decoded is not correctly encoded.");for(var n,o,a=0,i=0,c="";o=t.charAt(i++);~o&&(n=a%4?64*n+o:o,a++%4)?c+=String.fromCharCode(255&n>>(-2*a&6)):0)o="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".indexOf(o);return c};function t(e){var t=e.replace(/-/g,"+").replace(/_/g,"/");switch(t.length%4){case 0:break;case 2:t+="==";break;case 3:t+="=";break;default:throw"Illegal base64url string!"}try{return function(e){return decodeURIComponent(r(e).replace(/(.)/g,(function(e,r){var t=r.charCodeAt(0).toString(16).toUpperCase();return t.length<2&&(t="0"+t),"%"+t})))}(t)}catch(e){return r(t)}}function n(e){this.message=e}function o(e,r){if("string"!=typeof e)throw new n("Invalid token specified");var o=!0===(r=r||{}).header?0:1;try{return JSON.parse(t(e.split(".")[o]))}catch(e){throw new n("Invalid token specified: "+e.message)}}n.prototype=new Error,n.prototype.name="InvalidTokenError";const a=o;a.default=o,a.InvalidTokenError=n,module.exports=a;
 
 
