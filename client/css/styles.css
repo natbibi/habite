@@ -44,11 +44,34 @@ header {
 
 .habit-container{
     display: grid;
-    grid-template-columns: 1fr 2fr 3fr 1fr 1fr 1fr;
+    grid-template-columns: 3fr 3fr 1fr 1fr 1fr;
     grid-gap: 20px;
-    /* justify-content: center; */
+    padding: 3px;
     align-items: center;
     margin: 10px;
+    border: 2px solid green;
+}
+
+.habit-extras-container {
+    display: grid;
+    grid-column: 1 / 6;
+    grid-gap: 20px;
+    margin: 10px;
+    flex-direction: row;
+    border: 2px solid green;
+    align-items: center;
+}
+
+.extras-date {
+    display: grid;
+    grid-row: 1;
+    grid-column: 2 / 6;
+}
+
+.extras-progress {
+    display: grid;
+    grid-row: 1;
+    grid-column: 4 / 6;
 }
 
 progress {
@@ -60,10 +83,11 @@ button, .increase-freq-btn, .minus-btn, .see-more-btn {
   cursor: pointer;
   border: none;
   background-color: white;
+  margin-right: 2px;
 }
 
 button:hover {
-    transform: scale(1.05);
+    transform: scale(1.04);
 }
 
 footer {

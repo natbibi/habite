@@ -45,8 +45,7 @@ function renderStreaks() {
 
 
 async function renderMyHabits() {
-    const response = await requests.getAllHabits();
-    const habitsList = await response.data
+    const habitsList = await requests.getAllHabits();
     console.log(habitsList)
     if (habitsList.err) { return }
     const habits = document.createElement('div')
@@ -57,23 +56,24 @@ async function renderMyHabits() {
     const habitsContainer = document.createElement('div')
     habitsContainer.className = "habits-container"
     main.append(habits)
-    // insert GET request for user habits here
 
+    // insert GET request for user habits here
     habitsList.forEach(habit => {
 
         // function getHabitList
         let habitContainer = document.createElement('div')
         habitContainer.className = "habit-container"
 
-        let habitDate = document.createElement('p')
-        habitDate.textContent = habit.date
+        // let habitDate = document.createElement('p')
+        // habitDate.textContent = habit.day_entries[0].date
+        // console.log(habit.day_entries[0].date)
 
         let habitName = document.createElement('p')
         habitName.textContent = habit.name
 
         let habitFrequency = document.createElement('progress')
         habitFrequency.setAttribute('max', `${habit.max_frequency}`)
-        habitFrequency.setAttribute('value', `${habit.total_completed}`)
+        habitFrequency.setAttribute('value', `${habit.day_entries[0].total}`)
 
         let habitMinus = document.createElement('button')
         habitMinus.innerHTML = `<i class="fas fa-minus minus-btn"></i>`
@@ -85,14 +85,50 @@ async function renderMyHabits() {
         habitSeeMore.innerHTML = `<i class="fas fa-ellipsis-h see-more-btn"></i>`
 
 
+        let habitExtrasContainer = document.createElement('div')
+
+        habitSeeMore.addEventListener('click', () => {
+            habitExtrasContainer.className = "habit-extras-container"
+            if (habitExtrasContainer.style.display === "grid") {
+                habitExtrasContainer.style.display = "none";
+            } else {
+                habitExtrasContainer.style.display = "grid";
+            }
+
+            let habitExtrasDate = document.createElement('p')
+            habitExtrasDate.className = "extras-date"
+            habitExtrasDate.textContent = habit.day_entries[1].date
+
+            let habitExtrasFrequency = document.createElement('progress')
+            habitExtrasFrequency.className = "extras-progress"
+            habitExtrasFrequency.setAttribute('max', `${habit.max_frequency}`)
+            habitExtrasFrequency.setAttribute('value', `${habit.day_entries[1].total}`)
+
+            // let habitExtrasDateTwo = document.createElement('p')
+            // habitExtrasDateTwo.className = "extras-date-two"
+            // habitExtrasDateTwo.textContent = habit.day_entries[2].date
+            // console.log(habit.day_entries[2].date)
+
+            // let habitExtrasFrequencyTwo = document.createElement('progress')
+            // habitExtrasFrequencyTwo.className = "extras-progress-two"
+            // habitExtrasFrequencyTwo.setAttribute('max', `${habit.max_frequency}`)
+            // habitExtrasFrequencyTwo.setAttribute('value', `${habit.day_entries[2].total}`)
+
+
+            habitContainer.appendChild(habitExtrasContainer)
+            habitExtrasContainer.appendChild(habitExtrasDate)
+            habitExtrasContainer.appendChild(habitExtrasFrequency)
+            // habitExtrasContainer.appendChild(habitExtrasDateTwo)
+            // habitExtrasContainer.appendChild(habitExtrasFrequencyTwo)
+        })
+
         habitsContainer.appendChild(habitContainer)
-        habitContainer.appendChild(habitDate)
+        // habitContainer.appendChild(habitDate)
         habitContainer.appendChild(habitName)
         habitContainer.appendChild(habitFrequency)
         habitContainer.appendChild(habitMinus)
         habitContainer.appendChild(habitIncreaseFrequency)
         habitContainer.appendChild(habitSeeMore)
-
     })
 
     habits.appendChild(habitsHeading)

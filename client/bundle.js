@@ -250,8 +250,7 @@ function renderStreaks() {
 
 
 async function renderMyHabits() {
-    const response = await requests.getAllHabits();
-    const habitsList = await response.data
+    const habitsList = await requests.getAllHabits();
     console.log(habitsList)
     if (habitsList.err) { return }
     const habits = document.createElement('div')
@@ -262,23 +261,24 @@ async function renderMyHabits() {
     const habitsContainer = document.createElement('div')
     habitsContainer.className = "habits-container"
     main.append(habits)
-    // insert GET request for user habits here
 
+    // insert GET request for user habits here
     habitsList.forEach(habit => {
 
         // function getHabitList
         let habitContainer = document.createElement('div')
         habitContainer.className = "habit-container"
 
-        let habitDate = document.createElement('p')
-        habitDate.textContent = habit.date
+        // let habitDate = document.createElement('p')
+        // habitDate.textContent = habit.day_entries[0].date
+        // console.log(habit.day_entries[0].date)
 
         let habitName = document.createElement('p')
         habitName.textContent = habit.name
 
         let habitFrequency = document.createElement('progress')
         habitFrequency.setAttribute('max', `${habit.max_frequency}`)
-        habitFrequency.setAttribute('value', `${habit.total_completed}`)
+        habitFrequency.setAttribute('value', `${habit.day_entries[0].total}`)
 
         let habitMinus = document.createElement('button')
         habitMinus.innerHTML = `<i class="fas fa-minus minus-btn"></i>`
@@ -290,14 +290,50 @@ async function renderMyHabits() {
         habitSeeMore.innerHTML = `<i class="fas fa-ellipsis-h see-more-btn"></i>`
 
 
+        let habitExtrasContainer = document.createElement('div')
+
+        habitSeeMore.addEventListener('click', () => {
+            habitExtrasContainer.className = "habit-extras-container"
+            if (habitExtrasContainer.style.display === "grid") {
+                habitExtrasContainer.style.display = "none";
+            } else {
+                habitExtrasContainer.style.display = "grid";
+            }
+
+            let habitExtrasDate = document.createElement('p')
+            habitExtrasDate.className = "extras-date"
+            habitExtrasDate.textContent = habit.day_entries[1].date
+
+            let habitExtrasFrequency = document.createElement('progress')
+            habitExtrasFrequency.className = "extras-progress"
+            habitExtrasFrequency.setAttribute('max', `${habit.max_frequency}`)
+            habitExtrasFrequency.setAttribute('value', `${habit.day_entries[1].total}`)
+
+            // let habitExtrasDateTwo = document.createElement('p')
+            // habitExtrasDateTwo.className = "extras-date-two"
+            // habitExtrasDateTwo.textContent = habit.day_entries[2].date
+            // console.log(habit.day_entries[2].date)
+
+            // let habitExtrasFrequencyTwo = document.createElement('progress')
+            // habitExtrasFrequencyTwo.className = "extras-progress-two"
+            // habitExtrasFrequencyTwo.setAttribute('max', `${habit.max_frequency}`)
+            // habitExtrasFrequencyTwo.setAttribute('value', `${habit.day_entries[2].total}`)
+
+
+            habitContainer.appendChild(habitExtrasContainer)
+            habitExtrasContainer.appendChild(habitExtrasDate)
+            habitExtrasContainer.appendChild(habitExtrasFrequency)
+            // habitExtrasContainer.appendChild(habitExtrasDateTwo)
+            // habitExtrasContainer.appendChild(habitExtrasFrequencyTwo)
+        })
+
         habitsContainer.appendChild(habitContainer)
-        habitContainer.appendChild(habitDate)
+        // habitContainer.appendChild(habitDate)
         habitContainer.appendChild(habitName)
         habitContainer.appendChild(habitFrequency)
         habitContainer.appendChild(habitMinus)
         habitContainer.appendChild(habitIncreaseFrequency)
         habitContainer.appendChild(habitSeeMore)
-
     })
 
     habits.appendChild(habitsHeading)
@@ -324,37 +360,54 @@ module.exports = { renderStreaks, renderMyHabits, renderLandingPage, render404 }
 const auth = require("./auth");
 const main = document.querySelector('main');
 
+// function renderAuthBtns() {
+//     const authBtns = document.createElement('div');
+//     authBtns.className = 'auth-btns';
+
+//     const loginBtn = document.createElement('button');
+//     loginBtn.className = 'login-btn';
+//     loginBtn.textContent = 'login';
+
+//     const regBtn = document.createElement('button');
+//     regBtn.className = 'register-btn';
+//     regBtn.textContent = 'register';
+
+//     authBtns.appendChild(loginBtn);
+//     authBtns.appendChild(regBtn);
+//     main.appendChild(authBtns);
+// }
+
 function renderLoginForm() {
     // Define form fields
     const authFields = [
-        { tag: 'label', attributes: { id: 'username-label', for: 'username' }, text: 'Username'},
+        { tag: 'label', attributes: { id: 'username-label', for: 'username' } },
         { tag: 'input', attributes: { id: 'username', name: 'username', placeholder: 'Enter your username', } },
-        { tag: 'label', attributes: { id: 'password-label', for: 'password' } , text: 'Password' },
+        { tag: 'label', attributes: { id: 'password-label', for: 'password' } },
         { tag: 'input', attributes: { id: 'password', type: 'password', name: 'password', placeholder: 'Enter your password', } },
-        { tag: 'label', attributes: { id: 'robot-label', for: 'robot-check' }, text: 'Not a robot, (bzzt, dzzt).' },
-        { tag: 'input', attributes: { id: 'robot-check', type: 'checkbox', name: 'robot-check', } },       
+        { tag: 'input', attributes: { id: 'robot-check', type: 'checkbox', name: 'robot-check', } },
+        { tag: 'label', attributes: { id: 'robot-label', for: 'robot-check' } },
         { tag: 'input', attributes: { id: 'login-sbmt', type: 'submit', name: 'login-sbmt', value: 'Login', } }
     ];
 
     const form = createForm(authFields)
-    form.className = "login-form auth-form";
+    form.classList.add("login-form");
     form.addEventListener('submit', auth.requestLogin);
     main.appendChild(form);
 }
 
 function renderRegisterForm() {
     const authFields = [
-        { tag: 'label', attributes: { id: 'username-label', for: 'username' }, text: 'Username' },
+        { tag: 'label', attributes: { id: 'username-label', for: 'username' } },
         { tag: 'input', attributes: { id: 'username', name: 'username', placeholder: 'Enter your username', } },
-        { tag: 'label', attributes: { id: 'password-label', for: 'password'}, text: 'Password'  },
+        { tag: 'label', attributes: { id: 'password-label', for: 'password' } },
         { tag: 'input', attributes: { id: 'password', type: 'password', name: 'password', placeholder: 'Enter your password', } },
         { tag: 'input', attributes: { id: 'password-check', type: 'password', name: 'password', placeholder: 'Confirm password', } },
-        { tag: 'label', attributes: { id: 'robot-label', for: 'robot-check' }, text: 'Not a robot, (bzzt, dzzt).' },
         { tag: 'input', attributes: { id: 'robot-check', type: 'checkbox', name: 'robot-check', } },
+        { tag: 'label', attributes: { id: 'robot-label', for: 'robot-check' } },
         { tag: 'input', attributes: { id: 'register-sbmt', type: 'submit', name: 'register-sbmt', value: 'Register', } }
     ];
     const form = createForm(authFields)
-    form.className = "register-form auth-form";
+    form.classList.add("register-form");
     form.addEventListener('submit', auth.requestRegistration);
     main.appendChild(form);
 }
@@ -364,13 +417,23 @@ function createForm(authFields) {
     // Create new form element with auth-form class name
     const form = document.createElement('form');
     form.method = "post";
-    form.className = 'submit-form';
+    form.className = 'auth-form';
     // Create form elements
     authFields.forEach(f => {
         let field = document.createElement(f.tag);
         // Add text content to relevant tags
-        field.textContent = f.text || "";
-
+        let fieldId = f.attributes.id;
+        switch (fieldId) {
+            case 'username-label':
+                field.textContent = "username"; break;
+            case 'password-label':
+                field.textContent = "password"; break;
+            case 'robot-label':
+                field.textContent = "I am not a robot!"; break;
+            default:
+                field.textContent = ''; break;
+        }
+        // Add relevant attributes to each html tag and append to form
         Object.entries(f.attributes).forEach(([att, val]) => {
             field.setAttribute(att, val);
         })
@@ -656,7 +719,7 @@ async function deleteUserHabit(habit_id){
             headers: new Headers({ 'Authorization': localStorage.getItem('token') }), 
         }
         await fetch(`${hostURL}/users/${username}/habits/${habit_id}`, options);
-        window.location.hash = `#addhabits`
+        window.location.hash = `#addhabit`
     } catch (err) {
         console.warn(err);
     }
@@ -679,61 +742,27 @@ async function get(path) {
     }
 }
 
-const getUserHabits = () => get(`users/${username}/habits`); 
 
-async function addUserhabit(formData) {
+async function post(path, data) {
     try {
         const options = {
             method: 'POST',
-            headers: new Headers({
-                'Authorization': localStorage.getItem('token'),
-                'Content-Type': 'application/json' 
-                }),
-            body: JSON.stringify(formData)
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
         }
-        console.log((options.body));
-        const response = await fetch(`${hostURL}/users/${username}/habits`, options);
+        const response = await fetch(`${hostURL}/${path}`, options)
         const data = await response.json();
-        window.location.hash = "addhabits"
-        if (data.err) {
-            console.warn(data.err);
-            // logout();
-        }
-        console.log("Added ");
+        // if (data.err) {
+        //     console.warn(data.err);
+        //     logout();
+        // }
         return data;
     } catch (err) {
         console.warn(err);
     }
 }
 
-
-async function createHabit(formData) {
-    try {
-        const options = {
-            method: 'POST',
-            headers: new Headers({
-                 'Authorization': localStorage.getItem('token'),
-                 'Content-Type': 'application/json' 
-                }),
-            body: JSON.stringify(formData)
-        }
-        const response = await fetch(`${hostURL}/habits`, options);
-        
-        const data = await response.json();
-        window.location.hash = "addhabits"
-        if (data.err) {
-            console.warn(data.err);
-            // logout();
-        }
-        return data;
-    } catch (err) {
-        console.warn(err);
-    }
-}
-
-
-
-module.exports = { getAllHabits, getUserHabits, get, addUserhabit, createHabit, deleteUserHabit}
+module.exports = { getAllHabits , get}
 
 },{"./auth":2}],9:[function(require,module,exports){
 "use strict";function e(e){this.message=e}e.prototype=new Error,e.prototype.name="InvalidCharacterError";var r="undefined"!=typeof window&&window.atob&&window.atob.bind(window)||function(r){var t=String(r).replace(/=+$/,"");if(t.length%4==1)throw new e("'atob' failed: The string to be decoded is not correctly encoded.");for(var n,o,a=0,i=0,c="";o=t.charAt(i++);~o&&(n=a%4?64*n+o:o,a++%4)?c+=String.fromCharCode(255&n>>(-2*a&6)):0)o="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".indexOf(o);return c};function t(e){var t=e.replace(/-/g,"+").replace(/_/g,"/");switch(t.length%4){case 0:break;case 2:t+="==";break;case 3:t+="=";break;default:throw"Illegal base64url string!"}try{return function(e){return decodeURIComponent(r(e).replace(/(.)/g,(function(e,r){var t=r.charCodeAt(0).toString(16).toUpperCase();return t.length<2&&(t="0"+t),"%"+t})))}(t)}catch(e){return r(t)}}function n(e){this.message=e}function o(e,r){if("string"!=typeof e)throw new n("Invalid token specified");var o=!0===(r=r||{}).header?0:1;try{return JSON.parse(t(e.split(".")[o]))}catch(e){throw new n("Invalid token specified: "+e.message)}}n.prototype=new Error,n.prototype.name="InvalidTokenError";const a=o;a.default=o,a.InvalidTokenError=n,module.exports=a;
