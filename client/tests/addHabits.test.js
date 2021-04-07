@@ -5,7 +5,7 @@ describe('addHabits', () => {
     let main;
 
     beforeAll(() => {
-        document.documentElement.innerHTML = '<header id="top"></header><main class="container">';
+        document.documentElement.innerHTML = '<header id="top"></header><main class="container"></main>';
         header = document.querySelector('header');
         main = document.querySelector('main');
         addHabits = require('../js/addHabits');
@@ -14,11 +14,10 @@ describe('addHabits', () => {
     beforeEach(() => {
         header.innerHTML = '';
         main.innerHTML = '';
+        addHabits.createNewHabitForm();
     });
 
     describe('createNewHabitForm', () => {
-        
-        addHabits.createNewHabitForm();
 
         it('should have a text area', () => {
             let textArea = main.querySelector('input');
