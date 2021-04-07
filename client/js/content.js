@@ -1,7 +1,9 @@
 const rHelpers = require('./renderHelpers');
 const forms = require('./forms');
 const requests = require('./requests')
+const auth = require('./auth')
 
+const username = auth.currentUser();
 const nav = document.querySelector('nav');
 const heading = document.querySelector('header');
 const main = document.querySelector('main');
@@ -79,16 +81,36 @@ async function renderMyHabits() {
         habitMinus.innerHTML = `<i class="fas fa-minus minus-btn"></i>`
 
         let habitIncreaseFrequency = document.createElement('button')
-        habitIncreaseFrequency.innerHTML = `<i class="fas fa-plus increase-freq-btn"></i>`
+        habitIncreaseFrequency.id = "increase-freq-btn"
+        habitIncreaseFrequency.innerHTML = `<i class="fas fa-plus"></i>`
 
         let habitSeeMore = document.createElement('button')
         habitSeeMore.innerHTML = `<i class="fas fa-ellipsis-h see-more-btn"></i>`
 
+        // POST: Increment habit 
+        habitIncreaseFrequency.addEventListener('click', () => {
+            console.log('w')
+            try {
+                console.log('hello')
+                // e.preventDefault();
+                const url = `http://localhost:3000/users/${username}/habit/entries`
+                const data = { user_habit_id: 1 }
+                requests.postData(url, data);
+                location.reload();
+            } catch (err) {
+                throw err
+            }
+        });
+
+        // DELETE: Decrement habit
+
+        
 
         let habitExtrasContainer = document.createElement('div')
+        habitExtrasContainer.className = "habit-extras-container"
 
         habitSeeMore.addEventListener('click', () => {
-            habitExtrasContainer.className = "habit-extras-container"
+
             if (habitExtrasContainer.style.display === "grid") {
                 habitExtrasContainer.style.display = "none";
             } else {
@@ -113,7 +135,6 @@ async function renderMyHabits() {
             // habitExtrasFrequencyTwo.className = "extras-progress-two"
             // habitExtrasFrequencyTwo.setAttribute('max', `${habit.max_frequency}`)
             // habitExtrasFrequencyTwo.setAttribute('value', `${habit.day_entries[2].total}`)
-
 
             habitContainer.appendChild(habitExtrasContainer)
             habitExtrasContainer.appendChild(habitExtrasDate)
