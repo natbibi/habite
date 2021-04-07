@@ -34,6 +34,7 @@ function updateMain(path) {
                 content.renderStreaks(); content.renderMyHabits(); break;
             case '#addhabits':
                 addHabits.renderAddHabitsPage();
+                addHabits.createNewHabitForm();
                 break;
             // case '#more':
             //     renderLandingPage(); renderMenuMessage(); break;
