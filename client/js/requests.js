@@ -41,10 +41,81 @@ async function deleteUserHabit(habit_id){
             headers: new Headers({ 'Authorization': localStorage.getItem('token') }), 
         }
         await fetch(`${hostURL}/users/${username}/habits/${habit_id}`, options);
-        window.location.hash = `#addhabit`
+        window.location.hash = `#addhabits`
     } catch (err) {
         console.warn(err);
     }
 }
 
-module.exports = { getAllHabits, decrementHabit, deleteUserHabit }
+async function get(path) {
+    try {
+        const options = {
+            headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
+        }
+        const response = await fetch(`${hostURL}/${path}`, options)
+        const data = await response.json();
+        // if (data.err) {
+        //     console.warn(data.err);
+        //     logout();
+        // }
+        return data;
+    } catch (err) {
+        console.warn(err);
+    }
+}
+
+const getUserHabits = () => get(`users/${username}/habits`); 
+
+async function addUserhabit(formData) {
+    try {
+        const options = {
+            method: 'POST',
+            headers: new Headers({
+                'Authorization': localStorage.getItem('token'),
+                'Content-Type': 'application/json' 
+                }),
+            body: JSON.stringify(formData)
+        }
+        console.log((options.body));
+        const response = await fetch(`${hostURL}/users/${username}/habits`, options);
+        const data = await response.json();
+        window.location.hash = "addhabits"
+        if (data.err) {
+            console.warn(data.err);
+            // logout();
+        }
+        console.log("Added ");
+        return data;
+    } catch (err) {
+        console.warn(err);
+    }
+}
+
+
+async function createHabit(formData) {
+    try {
+        const options = {
+            method: 'POST',
+            headers: new Headers({
+                 'Authorization': localStorage.getItem('token'),
+                 'Content-Type': 'application/json' 
+                }),
+            body: JSON.stringify(formData)
+        }
+        const response = await fetch(`${hostURL}/habits`, options);
+        
+        const data = await response.json();
+        window.location.hash = "addhabits"
+        if (data.err) {
+            console.warn(data.err);
+            // logout();
+        }
+        return data;
+    } catch (err) {
+        console.warn(err);
+    }
+}
+
+
+
+module.exports = { getAllHabits, getUserHabits, get, addUserhabit, createHabit, deleteUserHabit}
