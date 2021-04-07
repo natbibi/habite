@@ -215,6 +215,7 @@ function renderStreaks() {
 async function renderMyHabits() {
     const response = await requests.getAllHabits();
     const habitsList = await response.data
+    console.log(habitsList)
     if (habitsList.err) { return }
     const habits = document.createElement('div')
     habits.className = "habits-list"
@@ -232,6 +233,9 @@ async function renderMyHabits() {
         let habitContainer = document.createElement('div')
         habitContainer.className = "habit-container"
 
+        let habitDate = document.createElement('p')
+        habitDate.textContent = habit.date
+
         let habitName = document.createElement('p')
         habitName.textContent = habit.name
 
@@ -246,6 +250,7 @@ async function renderMyHabits() {
         habitIncreaseFrequency.className = "fas fa-plus increase-freq-btn"
 
         habitsContainer.appendChild(habitContainer)
+        habitContainer.appendChild(habitDate)
         habitContainer.appendChild(habitName)
         habitContainer.appendChild(habitFrequency)
         habitContainer.appendChild(habitMinus)
