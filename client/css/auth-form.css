@@ -5,3 +5,31 @@
     text-align: center;
     align-items: center;
 }
+
+#title-icon {
+    border: 2px solid yellow;
+}
+
+#app-name {
+    border: 2px solid purple
+}
+
+#tagline {
+    border: 2px solid green;
+}
+
+#register-link, #register-sbmt {
+    border: 2px solid orange;
+}
+
+#login-sbmt, #login-link {
+    border: 2px solid blue;
+}
+
+input#username {
+    border: 2px solid pink;
+}
+
+input#password, input#password-check {
+    border: 2px solid pink;
+}
