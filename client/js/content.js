@@ -64,9 +64,9 @@ async function renderMyHabits() {
         let habitContainer = document.createElement('div')
         habitContainer.className = "habit-container"
 
-        let habitDate = document.createElement('p')
-        habitDate.textContent = habit.day_entries[0].date
-        console.log(habit.day_entries[0].date)
+        // let habitDate = document.createElement('p')
+        // habitDate.textContent = habit.day_entries[0].date
+        // console.log(habit.day_entries[0].date)
 
         let habitName = document.createElement('p')
         habitName.textContent = habit.name
@@ -89,21 +89,23 @@ async function renderMyHabits() {
             habitExtrasContainer.className = "habit-extras-container"
 
             let habitExtrasDate = document.createElement('p')
+            habitExtrasDate.className = "extras-date"
             habitExtrasDate.textContent = habit.day_entries[1].date
             console.log(habit.day_entries[1].date)
 
             let habitExtrasFrequency = document.createElement('progress')
+            habitExtrasFrequency.className = "extras-progress"
             habitExtrasFrequency.setAttribute('max', `${habit.max_frequency}`)
             habitExtrasFrequency.setAttribute('value', `${habit.day_entries[1].total}`)
 
             habitContainer.appendChild(habitExtrasContainer)
             habitExtrasContainer.appendChild(habitExtrasDate)
-            habitsExtrasContainer.appendChild(habitExtrasFrequency)
+            habitExtrasContainer.appendChild(habitExtrasFrequency)
 
         })
 
         habitsContainer.appendChild(habitContainer)
-        habitContainer.appendChild(habitDate)
+        // habitContainer.appendChild(habitDate)
         habitContainer.appendChild(habitName)
         habitContainer.appendChild(habitFrequency)
         habitContainer.appendChild(habitMinus)

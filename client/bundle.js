@@ -232,9 +232,9 @@ async function renderMyHabits() {
         let habitContainer = document.createElement('div')
         habitContainer.className = "habit-container"
 
-        let habitDate = document.createElement('p')
-        habitDate.textContent = habit.day_entries[0].date
-        console.log(habit.day_entries[0].date)
+        // let habitDate = document.createElement('p')
+        // habitDate.textContent = habit.day_entries[0].date
+        // console.log(habit.day_entries[0].date)
 
         let habitName = document.createElement('p')
         habitName.textContent = habit.name
@@ -257,21 +257,23 @@ async function renderMyHabits() {
             habitExtrasContainer.className = "habit-extras-container"
 
             let habitExtrasDate = document.createElement('p')
+            habitExtrasDate.className = "extras-date"
             habitExtrasDate.textContent = habit.day_entries[1].date
             console.log(habit.day_entries[1].date)
 
             let habitExtrasFrequency = document.createElement('progress')
+            habitExtrasFrequency.className = "extras-progress"
             habitExtrasFrequency.setAttribute('max', `${habit.max_frequency}`)
             habitExtrasFrequency.setAttribute('value', `${habit.day_entries[1].total}`)
 
             habitContainer.appendChild(habitExtrasContainer)
             habitExtrasContainer.appendChild(habitExtrasDate)
-            habitsExtrasContainer.appendChild(habitExtrasFrequency)
+            habitExtrasContainer.appendChild(habitExtrasFrequency)
 
         })
 
         habitsContainer.appendChild(habitContainer)
-        habitContainer.appendChild(habitDate)
+        // habitContainer.appendChild(habitDate)
         habitContainer.appendChild(habitName)
         habitContainer.appendChild(habitFrequency)
         habitContainer.appendChild(habitMinus)
@@ -284,16 +286,6 @@ async function renderMyHabits() {
     habits.appendChild(habitsContainer)
 }
 
-function renderAddHabitsPage() {
-    const showFooter = document.getElementById('footer')
-    showFooter.style.display = 'block';
-    const greeting = document.createElement('h1')
-    greeting.textContent = "Let's get started..."
-    heading.appendChild(greeting)
-
-    // getAllHabits -> name and put into options value / dropdown 
-
-}
 
 function renderMenuMessage() {
     const menuMessage = document.createElement('p');
@@ -309,7 +301,7 @@ function render404() {
 }
 
 
-module.exports = { renderStreaks, renderMyHabits, renderAddHabitsPage, renderLandingPage, render404 }
+module.exports = { renderStreaks, renderMyHabits, renderLandingPage, render404 }
 },{"./forms":4,"./renderHelpers":7,"./requests":8}],4:[function(require,module,exports){
 const auth = require("./auth");
 const main = document.querySelector('main');
@@ -680,7 +672,45 @@ async function deleteUserHabit(habit_id){
     }
 }
 
-module.exports = { getAllHabits, decrementHabit, deleteUserHabit }
+async function get(path) {
+    try {
+        const options = {
+            headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
+        }
+        const response = await fetch(`${hostURL}/${path}`, options)
+        const data = await response.json();
+        // if (data.err) {
+        //     console.warn(data.err);
+        //     logout();
+        // }
+        return data;
+    } catch (err) {
+        console.warn(err);
+    }
+}
+
+
+async function post(path, data) {
+    try {
+        const options = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        }
+        const response = await fetch(`${hostURL}/${path}`, options)
+        const data = await response.json();
+        // if (data.err) {
+        //     console.warn(data.err);
+        //     logout();
+        // }
+        return data;
+    } catch (err) {
+        console.warn(err);
+    }
+}
+
+module.exports = { getAllHabits , get}
+
 },{"./auth":2}],9:[function(require,module,exports){
 "use strict";function e(e){this.message=e}e.prototype=new Error,e.prototype.name="InvalidCharacterError";var r="undefined"!=typeof window&&window.atob&&window.atob.bind(window)||function(r){var t=String(r).replace(/=+$/,"");if(t.length%4==1)throw new e("'atob' failed: The string to be decoded is not correctly encoded.");for(var n,o,a=0,i=0,c="";o=t.charAt(i++);~o&&(n=a%4?64*n+o:o,a++%4)?c+=String.fromCharCode(255&n>>(-2*a&6)):0)o="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".indexOf(o);return c};function t(e){var t=e.replace(/-/g,"+").replace(/_/g,"/");switch(t.length%4){case 0:break;case 2:t+="==";break;case 3:t+="=";break;default:throw"Illegal base64url string!"}try{return function(e){return decodeURIComponent(r(e).replace(/(.)/g,(function(e,r){var t=r.charCodeAt(0).toString(16).toUpperCase();return t.length<2&&(t="0"+t),"%"+t})))}(t)}catch(e){return r(t)}}function n(e){this.message=e}function o(e,r){if("string"!=typeof e)throw new n("Invalid token specified");var o=!0===(r=r||{}).header?0:1;try{return JSON.parse(t(e.split(".")[o]))}catch(e){throw new n("Invalid token specified: "+e.message)}}n.prototype=new Error,n.prototype.name="InvalidTokenError";const a=o;a.default=o,a.InvalidTokenError=n,module.exports=a;
 
