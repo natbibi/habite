@@ -94,11 +94,14 @@ function createNewHabitForm() {
 
     form.onsubmit = async (e) => {
         e.preventDefault();
-        const data = {
-            name: nameInput.value
-        }
-        await req.createHabit(data);
-        location.reload();
+        const url = `http://localhost:3000/users/${username}/habit`
+        const data = { name: nameInput.value }
+        req.postData(url, data);
+        // location.reload();
+        window.location.hash = "#addhabits"
+        // if (data.err) {
+        //     console.warn(data.err);
+        // logout();
     };
 
     return form;

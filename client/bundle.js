@@ -95,11 +95,14 @@ function createNewHabitForm() {
 
     form.onsubmit = async (e) => {
         e.preventDefault();
-        const data = {
-            name: nameInput.value
-        }
-        await req.createHabit(data);
-        location.reload();
+        const url = `http://localhost:3000/users/${username}/habit`
+        const data = { name: nameInput.value }
+        req.postData(url, data);
+        // location.reload();
+        window.location.hash = "#addhabits"
+        // if (data.err) {
+        //     console.warn(data.err);
+        // logout();
     };
 
     return form;
@@ -206,7 +209,9 @@ module.exports = {
 const rHelpers = require('./renderHelpers');
 const forms = require('./forms');
 const requests = require('./requests')
+const auth = require('./auth')
 
+const username = auth.currentUser();
 const nav = document.querySelector('nav');
 const heading = document.querySelector('header');
 const main = document.querySelector('main');
@@ -284,16 +289,36 @@ async function renderMyHabits() {
         habitMinus.innerHTML = `<i class="fas fa-minus minus-btn"></i>`
 
         let habitIncreaseFrequency = document.createElement('button')
-        habitIncreaseFrequency.innerHTML = `<i class="fas fa-plus increase-freq-btn"></i>`
+        habitIncreaseFrequency.id = "increase-freq-btn"
+        habitIncreaseFrequency.innerHTML = `<i class="fas fa-plus"></i>`
 
         let habitSeeMore = document.createElement('button')
         habitSeeMore.innerHTML = `<i class="fas fa-ellipsis-h see-more-btn"></i>`
 
+        // POST: Increment habit 
+        habitIncreaseFrequency.addEventListener('click', () => {
+            console.log('w')
+            try {
+                console.log('hello')
+                // e.preventDefault();
+                const url = `http://localhost:3000/users/${username}/habit/entries`
+                const data = { user_habit_id: 1 }
+                requests.postData(url, data);
+                location.reload();
+            } catch (err) {
+                throw err
+            }
+        });
+
+        // DELETE: Decrement habit
+
+        
 
         let habitExtrasContainer = document.createElement('div')
+        habitExtrasContainer.className = "habit-extras-container"
 
         habitSeeMore.addEventListener('click', () => {
-            habitExtrasContainer.className = "habit-extras-container"
+
             if (habitExtrasContainer.style.display === "grid") {
                 habitExtrasContainer.style.display = "none";
             } else {
@@ -318,7 +343,6 @@ async function renderMyHabits() {
             // habitExtrasFrequencyTwo.className = "extras-progress-two"
             // habitExtrasFrequencyTwo.setAttribute('max', `${habit.max_frequency}`)
             // habitExtrasFrequencyTwo.setAttribute('value', `${habit.day_entries[2].total}`)
-
 
             habitContainer.appendChild(habitExtrasContainer)
             habitExtrasContainer.appendChild(habitExtrasDate)
@@ -356,7 +380,7 @@ function render404() {
 
 
 module.exports = { renderStreaks, renderMyHabits, renderLandingPage, render404 }
-},{"./forms":4,"./renderHelpers":7,"./requests":8}],4:[function(require,module,exports){
+},{"./auth":2,"./forms":4,"./renderHelpers":7,"./requests":8}],4:[function(require,module,exports){
 const auth = require("./auth");
 const main = document.querySelector('main');
 
@@ -664,11 +688,11 @@ async function getAllHabits() {
     }
 }
 
-async function decrementHabit(id){
+async function decrementHabit(id) {
     try {
-        const options = { 
+        const options = {
             method: 'DELETE',
-            headers: new Headers({ 'Authorization': localStorage.getItem('token') }), 
+            headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
         }
         await fetch(`${hostURL}/users/${username}/habits/entries/${id}`, options);
         window.location.hash = `#profile`
@@ -677,11 +701,11 @@ async function decrementHabit(id){
     }
 }
 
-async function deleteUserHabit(habit_id){
+async function deleteUserHabit(habit_id) {
     try {
-        const options = { 
+        const options = {
             method: 'DELETE',
-            headers: new Headers({ 'Authorization': localStorage.getItem('token') }), 
+            headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
         }
         await fetch(`${hostURL}/users/${username}/habits/${habit_id}`, options);
         window.location.hash = `#addhabits`
@@ -707,7 +731,7 @@ async function get(path) {
     }
 }
 
-const getUserHabits = () => get(`users/${username}/habits`); 
+const getUserHabits = () => get(`users/${username}/habits`);
 
 async function addUserhabit(formData) {
     try {
@@ -715,8 +739,8 @@ async function addUserhabit(formData) {
             method: 'POST',
             headers: new Headers({
                 'Authorization': localStorage.getItem('token'),
-                'Content-Type': 'application/json' 
-                }),
+                'Content-Type': 'application/json'
+            }),
             body: JSON.stringify(formData)
         }
         console.log((options.body));
@@ -735,33 +759,25 @@ async function addUserhabit(formData) {
 }
 
 
-async function createHabit(formData) {
+async function postData(url = '', formData = {}) {
     try {
         const options = {
             method: 'POST',
             headers: new Headers({
-                 'Authorization': localStorage.getItem('token'),
-                 'Content-Type': 'application/json' 
-                }),
+                'Authorization': localStorage.getItem('token'),
+                'Content-Type': 'application/json'
+            }),
             body: JSON.stringify(formData)
         }
-        const response = await fetch(`${hostURL}/habits`, options);
-        
-        const data = await response.json();
-        window.location.hash = "addhabits"
-        if (data.err) {
-            console.warn(data.err);
-            // logout();
-        }
-        return data;
+        const response = await fetch(url, options);
+        return response.json();
     } catch (err) {
         console.warn(err);
     }
 }
 
 
-
-module.exports = { getAllHabits, getUserHabits, get, addUserhabit, createHabit, deleteUserHabit}
+module.exports = { getAllHabits, getUserHabits, get, addUserhabit, postData, deleteUserHabit }
 
 },{"./auth":2}],9:[function(require,module,exports){
 "use strict";function e(e){this.message=e}e.prototype=new Error,e.prototype.name="InvalidCharacterError";var r="undefined"!=typeof window&&window.atob&&window.atob.bind(window)||function(r){var t=String(r).replace(/=+$/,"");if(t.length%4==1)throw new e("'atob' failed: The string to be decoded is not correctly encoded.");for(var n,o,a=0,i=0,c="";o=t.charAt(i++);~o&&(n=a%4?64*n+o:o,a++%4)?c+=String.fromCharCode(255&n>>(-2*a&6)):0)o="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".indexOf(o);return c};function t(e){var t=e.replace(/-/g,"+").replace(/_/g,"/");switch(t.length%4){case 0:break;case 2:t+="==";break;case 3:t+="=";break;default:throw"Illegal base64url string!"}try{return function(e){return decodeURIComponent(r(e).replace(/(.)/g,(function(e,r){var t=r.charCodeAt(0).toString(16).toUpperCase();return t.length<2&&(t="0"+t),"%"+t})))}(t)}catch(e){return r(t)}}function n(e){this.message=e}function o(e,r){if("string"!=typeof e)throw new n("Invalid token specified");var o=!0===(r=r||{}).header?0:1;try{return JSON.parse(t(e.split(".")[o]))}catch(e){throw new n("Invalid token specified: "+e.message)}}n.prototype=new Error,n.prototype.name="InvalidTokenError";const a=o;a.default=o,a.InvalidTokenError=n,module.exports=a;
