@@ -76,7 +76,7 @@ class UserHabit extends Habit {
         const result = await db.query(SQL`
         select users.username, users.id AS user_id, habits.id AS habit_id, habits.name AS habit_name, user_habits.frequency FROM user_habits
         JOIN
-        habits on user_habits.id = habits.id
+        habits on user_habits.habit_id = habits.id
         JOIN 
         users on user_habits.user_id = users.id
         WHERE users.username = ${username};`);
