@@ -21,11 +21,11 @@ async function getAllHabits() {
     }
 }
 
-async function decrementHabit(id){
+async function decrementHabit(id) {
     try {
-        const options = { 
+        const options = {
             method: 'DELETE',
-            headers: new Headers({ 'Authorization': localStorage.getItem('token') }), 
+            headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
         }
         await fetch(`${hostURL}/users/${username}/habits/entries/${id}`, options);
         window.location.hash = `#profile`
@@ -34,11 +34,11 @@ async function decrementHabit(id){
     }
 }
 
-async function deleteUserHabit(habit_id){
+async function deleteUserHabit(habit_id) {
     try {
-        const options = { 
+        const options = {
             method: 'DELETE',
-            headers: new Headers({ 'Authorization': localStorage.getItem('token') }), 
+            headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
         }
         await fetch(`${hostURL}/users/${username}/habits/${habit_id}`, options);
         window.location.hash = `#addhabits`
@@ -64,7 +64,7 @@ async function get(path) {
     }
 }
 
-const getUserHabits = () => get(`users/${username}/habits`); 
+const getUserHabits = () => get(`users/${username}/habits`);
 
 async function addUserhabit(formData) {
     try {
@@ -72,8 +72,8 @@ async function addUserhabit(formData) {
             method: 'POST',
             headers: new Headers({
                 'Authorization': localStorage.getItem('token'),
-                'Content-Type': 'application/json' 
-                }),
+                'Content-Type': 'application/json'
+            }),
             body: JSON.stringify(formData)
         }
         console.log((options.body));
@@ -92,30 +92,22 @@ async function addUserhabit(formData) {
 }
 
 
-async function createHabit(formData) {
+async function postData(url = '', formData = {}) {
     try {
         const options = {
             method: 'POST',
             headers: new Headers({
-                 'Authorization': localStorage.getItem('token'),
-                 'Content-Type': 'application/json' 
-                }),
+                'Authorization': localStorage.getItem('token'),
+                'Content-Type': 'application/json'
+            }),
             body: JSON.stringify(formData)
         }
-        const response = await fetch(`${hostURL}/habits`, options);
-        
-        const data = await response.json();
-        window.location.hash = "addhabits"
-        if (data.err) {
-            console.warn(data.err);
-            // logout();
-        }
-        return data;
+        const response = await fetch(url, options);
+        return response.json();
     } catch (err) {
         console.warn(err);
     }
 }
 
 
-
-module.exports = { getAllHabits, getUserHabits, get, addUserhabit, createHabit, deleteUserHabit}
+module.exports = { getAllHabits, getUserHabits, get, addUserhabit, postData, deleteUserHabit }
