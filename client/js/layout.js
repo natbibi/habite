@@ -1,4 +1,5 @@
 const content = require('./content')
+const addHabits = require('./addHabits');
 const rHelpers = require('./renderHelpers');
 const forms = require('./forms')
 const auth = require('./auth');
@@ -9,7 +10,7 @@ const main = document.querySelector('main');
 const publicRoutes = ['#', '#login', '#register'];
 const privateRoutes = []; // add #profile and #addhabits
 
-window.addEventListener('hashchange', updateContent);
+// window.addEventListener('hashchange', updateContent);
 
 function updateMain(path) {
     console.log("hello updating main")
@@ -32,7 +33,13 @@ function updateMain(path) {
             case '#profile':
                 content.renderStreaks(); content.renderMyHabits(); break;
             case '#addhabits':
-                content.renderAddHabitsPage(); break;
+                addHabits.renderAddHabitsPage();
+                addHabits.createNewHabitForm();
+                break;
+            // case '#more':
+            //     renderLandingPage(); renderMenuMessage(); break;
+            // case '#top':
+            //     break;
             default:
                 content.render404(); break;
         }
