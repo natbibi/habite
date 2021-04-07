@@ -46,7 +46,7 @@ async function renderAddHabitsPage() {
      </form>
      `
 
-    console.log(addHabitForm);
+     console.log(addHabitForm);
     main.appendChild(addHabitForm)
 }
 
@@ -605,6 +605,43 @@ async function deleteUserHabit(habit_id){
         }
         await fetch(`${hostURL}/users/${username}/habits/${habit_id}`, options);
         window.location.hash = `#addhabit`
+    } catch (err) {
+        console.warn(err);
+    }
+}
+
+async function get(path) {
+    try {
+        const options = {
+            headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
+        }
+        const response = await fetch(`${hostURL}/${path}`, options)
+        const data = await response.json();
+        // if (data.err) {
+        //     console.warn(data.err);
+        //     logout();
+        // }
+        return data;
+    } catch (err) {
+        console.warn(err);
+    }
+}
+
+
+async function post(path, data) {
+    try {
+        const options = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        }
+        const response = await fetch(`${hostURL}/${path}`, options)
+        const data = await response.json();
+        // if (data.err) {
+        //     console.warn(data.err);
+        //     logout();
+        // }
+        return data;
     } catch (err) {
         console.warn(err);
     }

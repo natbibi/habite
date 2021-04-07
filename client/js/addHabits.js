@@ -45,7 +45,7 @@ async function renderAddHabitsPage() {
      </form>
      `
 
-    console.log(addHabitForm);
+     console.log(addHabitForm);
     main.appendChild(addHabitForm)
 }
 
