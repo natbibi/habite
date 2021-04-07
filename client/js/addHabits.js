@@ -10,7 +10,7 @@ function renderAddHabitsPage() {
     const greeting = document.createElement('h1')
     greeting.textContent = "Let's get started..."
     heading.appendChild(greeting)
-    
+
     // render add habit form
     const addHabitForm = document.createElement("div");
     addHabitForm.className = "form add-habit-form";
@@ -29,15 +29,24 @@ function renderAddHabitsPage() {
     newHabitForm.appendChild(newHabitFormHeading);
     newHabitForm.appendChild(createNewHabitForm());
 
+    const deleteHabitForm = document.createElement("div");
+    deleteHabitForm.className = "form delete-habit-form";
+    const deleteHabitFormHeading = document.createElement("h2");
+    deleteHabitFormHeading.textContent = "Stop tracking a habit";
+
+    deleteHabitForm.appendChild(deleteHabitFormHeading);
+    deleteHabitForm.appendChild(createDeleteHabitForm());
+
     main.appendChild(addHabitForm);
     main.appendChild(newHabitForm);
+    main.appendChild(deleteHabitForm);
 }
 
 function createAddHabitForm() {
     // form fields
     fields = [
         { tag: 'label', attributes: { class: 'add-habits-dropdown', for: 'habits-dropdown' }, text: 'Choose a habit:' },
-        { tag: 'select', attributes:{ class: 'add-habits-dropdown', name: 'habits-dropdown'} },
+        { tag: 'select', attributes: { class: 'add-habits-dropdown', name: 'habits-dropdown' } },
         { tag: 'label', attributes: { class: 'add-habits-frequency', for: 'frequency' }, text: 'How often?' },
         { tag: 'input', attributes: { class: 'add-habits-frequency', name: 'frequency', type: 'number', placeholder: '3', min: "1", max: "24" } },
         { tag: 'input', attributes: { class: 'add-habits-btn', type: 'submit', name: 'habit-sbmt', value: 'Track Habit' } }
@@ -46,7 +55,7 @@ function createAddHabitForm() {
     const form = forms.createForm(fields);
     const freqInput = form.querySelector("input[name='frequency']");
     const habitsDropdown = form.querySelector("select");
-    
+
     // add habits to dropdown     
     req.get('habits')
         .then(habits => {
@@ -67,6 +76,7 @@ function createAddHabitForm() {
             frequency: freqInput.value
         }
         req.addUserhabit(data);
+        location.reload();
     };
 
     return form;
@@ -74,26 +84,58 @@ function createAddHabitForm() {
 
 function createNewHabitForm() {
     fields = [
-        { tag: 'label', attributes: { class: 'new-habit-name', for: 'new-habit-name'}, text: 'Add a custom habit' },
+        { tag: 'label', attributes: { class: 'new-habit-name', for: 'new-habit-name' }, text: 'Add a custom habit' },
         { tag: 'input', attributes: { class: 'new-habit-name', name: 'new-habit-name', type: 'text', placeholder: 'use habite' }, text: 'Add a custom habit' },
-        { tag: 'input', attributes: { class: 'new-habit-btn', type: 'submit', name: 'new-habit-sbmt'} }
+        { tag: 'input', attributes: { class: 'new-habit-btn', type: 'submit', name: 'new-habit-sbmt' } }
     ];
 
     const form = forms.createForm(fields);
     const nameInput = form.querySelector('input[type=text]');
-    
+
     form.onsubmit = async (e) => {
         e.preventDefault();
         const data = {
             name: nameInput.value
         }
         await req.createHabit(data);
+        location.reload();
     };
 
     return form;
 }
 
 function createDeleteHabitForm() {
+    fields = [
+        { tag: 'label', attributes: { class: 'delete-habit', for: 'delete-habit-dropdown' }, text: 'Habit' },
+        { tag: 'select', attributes: { class: 'delete-habit', name: 'delete-habit-dropdown' } },
+        { tag: 'input', attributes: { class: 'new-habit-btn', type: 'submit', name: 'new-habit-sbmt' } }
+    ];
+
+
+    const form = forms.createForm(fields);
+    const userHabitsDropdown = form.querySelector("select");
+
+    req.getUserHabits()
+        .then(habits => {
+            console.log(habits);
+            habits.forEach(habit => {
+                const option = document.createElement("option");
+                option.textContent = habit.habit_name;
+                option.setAttribute('data-id', habit.habit_id);
+                userHabitsDropdown.appendChild(option)
+            })
+        });
+
+
+    form.onsubmit = async (e) => {
+        e.preventDefault();
+        const selected = userHabitsDropdown.options[userHabitsDropdown.selectedIndex].getAttribute('data-id');
+        await req.deleteUserHabit(selected);
+        location.reload();
+    };
+
+    return form;
+
     // delete a user habit so it is no longer tracked
     // const deleteUserHabitBtn = document.createElement('button');
     // deleteUserHabitBtn.setAttribute('class', 'far fa-trash-alt delete-habit-btn')
