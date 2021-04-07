@@ -184,6 +184,7 @@ function renderStreaks() {
 async function renderMyHabits() {
     const response = await requests.getAllHabits();
     const habitsList = await response.data
+    console.log(habitsList)
     if (habitsList.err) { return }
     const habits = document.createElement('div')
     habits.className = "habits-list"
@@ -201,6 +202,9 @@ async function renderMyHabits() {
         let habitContainer = document.createElement('div')
         habitContainer.className = "habit-container"
 
+        let habitDate = document.createElement('p')
+        habitDate.textContent = habit.date
+
         let habitName = document.createElement('p')
         habitName.textContent = habit.name
 
@@ -208,17 +212,23 @@ async function renderMyHabits() {
         habitFrequency.setAttribute('max', `${habit.max_frequency}`)
         habitFrequency.setAttribute('value', `${habit.total_completed}`)
 
-        let habitMinus = document.createElement('i')
-        habitMinus.className = "fas fa-minus minus-btn"
+        let habitMinus = document.createElement('button')
+        habitMinus.innerHTML = `<i class="fas fa-minus minus-btn"></i>`
 
-        let habitIncreaseFrequency = document.createElement('i')
-        habitIncreaseFrequency.className = "fas fa-plus increase-freq-btn"
+        let habitIncreaseFrequency = document.createElement('button')
+        habitIncreaseFrequency.innerHTML = `<i class="fas fa-plus increase-freq-btn"></i>`
+
+        let habitSeeMore = document.createElement('button')
+        habitSeeMore.innerHTML = `<i class="fas fa-ellipsis-h see-more-btn"></i>`
+
 
         habitsContainer.appendChild(habitContainer)
+        habitContainer.appendChild(habitDate)
         habitContainer.appendChild(habitName)
         habitContainer.appendChild(habitFrequency)
         habitContainer.appendChild(habitMinus)
         habitContainer.appendChild(habitIncreaseFrequency)
+        habitContainer.appendChild(habitSeeMore)
 
     })
 
