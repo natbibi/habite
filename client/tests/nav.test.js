@@ -16,7 +16,7 @@ describe('top navbar', () => {
     describe('visibility', () => {
         it('should be displayed when rendered', () => {
             expect(nav).toBeTruthy();
-            expect(nav.style.visibility).toBe('show');      
+            expect(nav.style.visibility).toBe('show');
         });
     });
 
