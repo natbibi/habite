@@ -132,7 +132,7 @@ async function renderMyHabits() {
         habitName.textContent = habit.name
 
         let habitFrequency = document.createElement('progress')
-        habitFrequency.setAttribute('max', `${habit.frequency}`)
+        habitFrequency.setAttribute('max', `${habit.max_frequency}`)
         habitFrequency.setAttribute('value', `${habit.total_completed}`)
 
         let habitMinus = document.createElement('i')
