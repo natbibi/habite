@@ -48,7 +48,6 @@ async function renderMyHabits() {
     const response = await requests.getAllHabits();
     const habitsList = await response.data
     if (habitsList.err) { return }
-    console.log(habitsList)
     const habits = document.createElement('div')
     habits.className = "habits-list"
     const habitsHeading = document.createElement('h2')
