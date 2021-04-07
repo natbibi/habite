@@ -45,9 +45,9 @@ function renderStreaks() {
 
 
 async function renderMyHabits() {
-    const habitsList = await requests.getAllHabits();
+    const response = await requests.getAllHabits();
+    const habitsList = await response.data
     if (habitsList.err) { return }
-
     const habits = document.createElement('div')
     habits.className = "habits-list"
     const habitsHeading = document.createElement('h2')
@@ -58,8 +58,6 @@ async function renderMyHabits() {
     main.append(habits)
     // insert GET request for user habits here
 
-    // let habitContainer = document.createElement('div')
-    // habitContainer.className = "habit-container"
     habitsList.forEach(habit => {
 
         // function getHabitList
@@ -67,19 +65,24 @@ async function renderMyHabits() {
         habitContainer.className = "habit-container"
 
         let habitName = document.createElement('p')
-        habitName.textContent = habit.habit_name
+        habitName.textContent = habit.name
 
         let habitFrequency = document.createElement('progress')
-        habitFrequency.setAttribute('max', `${habit.frequency}`)
-        habitFrequency.setAttribute('value', `${habit.frequency}`)
+        habitFrequency.setAttribute('max', `${habit.max_frequency}`)
+        habitFrequency.setAttribute('value', `${habit.total_completed}`)
+
+        let habitMinus = document.createElement('i')
+        habitMinus.className = "fas fa-minus minus-btn"
 
         let habitIncreaseFrequency = document.createElement('i')
-        habitIncreaseFrequency.className = "fas fa-plus-circle increase-freq-btn"
+        habitIncreaseFrequency.className = "fas fa-plus increase-freq-btn"
 
         habitsContainer.appendChild(habitContainer)
         habitContainer.appendChild(habitName)
         habitContainer.appendChild(habitFrequency)
+        habitContainer.appendChild(habitMinus)
         habitContainer.appendChild(habitIncreaseFrequency)
+
     })
 
     habits.appendChild(habitsHeading)

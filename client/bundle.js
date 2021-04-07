@@ -109,9 +109,9 @@ function renderStreaks() {
 
 
 async function renderMyHabits() {
-    const habitsList = await requests.getAllHabits();
+    const response = await requests.getAllHabits();
+    const habitsList = await response.data
     if (habitsList.err) { return }
-
     const habits = document.createElement('div')
     habits.className = "habits-list"
     const habitsHeading = document.createElement('h2')
@@ -122,8 +122,6 @@ async function renderMyHabits() {
     main.append(habits)
     // insert GET request for user habits here
 
-    // let habitContainer = document.createElement('div')
-    // habitContainer.className = "habit-container"
     habitsList.forEach(habit => {
 
         // function getHabitList
@@ -131,19 +129,24 @@ async function renderMyHabits() {
         habitContainer.className = "habit-container"
 
         let habitName = document.createElement('p')
-        habitName.textContent = habit.habit_name
+        habitName.textContent = habit.name
 
         let habitFrequency = document.createElement('progress')
-        habitFrequency.setAttribute('max', `${habit.frequency}`)
-        habitFrequency.setAttribute('value', `${habit.frequency}`)
+        habitFrequency.setAttribute('max', `${habit.max_frequency}`)
+        habitFrequency.setAttribute('value', `${habit.total_completed}`)
+
+        let habitMinus = document.createElement('i')
+        habitMinus.className = "fas fa-minus minus-btn"
 
         let habitIncreaseFrequency = document.createElement('i')
-        habitIncreaseFrequency.className = "fas fa-plus-circle increase-freq-btn"
+        habitIncreaseFrequency.className = "fas fa-plus increase-freq-btn"
 
         habitsContainer.appendChild(habitContainer)
         habitContainer.appendChild(habitName)
         habitContainer.appendChild(habitFrequency)
+        habitContainer.appendChild(habitMinus)
         habitContainer.appendChild(habitIncreaseFrequency)
+
     })
 
     habits.appendChild(habitsHeading)
@@ -494,15 +497,14 @@ module.exports = {
 },{}],7:[function(require,module,exports){
 const auth = require('./auth')
 const hostURL = "http://localhost:3000";
+const username = auth.currentUser();
 
 async function getAllHabits() {
     try {
         const options = {
             headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
         }
-        const username = auth.currentUser()
-        console.log(username)
-        const response = await fetch(`${hostURL}/users/${username}/habits`, options)
+        const response = await fetch(`${hostURL}/users/${username}/habits/entries`, options)
         // https://habit-your-way.herokuapp.com/habits 
         const data = await response.json();
 
@@ -516,24 +518,33 @@ async function getAllHabits() {
     }
 }
 
-async function getAllUsers() {
+async function decrementHabit(id){
     try {
-        const options = {
-            headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
+        const options = { 
+            method: 'DELETE',
+            headers: new Headers({ 'Authorization': localStorage.getItem('token') }), 
         }
-        const response = await fetch('https://habit-your-way.herokuapp.com/users', options);
-        const data = await response.json();
-        if (data.err) {
-            console.warn(data.err);
-            logout();
-        }
-        return data;
+        await fetch(`${hostURL}/users/${username}/habits/entries/${id}`, options);
+        window.location.hash = `#profile`
     } catch (err) {
         console.warn(err);
     }
 }
 
-module.exports = { getAllHabits, getAllUsers }
+async function deleteUserHabit(habit_id){
+    try {
+        const options = { 
+            method: 'DELETE',
+            headers: new Headers({ 'Authorization': localStorage.getItem('token') }), 
+        }
+        await fetch(`${hostURL}/users/${username}/habits/${habit_id}`, options);
+        window.location.hash = `#addhabit`
+    } catch (err) {
+        console.warn(err);
+    }
+}
+
+module.exports = { getAllHabits, decrementHabit, deleteUserHabit }
 },{"./auth":1}],8:[function(require,module,exports){
 "use strict";function e(e){this.message=e}e.prototype=new Error,e.prototype.name="InvalidCharacterError";var r="undefined"!=typeof window&&window.atob&&window.atob.bind(window)||function(r){var t=String(r).replace(/=+$/,"");if(t.length%4==1)throw new e("'atob' failed: The string to be decoded is not correctly encoded.");for(var n,o,a=0,i=0,c="";o=t.charAt(i++);~o&&(n=a%4?64*n+o:o,a++%4)?c+=String.fromCharCode(255&n>>(-2*a&6)):0)o="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".indexOf(o);return c};function t(e){var t=e.replace(/-/g,"+").replace(/_/g,"/");switch(t.length%4){case 0:break;case 2:t+="==";break;case 3:t+="=";break;default:throw"Illegal base64url string!"}try{return function(e){return decodeURIComponent(r(e).replace(/(.)/g,(function(e,r){var t=r.charCodeAt(0).toString(16).toUpperCase();return t.length<2&&(t="0"+t),"%"+t})))}(t)}catch(e){return r(t)}}function n(e){this.message=e}function o(e,r){if("string"!=typeof e)throw new n("Invalid token specified");var o=!0===(r=r||{}).header?0:1;try{return JSON.parse(t(e.split(".")[o]))}catch(e){throw new n("Invalid token specified: "+e.message)}}n.prototype=new Error,n.prototype.name="InvalidTokenError";const a=o;a.default=o,a.InvalidTokenError=n,module.exports=a;
 

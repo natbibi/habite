@@ -179,6 +179,8 @@ class UserHabit extends Habit {
         AND to_char(habit_entries.completed_at, 'DD-MM-YYYY') <=  to_char(current_date, 'DD-MM-YYYY')
         AND
         users.username = ${username}
+        AND
+        habit_entries.completed = true
         GROUP BY users.username, users.id, date, user_habits.id, habits.name, habit_entries.completed
         ORDER BY habits.name ASC;`);
         const habits = result.rows.map((habit) => ({
