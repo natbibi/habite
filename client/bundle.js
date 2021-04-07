@@ -25,7 +25,11 @@ async function renderAddHabitsPage() {
          option.textContent = habit.name;
          habitsDropdown.appendChild(option)
      });
- 
+     
+
+     const dropdown =  document.createElement("div");
+     const frequency = document.createElement("div");
+     const addHabitBtn = document.createElement("button");
      // create form
      addHabitForm.innerHTML = `    
      <form action="" method="POST" class="add-habit-form">
@@ -42,7 +46,7 @@ async function renderAddHabitsPage() {
      </form>
      `
 
-     console.log(addHabitForm);
+    console.log(addHabitForm);
     main.appendChild(addHabitForm)
 }
 
