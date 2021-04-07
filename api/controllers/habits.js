@@ -57,11 +57,12 @@ async function createHabitEntry(req, res) {
 
 async function getUserHabitEntries(req, res) {
   try {
-    //check if valid jwt is for the requested user
-    // if (res.locals.user !== req.params.username) throw err
-    const userHabits = await UserHabit.getUserHabitEntries(req.params.username)
-    const streakData = streak(userHabits)
-    res.json({ data: userHabits, streakData: streakData })
+      //check if valid jwt is for the requested user
+      // if (res.locals.user !== req.params.username) throw err
+      const userHabits = await UserHabit.getUserHabitEntries(req.params.username)
+      console.log(userHabits)
+      const streakData = streak(userHabits.allEntries)
+      res.json({data: userHabits.habits, streakData: streakData})
   } catch (err) {
     res.status(403).send({ err: err })
   }

@@ -8,7 +8,7 @@ async function getAllHabits() {
         }
         const username = auth.currentUser()
         console.log(username)
-        const response = await fetch(`${hostURL}/users/${username}/habits`, options)
+        const response = await fetch(`${hostURL}/users/${username}/habits/entries`, options)
         // https://habit-your-way.herokuapp.com/habits 
         const data = await response.json();
 

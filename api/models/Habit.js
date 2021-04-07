@@ -131,10 +131,12 @@ class UserHabit extends Habit {
       }
     });
   }
+
+  
   static getUserHabitEntries(username) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const result = await db.query(SQL`
+    return new Promise (async (resolve,reject) => {
+      try{
+        const resultAll = await db.query(SQL`
         select users.username, habits.name, habit_entries.completed, habit_entries.id, habit_entries.completed_at FROM habit_entries
         JOIN
         user_habits on habit_entries.user_habit_id = user_habits.id
@@ -143,8 +145,27 @@ class UserHabit extends Habit {
         JOIN
         habits on user_habits.habit_id = habits.id
         WHERE users.username = ${username};`);
-        const habits = result.rows.map(habit => ({ name: habit.name, username: habit.username, completed: habit.completed, id: habit.id, timestamp: habit.completed_at }))
-        resolve(habits)
+        const resultAllHabits = resultAll.rows.map(habit => ({name: habit.name, username: habit.username, completed: habit.completed, id: habit.id, timestamp: habit.completed_at }))
+        const result = await db.query(SQL`
+        SELECT users.username, users.id as user_id, habits.name, user_habits.id AS user_habit_id, habit_entries.completed, user_habits.frequency, count(*) AS total_completed, to_char(completed_at, 'DD-MM-YYYY') AS date
+        FROM user_habits 
+        JOIN users ON user_habits.user_id = users.id
+        LEFT JOIN habits ON user_habits.habit_id = habits.id
+        LEFT JOIN habit_entries ON user_habits.id = habit_entries.user_habit_id
+        WHERE 
+        to_char(habit_entries.completed_at, 'DD-MM-YYYY')  >= to_char(current_date - INTEGER '3', 'DD-MM-YYYY')
+        AND to_char(habit_entries.completed_at, 'DD-MM-YYYY') <=  to_char(current_date, 'DD-MM-YYYY')
+        AND
+        users.username = ${username}
+        GROUP BY users.username, users.id, date, user_habits.id, habits.name, habit_entries.completed
+        ORDER BY date desc;`);
+        const habits = result.rows.map(habit => ({name: habit.name, username: habit.username, frequency: habit.frequency, total_completed: parseInt(habit.total_completed), completed: habit.completed, date: habit.date, user_habit_id: habit.user_habit_id }))
+        const data = {
+          allEntries: resultAllHabits,
+          habits: habits
+        }
+        console.log(data)
+        resolve(data)
       } catch (error) {
         reject(`Could not retrieve habit`);
       }
