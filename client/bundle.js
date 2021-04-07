@@ -11,7 +11,7 @@ function renderAddHabitsPage() {
     const greeting = document.createElement('h1')
     greeting.textContent = "Let's get started..."
     heading.appendChild(greeting)
-    
+
     // render add habit form
     const addHabitForm = document.createElement("div");
     addHabitForm.className = "form add-habit-form";
@@ -30,15 +30,24 @@ function renderAddHabitsPage() {
     newHabitForm.appendChild(newHabitFormHeading);
     newHabitForm.appendChild(createNewHabitForm());
 
+    const deleteHabitForm = document.createElement("div");
+    deleteHabitForm.className = "form delete-habit-form";
+    const deleteHabitFormHeading = document.createElement("h2");
+    deleteHabitFormHeading.textContent = "Stop tracking a habit";
+
+    deleteHabitForm.appendChild(deleteHabitFormHeading);
+    deleteHabitForm.appendChild(createDeleteHabitForm());
+
     main.appendChild(addHabitForm);
     main.appendChild(newHabitForm);
+    main.appendChild(deleteHabitForm);
 }
 
 function createAddHabitForm() {
     // form fields
     fields = [
         { tag: 'label', attributes: { class: 'add-habits-dropdown', for: 'habits-dropdown' }, text: 'Choose a habit:' },
-        { tag: 'select', attributes:{ class: 'add-habits-dropdown', name: 'habits-dropdown'} },
+        { tag: 'select', attributes: { class: 'add-habits-dropdown', name: 'habits-dropdown' } },
         { tag: 'label', attributes: { class: 'add-habits-frequency', for: 'frequency' }, text: 'How often?' },
         { tag: 'input', attributes: { class: 'add-habits-frequency', name: 'frequency', type: 'number', placeholder: '3', min: "1", max: "24" } },
         { tag: 'input', attributes: { class: 'add-habits-btn', type: 'submit', name: 'habit-sbmt', value: 'Track Habit' } }
@@ -47,7 +56,7 @@ function createAddHabitForm() {
     const form = forms.createForm(fields);
     const freqInput = form.querySelector("input[name='frequency']");
     const habitsDropdown = form.querySelector("select");
-    
+
     // add habits to dropdown     
     req.get('habits')
         .then(habits => {
@@ -68,6 +77,7 @@ function createAddHabitForm() {
             frequency: freqInput.value
         }
         req.addUserhabit(data);
+        location.reload();
     };
 
     return form;
@@ -75,26 +85,58 @@ function createAddHabitForm() {
 
 function createNewHabitForm() {
     fields = [
-        { tag: 'label', attributes: { class: 'new-habit-name', for: 'new-habit-name'}, text: 'Add a custom habit' },
+        { tag: 'label', attributes: { class: 'new-habit-name', for: 'new-habit-name' }, text: 'Add a custom habit' },
         { tag: 'input', attributes: { class: 'new-habit-name', name: 'new-habit-name', type: 'text', placeholder: 'use habite' }, text: 'Add a custom habit' },
-        { tag: 'input', attributes: { class: 'new-habit-btn', type: 'submit', name: 'new-habit-sbmt'} }
+        { tag: 'input', attributes: { class: 'new-habit-btn', type: 'submit', name: 'new-habit-sbmt' } }
     ];
 
     const form = forms.createForm(fields);
     const nameInput = form.querySelector('input[type=text]');
-    
+
     form.onsubmit = async (e) => {
         e.preventDefault();
         const data = {
             name: nameInput.value
         }
         await req.createHabit(data);
+        location.reload();
     };
 
     return form;
 }
 
 function createDeleteHabitForm() {
+    fields = [
+        { tag: 'label', attributes: { class: 'delete-habit', for: 'delete-habit-dropdown' }, text: 'Habit' },
+        { tag: 'select', attributes: { class: 'delete-habit', name: 'delete-habit-dropdown' } },
+        { tag: 'input', attributes: { class: 'new-habit-btn', type: 'submit', name: 'new-habit-sbmt' } }
+    ];
+
+
+    const form = forms.createForm(fields);
+    const userHabitsDropdown = form.querySelector("select");
+
+    req.getUserHabits()
+        .then(habits => {
+            console.log(habits);
+            habits.forEach(habit => {
+                const option = document.createElement("option");
+                option.textContent = habit.habit_name;
+                option.setAttribute('data-id', habit.habit_id);
+                userHabitsDropdown.appendChild(option)
+            })
+        });
+
+
+    form.onsubmit = async (e) => {
+        e.preventDefault();
+        const selected = userHabitsDropdown.options[userHabitsDropdown.selectedIndex].getAttribute('data-id');
+        await req.deleteUserHabit(selected);
+        location.reload();
+    };
+
+    return form;
+
     // delete a user habit so it is no longer tracked
     // const deleteUserHabitBtn = document.createElement('button');
     // deleteUserHabitBtn.setAttribute('class', 'far fa-trash-alt delete-habit-btn')
@@ -614,7 +656,7 @@ async function deleteUserHabit(habit_id){
             headers: new Headers({ 'Authorization': localStorage.getItem('token') }), 
         }
         await fetch(`${hostURL}/users/${username}/habits/${habit_id}`, options);
-        window.location.hash = `#addhabit`
+        window.location.hash = `#addhabits`
     } catch (err) {
         console.warn(err);
     }
@@ -636,6 +678,8 @@ async function get(path) {
         console.warn(err);
     }
 }
+
+const getUserHabits = () => get(`users/${username}/habits`); 
 
 async function addUserhabit(formData) {
     try {
@@ -689,7 +733,7 @@ async function createHabit(formData) {
 
 
 
-module.exports = { getAllHabits , get, addUserhabit, createHabit}
+module.exports = { getAllHabits, getUserHabits, get, addUserhabit, createHabit, deleteUserHabit}
 
 },{"./auth":2}],9:[function(require,module,exports){
 "use strict";function e(e){this.message=e}e.prototype=new Error,e.prototype.name="InvalidCharacterError";var r="undefined"!=typeof window&&window.atob&&window.atob.bind(window)||function(r){var t=String(r).replace(/=+$/,"");if(t.length%4==1)throw new e("'atob' failed: The string to be decoded is not correctly encoded.");for(var n,o,a=0,i=0,c="";o=t.charAt(i++);~o&&(n=a%4?64*n+o:o,a++%4)?c+=String.fromCharCode(255&n>>(-2*a&6)):0)o="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".indexOf(o);return c};function t(e){var t=e.replace(/-/g,"+").replace(/_/g,"/");switch(t.length%4){case 0:break;case 2:t+="==";break;case 3:t+="=";break;default:throw"Illegal base64url string!"}try{return function(e){return decodeURIComponent(r(e).replace(/(.)/g,(function(e,r){var t=r.charCodeAt(0).toString(16).toUpperCase();return t.length<2&&(t="0"+t),"%"+t})))}(t)}catch(e){return r(t)}}function n(e){this.message=e}function o(e,r){if("string"!=typeof e)throw new n("Invalid token specified");var o=!0===(r=r||{}).header?0:1;try{return JSON.parse(t(e.split(".")[o]))}catch(e){throw new n("Invalid token specified: "+e.message)}}n.prototype=new Error,n.prototype.name="InvalidTokenError";const a=o;a.default=o,a.InvalidTokenError=n,module.exports=a;
