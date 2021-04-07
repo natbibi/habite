@@ -6,7 +6,7 @@ body{
 }
 
 header {
-    min-height: 100px;
+    min-height: 70px;
     text-align: center;
 }
 
@@ -44,7 +44,7 @@ header {
 
 .habit-container{
     display: grid;
-    grid-template-columns: 2fr 3fr 1fr 1fr;
+    grid-template-columns: 1fr 2fr 3fr 1fr 1fr 1fr;
     grid-gap: 20px;
     /* justify-content: center; */
     align-items: center;
@@ -55,18 +55,14 @@ progress {
     height: 30px
 }
 
-.increase-freq-btn .minus-btn {
-  font-size: 25px;
+button, .increase-freq-btn, .minus-btn, .see-more-btn {
+  font-size: 18px;
   cursor: pointer;
-  display: flex;
-  justify-content: flex-end;
+  border: none;
+  background-color: white;
 }
 
-.increase-freq-btn:hover {
-    transform: scale(1.05);
-}
-
-.minus-btn:hover {
+button:hover {
     transform: scale(1.05);
 }
 
@@ -126,3 +122,10 @@ footer {
         display: block;
         text-align: left;
     }
+
+@media screen and (min-width: 1000px) {
+    footer {
+        position: relative;
+       
+    }
+}
