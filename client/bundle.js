@@ -1,11 +1,13 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 const req = require("./requests");
 const forms = require("./forms");
+const auth = require('./auth')
 const heading = document.querySelector('header');
 const main = document.querySelector('main');
 
 const hostURL = "http://localhost:3000";
 const username = auth.currentUser();
+
 
 function renderAddHabitsPage() {
     const showFooter = document.getElementById('footer')
@@ -81,10 +83,22 @@ function createAddHabitForm() {
             frequency: freqInput.value
         }
         req.postData(url, data);
-        // location.reload();
-        window.location.hash = "#addhabits"
-        console.log("Added ");
+        location.reload();
+        // window.location.hash = "#addhabits"
     };
+
+    // send
+    // form.onsubmit = (e) => {
+    //     e.preventDefault();
+    //     const selected = habitsDropdown.options[habitsDropdown.selectedIndex].getAttribute('data-id');
+    //     const url = `${hostURL}/users/${username}/habits`
+    //     const data = {
+    //         habit_id: selected,
+    //         frequency: freqInput.value
+    //     }
+    //     req.addUserhabit(data);
+    //     location.reload();
+    // };
 
     return form;
 }
@@ -104,8 +118,8 @@ function createNewHabitForm() {
         const url = `http://localhost:3000/users/${username}/habit`
         const data = { name: nameInput.value }
         req.postData(url, data);
-        // location.reload();
-        window.location.hash = "#addhabits"
+        location.reload();
+        // window.location.hash = "#addhabits"
         // if (data.err) {
         //     console.warn(data.err);
         // logout();
@@ -139,7 +153,8 @@ function createDeleteHabitForm() {
     form.onsubmit = async (e) => {
         e.preventDefault();
         const selected = userHabitsDropdown.options[userHabitsDropdown.selectedIndex].getAttribute('data-id');
-        await req.deleteUserHabit(selected);
+        const url = `${hostURL}/users/${username}/habits/${selected}`
+        req.deleteData(url, selected);
         location.reload();
     };
 
@@ -148,7 +163,7 @@ function createDeleteHabitForm() {
 
 module.exports = { renderAddHabitsPage };
 
-},{"./forms":4,"./requests":8}],2:[function(require,module,exports){
+},{"./auth":2,"./forms":4,"./requests":8}],2:[function(require,module,exports){
 const jwt_decode = require('jwt-decode')
 
 const hostURL = "http://localhost:3000"; // Should this be an ENV variable?
@@ -317,8 +332,17 @@ async function renderMyHabits() {
         });
 
         // DELETE: Decrement habit
-
-        
+        habitMinus.addEventListener('click', () => {
+            console.log('byee')
+            try {
+                const url = `http://localhost:3000/users/${username}/habits/${habit_id}`
+                const selected = userHabitsDropdown.options[userHabitsDropdown.selectedIndex].getAttribute('data-id');
+                requests.deleteData(url, selected);
+                location.reload();
+            } catch (err) {
+                throw err
+            }
+        });
 
         let habitExtrasContainer = document.createElement('div')
         habitExtrasContainer.className = "habit-extras-container"
@@ -694,27 +718,31 @@ async function getAllHabits() {
     }
 }
 
-async function decrementHabit(id) {
+async function postData(url = '', formData = {}) {
     try {
         const options = {
-            method: 'DELETE',
-            headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
+            method: 'POST',
+            headers: new Headers({
+                'Authorization': localStorage.getItem('token'),
+                'Content-Type': 'application/json'
+            }),
+            body: JSON.stringify(formData)
         }
-        await fetch(`${hostURL}/users/${username}/habits/entries/${id}`, options);
-        window.location.hash = `#profile`
+        const response = await fetch(url, options);
+        return response.json();
     } catch (err) {
         console.warn(err);
     }
 }
 
-async function deleteUserHabit(habit_id) {
+async function deleteData(url = '', id) {
     try {
         const options = {
             method: 'DELETE',
             headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
         }
-        await fetch(`${hostURL}/users/${username}/habits/${habit_id}`, options);
-        window.location.hash = `#addhabits`
+        await fetch(url, options);
+        location.reload();
     } catch (err) {
         console.warn(err);
     }
@@ -738,6 +766,19 @@ async function get(path) {
 }
 
 const getUserHabits = () => get(`users/${username}/habits`);
+
+// async function decrementHabit(id) {
+//     try {
+//         const options = {
+//             method: 'DELETE',
+//             headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
+//         }
+//         await fetch(`${hostURL}/users/${username}/habits/entries/${id}`, options);
+//         window.location.hash = `#profile`
+//     } catch (err) {
+//         console.warn(err);
+//     }
+// }
 
 // async function addUserhabit(formData) {
 //     try {
@@ -765,25 +806,7 @@ const getUserHabits = () => get(`users/${username}/habits`);
 // }
 
 
-async function postData(url = '', formData = {}) {
-    try {
-        const options = {
-            method: 'POST',
-            headers: new Headers({
-                'Authorization': localStorage.getItem('token'),
-                'Content-Type': 'application/json'
-            }),
-            body: JSON.stringify(formData)
-        }
-        const response = await fetch(url, options);
-        return response.json();
-    } catch (err) {
-        console.warn(err);
-    }
-}
-
-
-module.exports = { getAllHabits, getUserHabits, get, postData, deleteUserHabit }
+module.exports = { getAllHabits, getUserHabits, get, postData, deleteData }
 
 },{"./auth":2}],9:[function(require,module,exports){
 "use strict";function e(e){this.message=e}e.prototype=new Error,e.prototype.name="InvalidCharacterError";var r="undefined"!=typeof window&&window.atob&&window.atob.bind(window)||function(r){var t=String(r).replace(/=+$/,"");if(t.length%4==1)throw new e("'atob' failed: The string to be decoded is not correctly encoded.");for(var n,o,a=0,i=0,c="";o=t.charAt(i++);~o&&(n=a%4?64*n+o:o,a++%4)?c+=String.fromCharCode(255&n>>(-2*a&6)):0)o="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".indexOf(o);return c};function t(e){var t=e.replace(/-/g,"+").replace(/_/g,"/");switch(t.length%4){case 0:break;case 2:t+="==";break;case 3:t+="=";break;default:throw"Illegal base64url string!"}try{return function(e){return decodeURIComponent(r(e).replace(/(.)/g,(function(e,r){var t=r.charCodeAt(0).toString(16).toUpperCase();return t.length<2&&(t="0"+t),"%"+t})))}(t)}catch(e){return r(t)}}function n(e){this.message=e}function o(e,r){if("string"!=typeof e)throw new n("Invalid token specified");var o=!0===(r=r||{}).header?0:1;try{return JSON.parse(t(e.split(".")[o]))}catch(e){throw new n("Invalid token specified: "+e.message)}}n.prototype=new Error,n.prototype.name="InvalidTokenError";const a=o;a.default=o,a.InvalidTokenError=n,module.exports=a;

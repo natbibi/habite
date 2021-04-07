@@ -21,27 +21,31 @@ async function getAllHabits() {
     }
 }
 
-async function decrementHabit(id) {
+async function postData(url = '', formData = {}) {
     try {
         const options = {
-            method: 'DELETE',
-            headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
+            method: 'POST',
+            headers: new Headers({
+                'Authorization': localStorage.getItem('token'),
+                'Content-Type': 'application/json'
+            }),
+            body: JSON.stringify(formData)
         }
-        await fetch(`${hostURL}/users/${username}/habits/entries/${id}`, options);
-        window.location.hash = `#profile`
+        const response = await fetch(url, options);
+        return response.json();
     } catch (err) {
         console.warn(err);
     }
 }
 
-async function deleteUserHabit(habit_id) {
+async function deleteData(url = '', id) {
     try {
         const options = {
             method: 'DELETE',
             headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
         }
-        await fetch(`${hostURL}/users/${username}/habits/${habit_id}`, options);
-        window.location.hash = `#addhabits`
+        await fetch(url, options);
+        location.reload();
     } catch (err) {
         console.warn(err);
     }
@@ -65,6 +69,19 @@ async function get(path) {
 }
 
 const getUserHabits = () => get(`users/${username}/habits`);
+
+// async function decrementHabit(id) {
+//     try {
+//         const options = {
+//             method: 'DELETE',
+//             headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
+//         }
+//         await fetch(`${hostURL}/users/${username}/habits/entries/${id}`, options);
+//         window.location.hash = `#profile`
+//     } catch (err) {
+//         console.warn(err);
+//     }
+// }
 
 // async function addUserhabit(formData) {
 //     try {
@@ -92,22 +109,4 @@ const getUserHabits = () => get(`users/${username}/habits`);
 // }
 
 
-async function postData(url = '', formData = {}) {
-    try {
-        const options = {
-            method: 'POST',
-            headers: new Headers({
-                'Authorization': localStorage.getItem('token'),
-                'Content-Type': 'application/json'
-            }),
-            body: JSON.stringify(formData)
-        }
-        const response = await fetch(url, options);
-        return response.json();
-    } catch (err) {
-        console.warn(err);
-    }
-}
-
-
-module.exports = { getAllHabits, getUserHabits, get, postData, deleteUserHabit }
+module.exports = { getAllHabits, getUserHabits, get, postData, deleteData }

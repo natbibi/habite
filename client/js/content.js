@@ -103,8 +103,17 @@ async function renderMyHabits() {
         });
 
         // DELETE: Decrement habit
-
-        
+        habitMinus.addEventListener('click', () => {
+            console.log('byee')
+            try {
+                const url = `http://localhost:3000/users/${username}/habits/${habit_id}`
+                const selected = userHabitsDropdown.options[userHabitsDropdown.selectedIndex].getAttribute('data-id');
+                requests.deleteData(url, selected);
+                location.reload();
+            } catch (err) {
+                throw err
+            }
+        });
 
         let habitExtrasContainer = document.createElement('div')
         habitExtrasContainer.className = "habit-extras-container"

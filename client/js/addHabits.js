@@ -1,10 +1,12 @@
 const req = require("./requests");
 const forms = require("./forms");
+const auth = require('./auth')
 const heading = document.querySelector('header');
 const main = document.querySelector('main');
 
 const hostURL = "http://localhost:3000";
 const username = auth.currentUser();
+
 
 function renderAddHabitsPage() {
     const showFooter = document.getElementById('footer')
@@ -80,10 +82,22 @@ function createAddHabitForm() {
             frequency: freqInput.value
         }
         req.postData(url, data);
-        // location.reload();
-        window.location.hash = "#addhabits"
-        console.log("Added ");
+        location.reload();
+        // window.location.hash = "#addhabits"
     };
+
+    // send
+    // form.onsubmit = (e) => {
+    //     e.preventDefault();
+    //     const selected = habitsDropdown.options[habitsDropdown.selectedIndex].getAttribute('data-id');
+    //     const url = `${hostURL}/users/${username}/habits`
+    //     const data = {
+    //         habit_id: selected,
+    //         frequency: freqInput.value
+    //     }
+    //     req.addUserhabit(data);
+    //     location.reload();
+    // };
 
     return form;
 }
@@ -103,8 +117,8 @@ function createNewHabitForm() {
         const url = `http://localhost:3000/users/${username}/habit`
         const data = { name: nameInput.value }
         req.postData(url, data);
-        // location.reload();
-        window.location.hash = "#addhabits"
+        location.reload();
+        // window.location.hash = "#addhabits"
         // if (data.err) {
         //     console.warn(data.err);
         // logout();
@@ -138,7 +152,8 @@ function createDeleteHabitForm() {
     form.onsubmit = async (e) => {
         e.preventDefault();
         const selected = userHabitsDropdown.options[userHabitsDropdown.selectedIndex].getAttribute('data-id');
-        await req.deleteUserHabit(selected);
+        const url = `${hostURL}/users/${username}/habits/${selected}`
+        req.deleteData(url, selected);
         location.reload();
     };
 
