@@ -71,8 +71,8 @@ async function renderMyHabits() {
         habitFrequency.setAttribute('max', `${habit.frequency}`)
         habitFrequency.setAttribute('value', `${habit.total_completed}`)
 
-        let habitDelete = document.createElement('i')
-        habitDelete.className = "far fa-trash-alt delete-btn"
+        let habitMinus = document.createElement('i')
+        habitMinus.className = "fas fa-minus minus-btn"
 
         let habitIncreaseFrequency = document.createElement('i')
         habitIncreaseFrequency.className = "fas fa-plus increase-freq-btn"
@@ -80,7 +80,7 @@ async function renderMyHabits() {
         habitsContainer.appendChild(habitContainer)
         habitContainer.appendChild(habitName)
         habitContainer.appendChild(habitFrequency)
-        habitContainer.appendChild(habitDelete)
+        habitContainer.appendChild(habitMinus)
         habitContainer.appendChild(habitIncreaseFrequency)
 
     })
