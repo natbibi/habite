@@ -6,15 +6,31 @@ describe('addHabits', () => {
 
     beforeAll(() => {
         document.documentElement.innerHTML = '<header id="top"></header><main class="container"></main>';
-        header = document.querySelector('header');
+        heading = document.querySelector('header');
         main = document.querySelector('main');
         addHabits = require('../js/addHabits');
     });
 
     beforeEach(() => {
-        header.innerHTML = '';
+        heading.innerHTML = '';
         main.innerHTML = '';
+        addHabits.renderAddHabitsPage();
         addHabits.createNewHabitForm();
+    });
+
+    describe('renderAddHabitsPage', () => {
+
+        // it('heading should contain a greeting with a prompt to get started', () => {
+        //     let greeting = heading.querySelector('h1');
+        //     expect(greeting).toBeTruthy();
+        //     expect(greeting.textContent).toContain('started');     
+        // });
+
+        // it('the page should contain a form', () => {
+        //     let form = main.querySelector('form');
+        //     expect(form).toBeTruthy();    
+        // });
+
     });
 
     describe('createNewHabitForm', () => {
