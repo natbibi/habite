@@ -1,10 +1,10 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-const req  = require("./requests");
+const req = require("./requests");
 const forms = require("./forms");
 const heading = document.querySelector('header');
 const main = document.querySelector('main');
 
-async function renderAddHabitsPage() {
+function renderAddHabitsPage() {
     const showFooter = document.getElementById('footer')
     showFooter.style.display = 'block';
     // add greeting
@@ -12,96 +12,133 @@ async function renderAddHabitsPage() {
     greeting.textContent = "Let's get started..."
     heading.appendChild(greeting)
 
+    // render add habit form
     const addHabitForm = document.createElement("div");
-    addHabitForm.className = "form-container";
-    // addHabitForm.appendChild(addHabitForm());
-    
-     // add habits to dropdown
-     const habitsDropdown = document.createElement("select");
-     const habits = await req.get('habits');
-     
-     habits.forEach(habit => {
-         const option = document.createElement("option");
-         option.textContent = habit.name;
-         habitsDropdown.appendChild(option)
-     });
-     
+    addHabitForm.className = "form add-habit-form";
+    const addHabitFormHeading = document.createElement("h2");
+    addHabitFormHeading.textContent = "Track a habit";
 
-     const dropdown =  document.createElement("div");
-     const frequency = document.createElement("div");
-     const addHabitBtn = document.createElement("button");
-     // create form
-     addHabitForm.innerHTML = `    
-     <form action="" method="POST" class="add-habit-form">
-         <div class="habits-dropdown"> 
-             <label for="habits">Choose a habit to track</label>
-             ${habitsDropdown.outerHTML}
-         </div>
-  
-         <div class="frequency-input">
-             <label for="frequency">How many times per day?</label>
-             <input type="number" name="frequency">
-         </div>
-         <input type="button" value="Start Tracking">
-     </form>
-     `
+    addHabitForm.appendChild(addHabitFormHeading);
+    addHabitForm.appendChild(createAddHabitForm());
 
-     console.log(addHabitForm);
-    main.appendChild(addHabitForm)
+    // render create habit form
+    const newHabitForm = document.createElement("div");
+    newHabitForm.className = "form new-habit-form";
+    const newHabitFormHeading = document.createElement("h2");
+    newHabitFormHeading.textContent = "Create a new habit";
+
+    newHabitForm.appendChild(newHabitFormHeading);
+    newHabitForm.appendChild(createNewHabitForm());
+
+    const deleteHabitForm = document.createElement("div");
+    deleteHabitForm.className = "form delete-habit-form";
+    const deleteHabitFormHeading = document.createElement("h2");
+    deleteHabitFormHeading.textContent = "Stop tracking a habit";
+
+    deleteHabitForm.appendChild(deleteHabitFormHeading);
+    deleteHabitForm.appendChild(createDeleteHabitForm());
+
+    main.appendChild(addHabitForm);
+    main.appendChild(newHabitForm);
+    main.appendChild(deleteHabitForm);
 }
 
-// async function addHabitForm() {
-//    // add a new user habit from a list
-     
-//      return addHabitForm;
-// }
+function createAddHabitForm() {
+    // form fields
+    fields = [
+        { tag: 'label', attributes: { class: 'add-habits-dropdown', for: 'habits-dropdown' }, text: 'Choose a habit:' },
+        { tag: 'select', attributes: { class: 'add-habits-dropdown', name: 'habits-dropdown' } },
+        { tag: 'label', attributes: { class: 'add-habits-frequency', for: 'frequency' }, text: 'How often?' },
+        { tag: 'input', attributes: { class: 'add-habits-frequency', name: 'frequency', type: 'number', placeholder: '3', min: "1", max: "24" } },
+        { tag: 'input', attributes: { class: 'add-habits-btn', type: 'submit', name: 'habit-sbmt', value: 'Track Habit' } }
+    ];
 
-/*async*/ function createNewHabitForm() {
-    // create a new habit and add it to habits list (POST)
-    
-    // Target the main element (add heading for testing);
-    const heading = document.querySelector('header');
-    const main = document.querySelector('main');
-    // Create a new div for adding elements
-    let newHabitDiv = document.createElement('div');
-    // Create a label for adding a new habit
-    let newHabitLabel = document.createElement('label');
-    newHabitLabel.for = "new-habit";
-    newHabitLabel.textContent = "Or add a custom one!";
-    // Create a text area for the user to create their new habit
-    let newHabit = document.createElement('input');
-    newHabit.type = "text";
-    newHabit.name = "new-habit";
-    newHabit.id = "new-habit";
-    // Create a submit button for the new habit
-    let button = document.createElement('button');
-    // Create an icon for the submit button
-    let buttonIcon = document.createElement('i');
-    buttonIcon.className = "fas fa-plus-circle";
-    // Append the icon to the button
-    button.appendChild(buttonIcon);
-    // Append the newHabit features to the div
-    newHabitDiv.appendChild(newHabitLabel);
-    newHabitDiv.appendChild(newHabit);
-    newHabitDiv.appendChild(button);
-    // Append everything to main
-    main.appendChild(newHabitDiv);
+    const form = forms.createForm(fields);
+    const freqInput = form.querySelector("input[name='frequency']");
+    const habitsDropdown = form.querySelector("select");
 
-    return main;
+    // add habits to dropdown     
+    req.get('habits')
+        .then(habits => {
+            habits.forEach(habit => {
+                const option = document.createElement("option");
+                option.textContent = habit.name;
+                option.setAttribute('data-id', habit.id);
+                habitsDropdown.appendChild(option)
+            })
+        });
 
-    // Desired HTML content below:
-//     <div class="add-habit-input">
-//     <label for="new-habit">Or add a custom one!</label>
-//     <input type="text" name="new-habit" id="new-habit">
-//     <button><i class="fas fa-plus-circle"></i></button>
-//     </div>
+    // send
+    form.onsubmit = (e) => {
+        e.preventDefault();
+        const selected = habitsDropdown.options[habitsDropdown.selectedIndex].getAttribute('data-id');
+        const data = {
+            habit_id: selected,
+            frequency: freqInput.value
+        }
+        req.addUserhabit(data);
+        location.reload();
+    };
+
+    return form;
 }
 
-async function deleteHabitForm() {
-    // delete a user habit so it is no longer tracked
+function createNewHabitForm() {
+    fields = [
+        { tag: 'label', attributes: { class: 'new-habit-name', for: 'new-habit-name' }, text: 'Add a custom habit' },
+        { tag: 'input', attributes: { class: 'new-habit-name', name: 'new-habit-name', type: 'text', placeholder: 'use habite' }, text: 'Add a custom habit' },
+        { tag: 'input', attributes: { class: 'new-habit-btn', type: 'submit', name: 'new-habit-sbmt' } }
+    ];
+
+    const form = forms.createForm(fields);
+    const nameInput = form.querySelector('input[type=text]');
+
+    form.onsubmit = async (e) => {
+        e.preventDefault();
+        const data = {
+            name: nameInput.value
+        }
+        await req.createHabit(data);
+        location.reload();
+    };
+
+    return form;
 }
 
-module.exports = { renderAddHabitsPage, createNewHabitForm };
+function createDeleteHabitForm() {
+    fields = [
+        { tag: 'label', attributes: { class: 'delete-habit', for: 'delete-habit-dropdown' }, text: 'Habit' },
+        { tag: 'select', attributes: { class: 'delete-habit', name: 'delete-habit-dropdown' } },
+        { tag: 'input', attributes: { class: 'new-habit-btn', type: 'submit', name: 'new-habit-sbmt' } }
+    ];
+
+
+    const form = forms.createForm(fields);
+    const userHabitsDropdown = form.querySelector("select");
+
+    req.getUserHabits()
+        .then(habits => {
+            habits.forEach(habit => {
+                const option = document.createElement("option");
+                option.textContent = habit.habit_name;
+                option.setAttribute('data-id', habit.habit_id);
+                userHabitsDropdown.appendChild(option)
+            })
+        });
+
+
+    form.onsubmit = async (e) => {
+        e.preventDefault();
+        const selected = userHabitsDropdown.options[userHabitsDropdown.selectedIndex].getAttribute('data-id');
+        await req.deleteUserHabit(selected);
+        location.reload();
+    };
+
+    return form;
+}
+
+module.exports = { renderAddHabitsPage };
+
 },{"./forms":4,"./requests":8}],2:[function(require,module,exports){
 const jwt_decode = require('jwt-decode')
 
@@ -542,7 +579,6 @@ function updateMain(path) {
                 content.renderStreaks(); content.renderMyHabits(); break;
             case '#addhabits':
                 addHabits.renderAddHabitsPage();
-                addHabits.createNewHabitForm();
                 break;
             // case '#more':
             //     renderLandingPage(); renderMenuMessage(); break;
