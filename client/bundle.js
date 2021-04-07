@@ -118,7 +118,6 @@ function createDeleteHabitForm() {
 
     req.getUserHabits()
         .then(habits => {
-            console.log(habits);
             habits.forEach(habit => {
                 const option = document.createElement("option");
                 option.textContent = habit.habit_name;
@@ -136,12 +135,6 @@ function createDeleteHabitForm() {
     };
 
     return form;
-
-    // delete a user habit so it is no longer tracked
-    // const deleteUserHabitBtn = document.createElement('button');
-    // deleteUserHabitBtn.setAttribute('class', 'far fa-trash-alt delete-habit-btn')
-    // deleteUserHabitBtn.onclick = () => deleteUserHabit(habit_id);
-    // divWhereHabitIs.appendChild(deleteUserHabitBtn);
 }
 
 module.exports = { renderAddHabitsPage };
@@ -523,7 +516,6 @@ function updateMain(path) {
                 content.renderStreaks(); content.renderMyHabits(); break;
             case '#addhabits':
                 addHabits.renderAddHabitsPage();
-                addHabits.createNewHabitForm();
                 break;
             // case '#more':
             //     renderLandingPage(); renderMenuMessage(); break;
