@@ -12,9 +12,7 @@ function initBindings() {
     // e.preventDefault();
     // Initial bindings
     console.log('You found our javaScript')
-
     layout.updateContent();
-    
     window.addEventListener('hashchange', layout.updateContent);
 
     // Click event delegation
@@ -40,7 +38,7 @@ function navHandler(e) {
     const target = e.target.id;
     switch(target) {
         case 'logout': auth.logout(); break;
-        case 'add-habit': /*TODO add page*/ break;
+        case 'add-habit': window.location.hash = 'addhabits'; break;
         case 'show-habits': window.location.hash = 'profile'; break;
         default: break;
     }

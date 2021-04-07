@@ -47,4 +47,43 @@ async function deleteUserHabit(habit_id){
     }
 }
 
-module.exports = { getAllHabits, decrementHabit, deleteUserHabit }
+async function get(path) {
+    try {
+        const options = {
+            headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
+        }
+        const response = await fetch(`${hostURL}/${path}`, options)
+        const data = await response.json();
+        // if (data.err) {
+        //     console.warn(data.err);
+        //     logout();
+        // }
+        return data;
+    } catch (err) {
+        console.warn(err);
+    }
+}
+
+
+async function post(path, data) {
+    try {
+        const options = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        }
+        const response = await fetch(`${hostURL}/${path}`, options)
+        const data = await response.json();
+        // if (data.err) {
+        //     console.warn(data.err);
+        //     logout();
+        // }
+        return data;
+    } catch (err) {
+        console.warn(err);
+    }
+}
+
+
+
+module.exports = { getAllHabits, getAllUsers, get}
