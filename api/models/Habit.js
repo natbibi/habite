@@ -87,35 +87,11 @@ class UserHabit extends Habit {
           frequency: habit.frequency,
           user_id: habit.user_id,
         }));
-        //console.log(`The results are: ${result}`)
-        //console.log(`The habits are: ${habits}`)
         resolve(habits);
       } catch (error) {
         reject(`Could not retrieve habit`);
       }
     });
-  }
-  static deleteUserHabit(id) {
-    return new Promise (async (resolve,reject) => {
-      try{
-        const result = await db.query(SQL`
-        delete FROM user_habits
-        WHERE id = ${id};`)
-        /*
-        const habits = result.rows.map((habit) => ({
-          habit_name: habit.habit_name,
-          username: habit.username,
-          habit_id: habit.habit_id,
-          frequency: habit.frequency,
-          user_id: habit.user_id,
-        
-        }));
-        */
-       resolve(result.rowCount > 0 ? "deleted succesfully" : "could not delete")
-      } catch (error) {
-        reject(`Could not delete habit`);
-      }
-    })
   }
 
   static createHabitEntry(data) {
@@ -220,7 +196,7 @@ class UserHabit extends Habit {
           timestamp: habit.completed_at,
         }));
         const result = await db.query(SQL`
-        SELECT users.username, users.id as user_id, habits.name, habit_entries.completed, user_habits.id AS user_habit_id, user_habits.frequency, count(*) AS total_completed, to_char(completed_at, 'DD-MM-YYYY') AS date
+        SELECT users.username, users.id as user_id, habits.name, habit_entries.completed, user_habits.id AS user_habit_id, user_habits.frequency, count(*) AS total_completed, to_char(completed_at, 'MM-DD-YYYY') AS date
         FROM user_habits 
         JOIN users ON user_habits.user_id = users.id
         LEFT JOIN habits ON user_habits.habit_id = habits.id

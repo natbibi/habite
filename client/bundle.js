@@ -145,6 +145,7 @@ function createDeleteHabitForm() {
 }
 
 module.exports = { renderAddHabitsPage };
+
 },{"./forms":4,"./requests":8}],2:[function(require,module,exports){
 const jwt_decode = require('jwt-decode')
 
@@ -286,11 +287,15 @@ async function renderMyHabits() {
         habitFrequency.setAttribute('max', `${habit.max_frequency}`)
         habitFrequency.setAttribute('value', `${habit.total_completed}`)
 
-        let habitMinus = document.createElement('i')
-        habitMinus.className = "fas fa-minus minus-btn"
+        let habitMinus = document.createElement('button')
+        habitMinus.innerHTML = `<i class="fas fa-minus minus-btn"></i>`
 
-        let habitIncreaseFrequency = document.createElement('i')
-        habitIncreaseFrequency.className = "fas fa-plus increase-freq-btn"
+        let habitIncreaseFrequency = document.createElement('button')
+        habitIncreaseFrequency.innerHTML = `<i class="fas fa-plus increase-freq-btn"></i>`
+
+        let habitSeeMore = document.createElement('button')
+        habitSeeMore.innerHTML = `<i class="fas fa-ellipsis-h see-more-btn"></i>`
+
 
         habitsContainer.appendChild(habitContainer)
         habitContainer.appendChild(habitDate)
@@ -298,6 +303,7 @@ async function renderMyHabits() {
         habitContainer.appendChild(habitFrequency)
         habitContainer.appendChild(habitMinus)
         habitContainer.appendChild(habitIncreaseFrequency)
+        habitContainer.appendChild(habitSeeMore)
 
     })
 
@@ -516,7 +522,9 @@ function updateMain(path) {
             case '#profile':
                 content.renderStreaks(); content.renderMyHabits(); break;
             case '#addhabits':
-                addHabits.renderAddHabitsPage(); break;
+                addHabits.renderAddHabitsPage();
+                addHabits.createNewHabitForm();
+                break;
             // case '#more':
             //     renderLandingPage(); renderMenuMessage(); break;
             // case '#top':

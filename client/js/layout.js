@@ -33,7 +33,9 @@ function updateMain(path) {
             case '#profile':
                 content.renderStreaks(); content.renderMyHabits(); break;
             case '#addhabits':
-                addHabits.renderAddHabitsPage(); break;
+                addHabits.renderAddHabitsPage();
+                addHabits.createNewHabitForm();
+                break;
             // case '#more':
             //     renderLandingPage(); renderMenuMessage(); break;
             // case '#top':
