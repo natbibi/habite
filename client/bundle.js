@@ -505,8 +505,13 @@ async function streaksHelper() {
         
         let currentStreakTotal = streaks.streakData.current_streak;
 
-        let dayNumber;
-        if (currentStreakTotal===1){ dayNumber==='day'} else{dayNumber==='days'};
+        let dayNumber = '';
+        console.log(dayNumber);
+        if(currentStreakTotal===1){
+            dayNumber='day'
+        } else {
+            dayNumber='days'
+        };
     
         let message;
 
