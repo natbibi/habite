@@ -226,10 +226,12 @@ function renderLandingPage() {
 function renderStreaks() {
     profile.streaksHelper();
 }
-
-
 function renderMyHabits() {
     profile.habitsHelper();
+}
+async function renderProfile() {
+    await renderStreaks();
+    await renderMyHabits();
 }
 
 // *******************************************************************
@@ -249,7 +251,7 @@ function render404() {
 }
 
 
-module.exports = { renderStreaks, renderMyHabits, renderLandingPage, render404 }
+module.exports = { renderProfile, renderLandingPage, render404 }
 },{"./auth":2,"./forms":4,"./profile":7,"./renderHelpers":8,"./requests":9}],4:[function(require,module,exports){
 const auth = require("./auth");
 const main = document.querySelector('main');
@@ -432,7 +434,7 @@ function updateMain(path) {
                 forms.renderLoginLink();
                 break;
             case '#profile':
-                content.renderStreaks(); content.renderMyHabits(); break;
+                content.renderProfile(); break;
             case '#addhabits':
                 addHabits.renderAddHabitsPage();
                 break;
@@ -502,28 +504,28 @@ async function streaksHelper() {
         let streakName = document.createElement('h5');
         streakName.textContent = streaks.name;
         streakContainer.appendChild(streakName);
-        
+
         let currentStreakTotal = streaks.streakData.current_streak;
 
         let dayNumber = '';
         console.log(dayNumber);
-        if(currentStreakTotal===1){
-            dayNumber='day'
+        if (currentStreakTotal === 1) {
+            dayNumber = 'day'
         } else {
-            dayNumber='days'
+            dayNumber = 'days'
         };
-    
+
         let message;
 
-        if(currentStreakTotal===0) {
+        if (currentStreakTotal === 0) {
             message = "Crumbs ... let's get back in the habite!";
-        } else if (currentStreakTotal>0 && currentStreakTotal<=2) {
+        } else if (currentStreakTotal > 0 && currentStreakTotal <= 2) {
             message = "Great start!  Keep at it!";
-        } else if (currentStreakTotal>2 && currentStreakTotal<=7) {
+        } else if (currentStreakTotal > 2 && currentStreakTotal <= 7) {
             message = `A habit a day keeps procrastination away!`;
-        } else if (currentStreakTotal>7 && currentStreakTotal<=14) {
+        } else if (currentStreakTotal > 7 && currentStreakTotal <= 14) {
             message = "More than a week effort!";
-        } else if (currentStreakTotal>14) {
+        } else if (currentStreakTotal > 14) {
             message = "Rehabite-ation not required here!";
         } else {
             message = "Whoops.  No streakers here!";
@@ -562,13 +564,14 @@ async function habitsHelper() {
         habitContainer.className = "habit-container"
 
         let currentHabitTotal = habit.day_entries[0].total
+        let maxFrequency = habit.max_frequency
         let currentHabitID = habit.user_habit_id
 
         let habitName = document.createElement('p')
         habitName.textContent = habit.name
 
         let habitFrequency = document.createElement('progress')
-        habitFrequency.setAttribute('max', habit.max_frequency)
+        habitFrequency.setAttribute('max', maxFrequency)
         habitFrequency.setAttribute('value', currentHabitTotal)
 
         function updateProgressBar() {
@@ -588,7 +591,9 @@ async function habitsHelper() {
 
         // POST: Increment habit 
         habitIncreaseFrequency.addEventListener('click', () => {
-            currentHabitTotal += 1
+            // currentHabitTotal += 1
+            if (currentHabitTotal >= maxFrequency) {
+            } else { currentHabitTotal++ }
             try {
                 const data = { user_habit_id: currentHabitID, completed: true }
                 requests.postData(`users/${username}/habits/entries`, data);
@@ -600,7 +605,9 @@ async function habitsHelper() {
 
         // DELETE: Decrement habit
         habitMinus.addEventListener('click', () => {
-            currentHabitTotal -= 1
+            // currentHabitTotal -= 1
+            if (currentHabitTotal === 0) {
+            } else { currentHabitTotal-- }
             try {
                 requests.deleteData(`users/${username}/habits/entries/${currentHabitID}`);
                 updateProgressBar()
