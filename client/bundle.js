@@ -480,24 +480,65 @@ async function streaksHelper() {
     greeting.textContent = `Hi there, ${localStorage.getItem('username')}!`;
     heading.appendChild(greeting);
 
-    const habitsList = await requests.getData(`users/${username}/habits/entries`);
+    const userData = await requests.getData(`users/${username}/habits/entries`);
     if (requests.getData.err) { return }
     const streaks = document.createElement('div')
     streaks.className = "streaks-list"
     const streaksHeading = document.createElement('h2')
     streaksHeading.className = "streaks-heading"
     streaksHeading.textContent = "🔥 Streaks"
-    const streaksBody = document.createElement('div')
-    streaksBody.className = "streaks-body"
+    main.append(streaks)
+    streaks.appendChild(streaksHeading);
+
+    const streaksContainer = document.createElement('div')
+    streaksContainer.className = "streaks-container"
+    streaks.appendChild(streaksContainer)
 
     // insert GET request for habit completed here
-    habitsList.forEach(habit => {
+    userData.forEach(streaks => {
+        let streakContainer = document.createElement('div');
+        streakContainer.className = 'streak-container';
 
+        let streakName = document.createElement('h5');
+        streakName.textContent = streaks.name;
+        streakContainer.appendChild(streakName);
+        
+        let currentStreakTotal = streaks.streakData.current_streak;
 
-        main.appendChild(streaks)
-        streaks.appendChild(streaksHeading)
-        streaks.appendChild(streaksBody)
-        // streaks.appendChild(getHabits)
+        let dayNumber = '';
+        console.log(dayNumber);
+        if(currentStreakTotal===1){
+            dayNumber='day'
+        } else {
+            dayNumber='days'
+        };
+    
+        let message;
+
+        if(currentStreakTotal===0) {
+            message = "Crumbs ... let's get back in the habite!";
+        } else if (currentStreakTotal>0 && currentStreakTotal<=2) {
+            message = "Great start!  Keep at it!";
+        } else if (currentStreakTotal>2 && currentStreakTotal<=7) {
+            message = `A habit a day keeps procrastination away!`;
+        } else if (currentStreakTotal>7 && currentStreakTotal<=14) {
+            message = "More than a week effort!";
+        } else if (currentStreakTotal>14) {
+            message = "Rehabite-ation not required here!";
+        } else {
+            message = "Whoops.  No streakers here!";
+        }
+
+        let currentStreakMessage = document.createElement('p');
+        currentStreakMessage.textContent = `${currentStreakTotal} ${dayNumber}, ${message}`;
+        streakContainer.appendChild(currentStreakMessage);
+
+        let topStreak = streaks.streakData.top_streak;
+        let topStreakMessage = document.createElement('p');
+        topStreakMessage.textContent = `Your PB is ${topStreak}!`;
+        streakContainer.appendChild(topStreakMessage);
+
+        streaksContainer.appendChild(streakContainer);
     })
 }
 
