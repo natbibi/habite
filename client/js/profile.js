@@ -34,7 +34,7 @@ function streaksHelper() {
 }
 
 async function habitsHelper() {
-    const habitsList = await requests.getAllHabits();
+    const habitsList = await requests.getData(`users/${username}/habits/entries`);
     console.log(habitsList)
     if (habitsList.err) { return }
     const habits = document.createElement('div')
