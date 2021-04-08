@@ -9,7 +9,7 @@ const router = express.Router();
 async function showAllHabits(req, res) {
   try {
     const habits = await Habit.all;
-    res.json(habits)
+    res.status(200).json(habits)
   } catch (err) {
     res.status(403).send({ err: err })
   }
@@ -127,8 +127,16 @@ async function autoFillHabitEntries(req, res) {
 }
 
 const schedule = require('node-schedule');
+let rule = new schedule.RecurrenceRule();
 
-const job = schedule.scheduleJob(`0 0 * * *`, async function () {
+//
+rule.tz = 'Europe/London';
+// runs at 23:59:59
+rule.second = 59;
+rule.minute = 59;
+rule.hour = 23;
+
+schedule.scheduleJob(rule, async function () {
   try {
     const userHabits = await UserHabit.autoFillHabitEntries();
     console.log('habit_entires auto completed')
