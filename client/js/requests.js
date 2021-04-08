@@ -3,7 +3,7 @@ async function getData(path) {
         const options = {
             headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
         }
-        const response = await fetch(`${hostURL}/${path}`, options)
+        const response = await fetch(`${process.env.HOST_URL}/${path}`, options)
         const data = await response.json();
         if (data.err) {
             console.warn(data.err);
@@ -25,7 +25,7 @@ async function postData(path, formData) {
             }),
             body: JSON.stringify(formData)
         }
-        const response = await fetch(`${hostURL}/${path}`, options);
+        const response = await fetch(`${process.env.HOST_URL}/${path}`, options);
         return response.json();
     } catch (err) {
         console.warn(err);
@@ -38,7 +38,8 @@ async function deleteData(path) {
             method: 'DELETE',
             headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
         }
-        await fetch(`${hostURL}/${path}`, options);
+        const r = await fetch(`}/auth/register`, options)
+        await fetch(`${process.env.HOST_URL}/${path}`, options);
         return
     } catch (err) {
         console.warn(err);

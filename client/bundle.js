@@ -141,6 +141,7 @@ module.exports = {
     createNewHabitForm
 };
 },{"./auth":2,"./forms":4,"./requests":9}],2:[function(require,module,exports){
+(function (process){(function (){
 const jwt_decode = require('jwt-decode')
 
 async function requestLogin(e){
@@ -150,7 +151,7 @@ async function requestLogin(e){
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(Object.fromEntries(new FormData(e.target)))
         }
-        const r = await fetch(`${hostURL}/auth/login`, options)
+        const r = await fetch(`${process.env.HOST_URL}/auth/login`, options)
         const data = await r.json()
         if (!data.success) { throw new Error(data.err); }
         login(data.token);
@@ -166,7 +167,7 @@ async function requestRegistration(e) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(Object.fromEntries(new FormData(e.target)))
         }
-        const r = await fetch(`${hostURL}/auth/register`, options)
+        const r = await fetch(`${process.env.HOST_URL}/auth/register`, options)
         const data = await r.json()
         if (data.err){ throw Error(data.err) }
         requestLogin(e);
@@ -200,7 +201,8 @@ module.exports = {
     login,
     logout
 }
-},{"jwt-decode":10}],3:[function(require,module,exports){
+}).call(this)}).call(this,require('_process'))
+},{"_process":11,"jwt-decode":10}],3:[function(require,module,exports){
 const rHelpers = require('./renderHelpers');
 const forms = require('./forms');
 const requests = require('./requests')
@@ -277,12 +279,10 @@ function renderLoginForm() {
         try {
             await auth.requestLogin(e);
         } catch (err) {
-
             const username = document.getElementById("username");
             const password = document.getElementById("password");
             username.classList.add("input-invalid");
             password.classList.add("input-invalid");
-
         }
     });
 
@@ -392,13 +392,13 @@ module.exports = {
     createForm
 }
 },{"./auth":2}],5:[function(require,module,exports){
-(function (process,global){(function (){
+(function (process){(function (){
 // Import js files
 // Rendering
 const layout = require('./layout');
 const content = require('./content');
 
-global.hostURL = process.env.HOST_URL || "http://localhost:3000";
+process.env.HOST_URL || "http://localhost:3000";
 
 // Create initial bindings
 function initBindings() {
@@ -438,7 +438,7 @@ function navFunc() {
 initBindings();
 
 
-}).call(this)}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+}).call(this)}).call(this,require('_process'))
 },{"./content":3,"./layout":6,"_process":11}],6:[function(require,module,exports){
 const content = require('./content')
 const addHabits = require('./addHabits');
@@ -791,16 +791,16 @@ module.exports = {
     renderHeading
 }
 },{}],9:[function(require,module,exports){
+(function (process){(function (){
 async function getData(path) {
     try {
         const options = {
             headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
         }
-        const response = await fetch(`${hostURL}/${path}`, options)
+        const response = await fetch(`${process.env.HOST_URL}/${path}`, options)
         const data = await response.json();
         if (data.err) {
             console.warn(data.err);
-            logout();
         }
         return data;
     } catch (err) {
@@ -819,7 +819,7 @@ async function postData(path, formData) {
             }),
             body: JSON.stringify(formData)
         }
-        const response = await fetch(`${hostURL}/${path}`, options);
+        const response = await fetch(`${process.env.HOST_URL}/${path}`, options);
         return response.json();
     } catch (err) {
         console.warn(err);
@@ -832,7 +832,8 @@ async function deleteData(path) {
             method: 'DELETE',
             headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
         }
-        await fetch(`${hostURL}/${path}`, options);
+        const r = await fetch(`}/auth/register`, options)
+        await fetch(`${process.env.HOST_URL}/${path}`, options);
         return
     } catch (err) {
         console.warn(err);
@@ -841,7 +842,8 @@ async function deleteData(path) {
 
 module.exports = { getData, postData, deleteData }
 
-},{}],10:[function(require,module,exports){
+}).call(this)}).call(this,require('_process'))
+},{"_process":11}],10:[function(require,module,exports){
 "use strict";function e(e){this.message=e}e.prototype=new Error,e.prototype.name="InvalidCharacterError";var r="undefined"!=typeof window&&window.atob&&window.atob.bind(window)||function(r){var t=String(r).replace(/=+$/,"");if(t.length%4==1)throw new e("'atob' failed: The string to be decoded is not correctly encoded.");for(var n,o,a=0,i=0,c="";o=t.charAt(i++);~o&&(n=a%4?64*n+o:o,a++%4)?c+=String.fromCharCode(255&n>>(-2*a&6)):0)o="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".indexOf(o);return c};function t(e){var t=e.replace(/-/g,"+").replace(/_/g,"/");switch(t.length%4){case 0:break;case 2:t+="==";break;case 3:t+="=";break;default:throw"Illegal base64url string!"}try{return function(e){return decodeURIComponent(r(e).replace(/(.)/g,(function(e,r){var t=r.charCodeAt(0).toString(16).toUpperCase();return t.length<2&&(t="0"+t),"%"+t})))}(t)}catch(e){return r(t)}}function n(e){this.message=e}function o(e,r){if("string"!=typeof e)throw new n("Invalid token specified");var o=!0===(r=r||{}).header?0:1;try{return JSON.parse(t(e.split(".")[o]))}catch(e){throw new n("Invalid token specified: "+e.message)}}n.prototype=new Error,n.prototype.name="InvalidTokenError";const a=o;a.default=o,a.InvalidTokenError=n,module.exports=a;
 
 
