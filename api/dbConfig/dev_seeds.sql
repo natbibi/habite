@@ -6,24 +6,44 @@ VALUES
 
 INSERT INTO habits (name) 
 VALUES
-('drink water'),
-('workout'),
-('read book'),
-('eat breakfast'),
-('eat vegetables'),
-('meditate'),
-('stretch'),
-('study'),
-('nap'),
-('call parents'),
-('floss'),
-('write in journal'),
-('sleep eight hours');
+('💧 drink water'),
+('🏃🏻‍♀️ workout'),
+('🍳 eat breakfast'),
+('🥗 eat vegetables'),
+('🧘🏻‍♀️ meditate');
 
-INSERT INTO user_habits (user_id, habit_id, frequency) 
+INSERT INTO user_habits (user_id, habit_id, frequency, created_at) 
 VALUES
-(1,1,5),(1,2,8),(2,1,8),(3,3,8);
+(1,1,3, current_timestamp - INTERVAL '2 day'),
+(1,2,4, current_timestamp - INTERVAL '1 day'),
+(2,1,2, current_timestamp - INTERVAL '2 day'),
+(2,1,3, current_timestamp);
 
-INSERT INTO  habit_entries (user_habit_id, completed)
+INSERT INTO  habit_entries (user_habit_id, completed, completed_at)
 VALUES
-(1,TRUE),(1,TRUE),(1,TRUE),(1,FALSE),(2,TRUE),(2,TRUE),(3,FALSE),(3,FALSE);
+
+(1,TRUE, current_timestamp),
+
+(1,TRUE, current_timestamp - INTERVAL '1 day'),
+(1,TRUE, current_timestamp - INTERVAL '1 day'),
+(1,TRUE, current_timestamp - INTERVAL '1 day'),
+
+(1,TRUE, current_timestamp - INTERVAL '2 day'),
+(1,TRUE, current_timestamp - INTERVAL '2 day'),
+(1,FALSE, current_timestamp - INTERVAL '2 day'),
+
+(2,TRUE, current_timestamp),
+(2,TRUE, current_timestamp),
+
+(2,TRUE, current_timestamp - INTERVAL '1 day'),
+(2,TRUE, current_timestamp - INTERVAL '1 day'),
+(2,TRUE, current_timestamp - INTERVAL '1 day'),
+(2,TRUE, current_timestamp - INTERVAL '1 day'),
+
+(3,TRUE, current_timestamp),
+
+(3,TRUE, current_timestamp - INTERVAL '1 day'),
+(3,TRUE, current_timestamp - INTERVAL '1 day'),
+
+(3,FALSE, current_timestamp - INTERVAL '2 day'),
+(3,FALSE, current_timestamp - INTERVAL '2 day');

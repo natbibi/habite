@@ -1,55 +1,73 @@
 const auth = require("./auth");
 const main = document.querySelector('main');
 
-// function renderAuthBtns() {
-//     const authBtns = document.createElement('div');
-//     authBtns.className = 'auth-btns';
-
-//     const loginBtn = document.createElement('button');
-//     loginBtn.className = 'login-btn';
-//     loginBtn.textContent = 'login';
-
-//     const regBtn = document.createElement('button');
-//     regBtn.className = 'register-btn';
-//     regBtn.textContent = 'register';
-
-//     authBtns.appendChild(loginBtn);
-//     authBtns.appendChild(regBtn);
-//     main.appendChild(authBtns);
-// }
-
 function renderLoginForm() {
     // Define form fields
     const authFields = [
-        { tag: 'label', attributes: { id: 'username-label', for: 'username' } },
-        { tag: 'input', attributes: { id: 'username', name: 'username', placeholder: 'Enter your username', } },
-        { tag: 'label', attributes: { id: 'password-label', for: 'password' } },
-        { tag: 'input', attributes: { id: 'password', type: 'password', name: 'password', placeholder: 'Enter your password', } },
-        { tag: 'input', attributes: { id: 'robot-check', type: 'checkbox', name: 'robot-check', } },
-        { tag: 'label', attributes: { id: 'robot-label', for: 'robot-check' } },
+        { tag: 'label', attributes: { id: 'username-label', for: 'username' }, text: 'Username' },
+        { tag: 'input', attributes: { id: 'username', name: 'username', placeholder: 'Enter your username', required: true } },
+        { tag: 'label', attributes: { id: 'password-label', for: 'password' }, text: 'Password' },
+        { tag: 'input', attributes: { id: 'password', type: 'password', name: 'password', placeholder: 'Enter your password', required: true } },
+        { tag: 'label', attributes: { id: 'robot-label', for: 'robot-check' }, text: 'Not a robot, (bzzt, dzzt).' },
+        { tag: 'input', attributes: { id: 'robot-check', type: 'checkbox', required: true } },
         { tag: 'input', attributes: { id: 'login-sbmt', type: 'submit', name: 'login-sbmt', value: 'Login', } }
     ];
 
     const form = createForm(authFields)
-    form.classList.add("login-form");
-    form.addEventListener('submit', auth.requestLogin);
+    form.className = "login-form auth-form";
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        try {
+            await auth.requestLogin(e);
+        } catch (err) {
+            const username = document.getElementById("username");
+            const password = document.getElementById("password");
+            username.classList.add("input-invalid");
+            password.classList.add("input-invalid");
+        }
+    });
+
+
     main.appendChild(form);
 }
 
 function renderRegisterForm() {
     const authFields = [
-        { tag: 'label', attributes: { id: 'username-label', for: 'username' } },
-        { tag: 'input', attributes: { id: 'username', name: 'username', placeholder: 'Enter your username', } },
-        { tag: 'label', attributes: { id: 'password-label', for: 'password' } },
-        { tag: 'input', attributes: { id: 'password', type: 'password', name: 'password', placeholder: 'Enter your password', } },
-        { tag: 'input', attributes: { id: 'password-check', type: 'password', name: 'password', placeholder: 'Confirm password', } },
-        { tag: 'input', attributes: { id: 'robot-check', type: 'checkbox', name: 'robot-check', } },
-        { tag: 'label', attributes: { id: 'robot-label', for: 'robot-check' } },
+        { tag: 'label', attributes: { id: 'username-label', for: 'username' }, text: 'Username' },
+        { tag: 'input', attributes: { id: 'username', name: 'username', placeholder: 'Enter your username', required: true } },
+        { tag: 'label', attributes: { id: 'password-label', for: 'password' }, text: 'Password' },
+        { tag: 'input', attributes: { id: 'password', type: 'password', name: 'password', placeholder: 'Enter your password', required: true } },
+        { tag: 'input', attributes: { id: 'password-check', type: 'password', name: 'password', placeholder: 'Confirm password', required: true } },
+        { tag: 'label', attributes: { id: 'robot-label', for: 'robot-check', required: true }, text: 'Not a robot, (bzzt, dzzt).' },
+        { tag: 'input', attributes: { id: 'robot-check', type: 'checkbox', required: true } },
         { tag: 'input', attributes: { id: 'register-sbmt', type: 'submit', name: 'register-sbmt', value: 'Register', } }
     ];
     const form = createForm(authFields)
-    form.classList.add("register-form");
-    form.addEventListener('submit', auth.requestRegistration);
+    form.className = "register-form auth-form";
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault()
+
+        const pass = document.getElementById("password");
+        const confirm = document.getElementById("password-check");
+        console.log(document.getElementById("password-check"));
+
+        if (pass.value === confirm.value) {
+            try {
+                await auth.requestRegistration(e);
+            } catch (err) {
+                if (err.message.includes("duplicate")) {
+                    const username = document.getElementById("username");
+                    username.classList.add("input-invalid");
+                    username.setAttribute('placeholder', `Sorry, ${username.value} is taken!`)
+                    username.value = "";
+                }
+            }
+        } else {
+            confirm.classList.add("input-invalid");
+        }
+    });
+
     main.appendChild(form);
 }
 
@@ -58,23 +76,13 @@ function createForm(authFields) {
     // Create new form element with auth-form class name
     const form = document.createElement('form');
     form.method = "post";
-    form.className = 'auth-form';
+    form.className = 'submit-form';
     // Create form elements
     authFields.forEach(f => {
         let field = document.createElement(f.tag);
         // Add text content to relevant tags
-        let fieldId = f.attributes.id;
-        switch (fieldId) {
-            case 'username-label':
-                field.textContent = "username"; break;
-            case 'password-label':
-                field.textContent = "password"; break;
-            case 'robot-label':
-                field.textContent = "I am not a robot!"; break;
-            default:
-                field.textContent = ''; break;
-        }
-        // Add relevant attributes to each html tag and append to form
+        field.textContent = f.text || "";
+
         Object.entries(f.attributes).forEach(([att, val]) => {
             field.setAttribute(att, val);
         })
@@ -91,7 +99,7 @@ function renderRegisterLink() {
 
     registerPageBtn.textContent = "Register";
     registerPageBtn.id = "register-link";
-    
+
     registerText.textContent = "Don't have an account? Click here to create one!"
 
     registerElement.appendChild(registerText);
@@ -107,7 +115,7 @@ function renderLoginLink() {
 
     loginPageBtn.textContent = "Login";
     loginPageBtn.id = "login-link";
-    
+
     loginText.textContent = "Already have an account? Click here to login!"
 
     loginElement.appendChild(loginText);

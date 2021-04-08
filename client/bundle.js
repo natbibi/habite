@@ -1,10 +1,149 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+const req = require("./requests");
+const forms = require("./forms");
+const auth = require('./auth')
+const heading = document.querySelector('header');
+const main = document.querySelector('main');
+
+function renderAddHabitsPage() {
+    const showFooter = document.getElementById('footer')
+    showFooter.style.display = 'block';
+    // add greeting
+    const greeting = document.createElement('h1')
+    greeting.textContent = "Let's get started..."
+    heading.appendChild(greeting)
+
+    // render add habit form
+    const addHabitForm = document.createElement("div");
+    addHabitForm.className = "form add-habit-form";
+    const addHabitFormHeading = document.createElement("h2");
+    addHabitFormHeading.textContent = "Track a habit";
+
+    addHabitForm.appendChild(addHabitFormHeading);
+    addHabitForm.appendChild(createAddHabitForm());
+
+    // render create habit form
+    const newHabitForm = document.createElement("div");
+    newHabitForm.className = "form new-habit-form";
+    const newHabitFormHeading = document.createElement("h2");
+    newHabitFormHeading.textContent = "Create a new habit";
+
+    newHabitForm.appendChild(newHabitFormHeading);
+    newHabitForm.appendChild(createNewHabitForm());
+
+    const deleteHabitForm = document.createElement("div");
+    deleteHabitForm.className = "form delete-habit-form";
+    const deleteHabitFormHeading = document.createElement("h2");
+    deleteHabitFormHeading.textContent = "Stop tracking a habit";
+
+    deleteHabitForm.appendChild(deleteHabitFormHeading);
+    deleteHabitForm.appendChild(createDeleteHabitForm());
+
+    main.appendChild(addHabitForm);
+    main.appendChild(newHabitForm);
+    main.appendChild(deleteHabitForm);
+}
+
+function createAddHabitForm() {
+    // form fields
+    fields = [
+        { tag: 'label', attributes: { id: 'add-habits-dropdown', for: 'habits-dropdown' }, text: 'Choose a habit:' },
+        { tag: 'select', attributes:{ id: 'add-habits-dropdown', name: 'habits-dropdown' } },
+        { tag: 'label', attributes: { id: 'add-habits-frequency', for: 'frequency' }, text: 'How often?' },
+        { tag: 'input', attributes: { id: 'add-habits-frequency', name: 'frequency', type: 'number', placeholder: '3', min: "1", max: "24", required: "true" } },
+        { tag: 'p', attributes: {},  text: "times per day" },
+        { tag: 'input', attributes: { id: 'add-habits-btn', type: 'submit', name: 'habit-sbmt', value: 'Track Habit' } }
+    ];
+
+    const form = forms.createForm(fields);
+    const freqInput = form.querySelector("input[name='frequency']");
+    const habitsDropdown = form.querySelector("select");
+
+    // add habits to dropdown     
+    req.getData('habits')
+        .then(habits => {
+            habits.forEach(habit => {
+                const option = document.createElement("option");
+                option.textContent = habit.name;
+                option.setAttribute('data-id', habit.id);
+                habitsDropdown.appendChild(option)
+            })
+        });
+
+    form.onsubmit = (e) => {
+        e.preventDefault();
+        const selected = habitsDropdown.options[habitsDropdown.selectedIndex].getAttribute('data-id');
+        const path = `users/${auth.currentUser()}/habits`
+        const data = {
+            habit_id: selected,
+            frequency: freqInput.value
+        }
+        req.postData(path, data);
+    };
+
+    return form;
+}
+
+function createNewHabitForm() {
+    fields = [
+        { tag: 'label', attributes: { class: 'new-habit-name', for: 'new-habit-name' }, text: 'Add a custom habit' },
+        { tag: 'input', attributes: { class: 'new-habit-name', name: 'new-habit-name', type: 'text', placeholder: 'use habite', required: "true" }, text: 'Add a custom habit' },
+        { tag: 'input', attributes: { class: 'new-habit-btn', type: 'submit', name: 'new-habit-sbmt' } }
+    ];
+
+    const form = forms.createForm(fields);
+    const nameInput = form.querySelector('input[type=text]');
+
+    form.onsubmit = async (e) => {
+        e.preventDefault();
+        const data = { name: nameInput.value }
+        req.postData(`habits`, data);
+    };
+
+    return form;
+}
+
+function createDeleteHabitForm() {
+    fields = [
+        { tag: 'label', attributes: { class: 'delete-habit', for: 'delete-habit-dropdown' }, text: 'Habit' },
+        { tag: 'select', attributes: { class: 'delete-habit', name: 'delete-habit-dropdown' } },
+        { tag: 'input', attributes: { class: 'new-habit-btn', type: 'submit', name: 'new-habit-sbmt' } }
+    ];
+
+
+    const form = forms.createForm(fields);
+    const userHabitsDropdown = form.querySelector("select");
+
+    req.getData(`users/${auth.currentUser()}/habits`)
+        .then(habits => {
+            habits.forEach(habit => {
+                const option = document.createElement("option");
+                option.textContent = habit.habit_name;
+                option.setAttribute('data-id', habit.id);
+                userHabitsDropdown.appendChild(option)
+            })
+        });
+
+
+    form.onsubmit = async (e) => {
+        e.preventDefault();
+        const selected = userHabitsDropdown.options[userHabitsDropdown.selectedIndex].getAttribute('data-id');
+        req.deleteData(`users/${auth.currentUser()}/habits/${selected}`);
+    };
+
+    return form;
+}
+
+module.exports = { 
+    renderAddHabitsPage,
+    createAddHabitForm,
+    createDeleteHabitForm,
+    createNewHabitForm
+};
+},{"./auth":2,"./forms":4,"./requests":9}],2:[function(require,module,exports){
 const jwt_decode = require('jwt-decode')
 
-const hostURL = "http://localhost:3000"; // Should this be an ENV variable?
-
 async function requestLogin(e){
-    e.preventDefault();
     try {
         const options = {
             method: 'POST',
@@ -13,15 +152,14 @@ async function requestLogin(e){
         }
         const r = await fetch(`${hostURL}/auth/login`, options)
         const data = await r.json()
-        if (!data.success) { throw new Error('Login not authorised'); }
+        if (!data.success) { throw new Error(data.err); }
         login(data.token);
     } catch (err) {
-        console.warn(err);
+        throw err;
     }
 }
 
 async function requestRegistration(e) {
-    e.preventDefault();
     try {
         const options = {
             method: 'POST',
@@ -33,9 +171,10 @@ async function requestRegistration(e) {
         if (data.err){ throw Error(data.err) }
         requestLogin(e);
     } catch (err) {
-        console.warn(err);
+        throw err;
     }
 }
+
 
 function login(token){
     const user = jwt_decode(token);
@@ -61,15 +200,19 @@ module.exports = {
     login,
     logout
 }
-},{"jwt-decode":8}],2:[function(require,module,exports){
+},{"jwt-decode":10}],3:[function(require,module,exports){
 const rHelpers = require('./renderHelpers');
 const forms = require('./forms');
 const requests = require('./requests')
+const auth = require('./auth')
+const profile = require('./profile');
 
+const username = auth.currentUser();
 const nav = document.querySelector('nav');
 const heading = document.querySelector('header');
 const main = document.querySelector('main');
 // const newDiv = document.createElement('div').cloneNode();
+
 // Landing Page flow
 function renderLandingPage() {
     rHelpers.renderHeading();
@@ -83,83 +226,18 @@ function renderLandingPage() {
 // render profile page, main page:
 // aysnc  
 function renderStreaks() {
-    const showFooter = document.getElementById('footer')
-    showFooter.style.display = 'block';
-    const greeting = document.createElement('h1')
-    greeting.textContent = `Hi there, ${localStorage.getItem('username')}!`;
-    heading.appendChild(greeting);
-
-    // const getHabits = await getAllHabits();
-    // if (getHabits.err) { return }
-    // const renderHabit = habitData => {
-    const streaks = document.createElement('div')
-    streaks.className = "streaks-list"
-    const streaksHeading = document.createElement('h2')
-    streaksHeading.className = "streaks-heading"
-    streaksHeading.textContent = "🔥 Streaks"
-    const streaksBody = document.createElement('div')
-    streaksBody.className = "streaks-body"
-    // insert GET request for habit completed here
-
-    main.appendChild(streaks)
-    streaks.appendChild(streaksHeading)
-    streaks.appendChild(streaksBody)
-    // streaks.appendChild(getHabits)
+    profile.streaksHelper();
+}
+function renderMyHabits() {
+    profile.habitsHelper();
+}
+async function renderProfile() {
+    await renderStreaks();
+    await renderMyHabits();
 }
 
+// *******************************************************************
 
-async function renderMyHabits() {
-    const habitsList = await requests.getAllHabits();
-    if (habitsList.err) { return }
-
-    const habits = document.createElement('div')
-    habits.className = "habits-list"
-    const habitsHeading = document.createElement('h2')
-    habitsHeading.className = "habits-heading"
-    habitsHeading.textContent = "💙 My Habits"
-    const habitsContainer = document.createElement('div')
-    habitsContainer.className = "habits-container"
-    main.append(habits)
-    // insert GET request for user habits here
-
-    // let habitContainer = document.createElement('div')
-    // habitContainer.className = "habit-container"
-    habitsList.forEach(habit => {
-
-        // function getHabitList
-        let habitContainer = document.createElement('div')
-        habitContainer.className = "habit-container"
-
-        let habitName = document.createElement('p')
-        habitName.textContent = habit.habit_name
-
-        let habitFrequency = document.createElement('progress')
-        habitFrequency.setAttribute('max', `${habit.frequency}`)
-        habitFrequency.setAttribute('value', `${habit.frequency}`)
-
-        let habitIncreaseFrequency = document.createElement('i')
-        habitIncreaseFrequency.className = "fas fa-plus-circle increase-freq-btn"
-
-        habitsContainer.appendChild(habitContainer)
-        habitContainer.appendChild(habitName)
-        habitContainer.appendChild(habitFrequency)
-        habitContainer.appendChild(habitIncreaseFrequency)
-    })
-
-    habits.appendChild(habitsHeading)
-    habits.appendChild(habitsContainer)
-}
-
-function renderAddHabitsPage() {
-    const showFooter = document.getElementById('footer')
-    showFooter.style.display = 'block';
-    const greeting = document.createElement('h1')
-    greeting.textContent = "Let's get started..."
-    heading.appendChild(greeting)
-
-    // getAllHabits -> name and put into options value / dropdown 
-
-}
 
 function renderMenuMessage() {
     const menuMessage = document.createElement('p');
@@ -175,60 +253,80 @@ function render404() {
 }
 
 
-module.exports = { renderStreaks, renderMyHabits, renderAddHabitsPage, renderLandingPage, render404 }
-},{"./forms":3,"./renderHelpers":6,"./requests":7}],3:[function(require,module,exports){
+module.exports = { renderProfile, renderLandingPage, render404 }
+},{"./auth":2,"./forms":4,"./profile":7,"./renderHelpers":8,"./requests":9}],4:[function(require,module,exports){
 const auth = require("./auth");
 const main = document.querySelector('main');
-
-// function renderAuthBtns() {
-//     const authBtns = document.createElement('div');
-//     authBtns.className = 'auth-btns';
-
-//     const loginBtn = document.createElement('button');
-//     loginBtn.className = 'login-btn';
-//     loginBtn.textContent = 'login';
-
-//     const regBtn = document.createElement('button');
-//     regBtn.className = 'register-btn';
-//     regBtn.textContent = 'register';
-
-//     authBtns.appendChild(loginBtn);
-//     authBtns.appendChild(regBtn);
-//     main.appendChild(authBtns);
-// }
 
 function renderLoginForm() {
     // Define form fields
     const authFields = [
-        { tag: 'label', attributes: { id: 'username-label', for: 'username' } },
-        { tag: 'input', attributes: { id: 'username', name: 'username', placeholder: 'Enter your username', } },
-        { tag: 'label', attributes: { id: 'password-label', for: 'password' } },
-        { tag: 'input', attributes: { id: 'password', type: 'password', name: 'password', placeholder: 'Enter your password', } },
-        { tag: 'input', attributes: { id: 'robot-check', type: 'checkbox', name: 'robot-check', } },
-        { tag: 'label', attributes: { id: 'robot-label', for: 'robot-check' } },
+        { tag: 'label', attributes: { id: 'username-label', for: 'username' }, text: 'Username' },
+        { tag: 'input', attributes: { id: 'username', name: 'username', placeholder: 'Enter your username', required: true } },
+        { tag: 'label', attributes: { id: 'password-label', for: 'password' }, text: 'Password' },
+        { tag: 'input', attributes: { id: 'password', type: 'password', name: 'password', placeholder: 'Enter your password', required: true } },
+        { tag: 'label', attributes: { id: 'robot-label', for: 'robot-check' }, text: 'Not a robot, (bzzt, dzzt).' },
+        { tag: 'input', attributes: { id: 'robot-check', type: 'checkbox', required: true } },
         { tag: 'input', attributes: { id: 'login-sbmt', type: 'submit', name: 'login-sbmt', value: 'Login', } }
     ];
 
     const form = createForm(authFields)
-    form.classList.add("login-form");
-    form.addEventListener('submit', auth.requestLogin);
+    form.className = "login-form auth-form";
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        try {
+            await auth.requestLogin(e);
+        } catch (err) {
+
+            const username = document.getElementById("username");
+            const password = document.getElementById("password");
+            username.classList.add("input-invalid");
+            password.classList.add("input-invalid");
+
+        }
+    });
+
+
     main.appendChild(form);
 }
 
 function renderRegisterForm() {
     const authFields = [
-        { tag: 'label', attributes: { id: 'username-label', for: 'username' } },
-        { tag: 'input', attributes: { id: 'username', name: 'username', placeholder: 'Enter your username', } },
-        { tag: 'label', attributes: { id: 'password-label', for: 'password' } },
-        { tag: 'input', attributes: { id: 'password', type: 'password', name: 'password', placeholder: 'Enter your password', } },
-        { tag: 'input', attributes: { id: 'password-check', type: 'password', name: 'password', placeholder: 'Confirm password', } },
-        { tag: 'input', attributes: { id: 'robot-check', type: 'checkbox', name: 'robot-check', } },
-        { tag: 'label', attributes: { id: 'robot-label', for: 'robot-check' } },
+        { tag: 'label', attributes: { id: 'username-label', for: 'username' }, text: 'Username' },
+        { tag: 'input', attributes: { id: 'username', name: 'username', placeholder: 'Enter your username', required: true } },
+        { tag: 'label', attributes: { id: 'password-label', for: 'password' }, text: 'Password' },
+        { tag: 'input', attributes: { id: 'password', type: 'password', name: 'password', placeholder: 'Enter your password', required: true } },
+        { tag: 'input', attributes: { id: 'password-check', type: 'password', name: 'password', placeholder: 'Confirm password', required: true } },
+        { tag: 'label', attributes: { id: 'robot-label', for: 'robot-check', required: true }, text: 'Not a robot, (bzzt, dzzt).' },
+        { tag: 'input', attributes: { id: 'robot-check', type: 'checkbox', required: true } },
         { tag: 'input', attributes: { id: 'register-sbmt', type: 'submit', name: 'register-sbmt', value: 'Register', } }
     ];
     const form = createForm(authFields)
-    form.classList.add("register-form");
-    form.addEventListener('submit', auth.requestRegistration);
+    form.className = "register-form auth-form";
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault()
+
+        const pass = document.getElementById("password");
+        const confirm = document.getElementById("password-check");
+        console.log(document.getElementById("password-check"));
+
+        if (pass.value === confirm.value) {
+            try {
+                await auth.requestRegistration(e);
+            } catch (err) {
+                if (err.message.includes("duplicate")) {
+                    const username = document.getElementById("username");
+                    username.classList.add("input-invalid");
+                    username.setAttribute('placeholder', `Sorry, ${username.value} is taken!`)
+                    username.value = "";
+                }
+            }
+        } else {
+            confirm.classList.add("input-invalid");
+        }
+    });
+
     main.appendChild(form);
 }
 
@@ -237,23 +335,13 @@ function createForm(authFields) {
     // Create new form element with auth-form class name
     const form = document.createElement('form');
     form.method = "post";
-    form.className = 'auth-form';
+    form.className = 'submit-form';
     // Create form elements
     authFields.forEach(f => {
         let field = document.createElement(f.tag);
         // Add text content to relevant tags
-        let fieldId = f.attributes.id;
-        switch (fieldId) {
-            case 'username-label':
-                field.textContent = "username"; break;
-            case 'password-label':
-                field.textContent = "password"; break;
-            case 'robot-label':
-                field.textContent = "I am not a robot!"; break;
-            default:
-                field.textContent = ''; break;
-        }
-        // Add relevant attributes to each html tag and append to form
+        field.textContent = f.text || "";
+
         Object.entries(f.attributes).forEach(([att, val]) => {
             field.setAttribute(att, val);
         })
@@ -270,7 +358,7 @@ function renderRegisterLink() {
 
     registerPageBtn.textContent = "Register";
     registerPageBtn.id = "register-link";
-    
+
     registerText.textContent = "Don't have an account? Click here to create one!"
 
     registerElement.appendChild(registerText);
@@ -286,7 +374,7 @@ function renderLoginLink() {
 
     loginPageBtn.textContent = "Login";
     loginPageBtn.id = "login-link";
-    
+
     loginText.textContent = "Already have an account? Click here to login!"
 
     loginElement.appendChild(loginText);
@@ -303,24 +391,21 @@ module.exports = {
     renderRegisterLink,
     createForm
 }
-},{"./auth":1}],4:[function(require,module,exports){
+},{"./auth":2}],5:[function(require,module,exports){
+(function (process,global){(function (){
 // Import js files
 // Rendering
 const layout = require('./layout');
 const content = require('./content');
-// const navResponse = require('./navResponse');
-// Authentication
-const auth = require('./auth');
-const requests = require('./requests')
+
+global.hostURL = process.env.HOST_URL || "http://localhost:3000";
 
 // Create initial bindings
 function initBindings() {
     // e.preventDefault();
     // Initial bindings
     console.log('You found our javaScript')
-
     layout.updateContent();
-    
     window.addEventListener('hashchange', layout.updateContent);
 
     // Click event delegation
@@ -330,24 +415,13 @@ function initBindings() {
 
     main.addEventListener('click', formHandler);
     profile.addEventListener('click', navFunc);
-    bottomNav.addEventListener('click', navHandler);
 }
 
 function formHandler(e) {
     const target = e.target.id;
     switch(target) {
-        case 'register-link': window.location.hash = 'register'; break;
-        case 'login-link': window.location.hash = 'login'; break;
-        default: break;
-    }
-}
-
-function navHandler(e) {
-    const target = e.target.id;
-    switch(target) {
-        case 'logout': auth.logout(); break;
-        case 'add-habit': /*TODO add page*/ break;
-        case 'show-habits': window.location.hash = 'profile'; break;
+        case 'register-link': window.location.hash = '#register'; break;
+        case 'login-link': window.location.hash = '#login'; break;
         default: break;
     }
 }
@@ -364,8 +438,10 @@ function navFunc() {
 initBindings();
 
 
-},{"./auth":1,"./content":2,"./layout":5,"./requests":7}],5:[function(require,module,exports){
+}).call(this)}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./content":3,"./layout":6,"_process":11}],6:[function(require,module,exports){
 const content = require('./content')
+const addHabits = require('./addHabits');
 const rHelpers = require('./renderHelpers');
 const forms = require('./forms')
 const auth = require('./auth');
@@ -376,7 +452,7 @@ const main = document.querySelector('main');
 const publicRoutes = ['#', '#login', '#register'];
 const privateRoutes = []; // add #profile and #addhabits
 
-window.addEventListener('hashchange', updateContent);
+// window.addEventListener('hashchange', updateContent);
 
 function updateMain(path) {
     console.log("hello updating main")
@@ -397,9 +473,16 @@ function updateMain(path) {
                 forms.renderLoginLink();
                 break;
             case '#profile':
-                content.renderStreaks(); content.renderMyHabits(); break;
+                content.renderProfile(); break;
             case '#addhabits':
-                content.renderAddHabitsPage(); break;
+                addHabits.renderAddHabitsPage();
+                break;
+            case '#logout':
+                auth.logout(); break;
+            // case '#more':
+            //     renderLandingPage(); renderMenuMessage(); break;
+            // case '#top':
+            //     break;
             default:
                 content.render404(); break;
         }
@@ -420,7 +503,223 @@ function updateContent() {
 }
 
 module.exports = { updateContent };
-},{"./auth":1,"./content":2,"./forms":3,"./renderHelpers":6}],6:[function(require,module,exports){
+},{"./addHabits":1,"./auth":2,"./content":3,"./forms":4,"./renderHelpers":8}],7:[function(require,module,exports){
+const rHelpers = require('./renderHelpers');
+const forms = require('./forms');
+const requests = require('./requests')
+const auth = require('./auth')
+
+const username = auth.currentUser();
+const nav = document.querySelector('nav');
+const heading = document.querySelector('header');
+const main = document.querySelector('main');
+
+async function streaksHelper() {
+    const showFooter = document.getElementById('footer')
+    showFooter.style.display = 'block';
+    const greeting = document.createElement('h1')
+    greeting.textContent = `Hi there, ${localStorage.getItem('username')}!`;
+    heading.appendChild(greeting);
+
+    const userData = await requests.getData(`users/${username}/habits/entries`);
+    if (requests.getData.err) { return }
+    const streaks = document.createElement('div')
+    streaks.className = "streaks-list"
+    const streaksHeading = document.createElement('h2')
+    streaksHeading.className = "streaks-heading"
+    streaksHeading.textContent = "🔥 Streaks"
+
+    main.append(streaks)
+    streaks.appendChild(streaksHeading);
+
+
+    const streaksContainer = document.createElement('div')
+    streaksContainer.className = "streaks-container"
+    streaks.appendChild(streaksContainer)
+
+    const streaksSeeMore = document.createElement('button')
+    streaksSeeMore.innerHTML = `<i class="fas fa-chevron-down streaks-see-more-btn"></i>`
+    streaksHeading.appendChild(streaksSeeMore)
+
+    streaksSeeMore.addEventListener('click', () => {
+        if (streaksContainer.style.display === "grid") {
+            streaksContainer.style.display = "none";
+        } else {
+            streaksContainer.style.display = "grid";
+        }
+    })
+
+    // insert GET request for habit completed here
+    userData.forEach(streaks => {
+        let streakContainer = document.createElement('div');
+        streakContainer.className = 'streak-container';
+
+        let streakName = document.createElement('h5');
+        streakName.textContent = streaks.name;
+        streakContainer.appendChild(streakName);
+
+        let currentStreakTotal = streaks.streakData.current_streak;
+
+        let dayNumber = '';
+        console.log(dayNumber);
+        if (currentStreakTotal === 1) {
+            dayNumber = 'day'
+        } else {
+            dayNumber = 'days'
+        };
+
+        let message;
+
+        if (currentStreakTotal === 0) {
+            message = "Crumbs ... let's get back in the habite!";
+        } else if (currentStreakTotal > 0 && currentStreakTotal <= 2) {
+            message = "Great start!  Keep at it!";
+        } else if (currentStreakTotal > 2 && currentStreakTotal <= 7) {
+            message = `A habit a day keeps procrastination away!`;
+        } else if (currentStreakTotal > 7 && currentStreakTotal <= 14) {
+            message = "More than a week effort!";
+        } else if (currentStreakTotal > 14) {
+            message = "Rehabite-ation not required here!";
+        } else {
+            message = "Whoops.  No streakers here!";
+        }
+
+        let currentStreakMessage = document.createElement('p');
+        currentStreakMessage.textContent = `${currentStreakTotal} ${dayNumber}, ${message}`;
+        streakContainer.appendChild(currentStreakMessage);
+
+        let topStreak = streaks.streakData.top_streak;
+        let topStreakMessage = document.createElement('p');
+        topStreakMessage.textContent = `✨ Your PB is ${topStreak}! ✨`;
+        streakContainer.appendChild(topStreakMessage);
+
+        streaksContainer.appendChild(streakContainer);
+    })
+}
+
+async function habitsHelper() {
+    const habitsList = await requests.getData(`users/${username}/habits/entries`);
+    if (habitsList.err) { return }
+    const habits = document.createElement('div')
+    habits.className = "habits-list"
+    const habitsHeading = document.createElement('h2')
+    habitsHeading.className = "habits-heading"
+    habitsHeading.textContent = "💙 My Habits"
+    const habitsContainer = document.createElement('div')
+    habitsContainer.className = "habits-container"
+    main.append(habits)
+
+    // insert GET request for user habits here
+    habitsList.forEach(habit => {
+
+        // function getHabitList
+        let habitContainer = document.createElement('div')
+        habitContainer.className = "habit-container"
+
+        let currentHabitTotal = habit.day_entries[0].total
+        let maxFrequency = habit.max_frequency
+        let currentHabitID = habit.user_habit_id
+
+        let habitName = document.createElement('p')
+        habitName.textContent = habit.name
+
+        let habitFrequency = document.createElement('progress')
+        habitFrequency.setAttribute('max', maxFrequency)
+        habitFrequency.setAttribute('value', currentHabitTotal)
+
+        function updateProgressBar() {
+            habitFrequency.setAttribute('value', currentHabitTotal)
+        }
+
+        let habitMinus = document.createElement('button')
+        habitMinus.innerHTML = `<i class="fas fa-minus minus-btn"></i>`
+
+        let habitIncreaseFrequency = document.createElement('button')
+        habitIncreaseFrequency.id = "increase-freq-btn"
+        habitIncreaseFrequency.innerHTML = `<i class="fas fa-plus"></i>`
+
+        let habitSeeMore = document.createElement('button')
+        habitSeeMore.innerHTML = `<i class="fas fa-ellipsis-h see-more-btn"></i>`
+
+
+        // POST: Increment habit 
+        habitIncreaseFrequency.addEventListener('click', () => {
+            // currentHabitTotal += 1
+            if (currentHabitTotal >= maxFrequency) {
+            } else { currentHabitTotal++ }
+            try {
+                const data = { user_habit_id: currentHabitID, completed: true }
+                requests.postData(`users/${username}/habits/entries`, data);
+                updateProgressBar()
+            } catch (err) {
+                throw err
+            }
+        });
+
+        // DELETE: Decrement habit
+        habitMinus.addEventListener('click', () => {
+            // currentHabitTotal -= 1
+            if (currentHabitTotal === 0) {
+            } else { currentHabitTotal-- }
+            try {
+                requests.deleteData(`users/${username}/habits/entries/${currentHabitID}`);
+                updateProgressBar()
+            } catch (err) {
+                throw err
+            }
+        });
+
+        let habitsExtrasContainer = document.createElement('div')
+        habitsExtrasContainer.className = "habits-extras-container"
+
+        habitSeeMore.addEventListener('click', () => {
+
+            if (habitsExtrasContainer.style.display === "grid") {
+                habitsExtrasContainer.style.display = "none";
+            } else {
+                habitsExtrasContainer.style.display = "grid";
+            }
+
+            habitsExtrasContainer.innerHTML = ""
+
+            const dayEntries = habit.day_entries
+
+            const validEntries = dayEntries.filter(entry => entry.total !== null)
+            validEntries.forEach(entry => {
+                let habitExtrasContainer = document.createElement('div')
+                habitExtrasContainer.className = "habit-extra-item"
+                let habitExtrasDate = document.createElement('p')
+                habitExtrasDate.className = "extras-date"
+                habitExtrasDate.textContent = new Date(entry.date).toLocaleDateString()
+                let habitExtrasFrequency = document.createElement('progress')
+                habitExtrasFrequency.className = "extras-progress"
+                habitExtrasFrequency.setAttribute('max', maxFrequency)
+                habitExtrasFrequency.setAttribute('value', entry.total)
+                let habitExtraResult = document.createElement('p')
+                habitExtraResult.className = "extras-result"
+                habitExtraResult.textContent = `${entry.total} / ${maxFrequency}`
+
+                habitExtrasContainer.appendChild(habitExtrasDate)
+                habitExtrasContainer.appendChild(habitExtrasFrequency)
+                habitExtrasContainer.appendChild(habitExtraResult)
+                habitsExtrasContainer.appendChild(habitExtrasContainer)
+
+            })
+            habitContainer.appendChild(habitsExtrasContainer)
+        })
+        habitsContainer.appendChild(habitContainer)
+        habitContainer.appendChild(habitName)
+        habitContainer.appendChild(habitFrequency)
+        habitContainer.appendChild(habitMinus)
+        habitContainer.appendChild(habitIncreaseFrequency)
+        habitContainer.appendChild(habitSeeMore)
+    })
+    habits.appendChild(habitsHeading)
+    habits.appendChild(habitsContainer)
+}
+
+module.exports = { streaksHelper, habitsHelper }
+},{"./auth":2,"./forms":4,"./renderHelpers":8,"./requests":9}],8:[function(require,module,exports){
 let nav;
 let header;
 
@@ -491,37 +790,13 @@ module.exports = {
     renderNavBar,
     renderHeading
 }
-},{}],7:[function(require,module,exports){
-const auth = require('./auth')
-const hostURL = "http://localhost:3000";
-
-async function getAllHabits() {
+},{}],9:[function(require,module,exports){
+async function getData(path) {
     try {
         const options = {
             headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
         }
-        const username = auth.currentUser()
-        console.log(username)
-        const response = await fetch(`${hostURL}/users/${username}/habits`, options)
-        // https://habit-your-way.herokuapp.com/habits 
-        const data = await response.json();
-
-        if (data.err) {
-            console.warn(data.err);
-            logout();
-        }
-        return data;
-    } catch (err) {
-        console.warn(err);
-    }
-}
-
-async function getAllUsers() {
-    try {
-        const options = {
-            headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
-        }
-        const response = await fetch('https://habit-your-way.herokuapp.com/users', options);
+        const response = await fetch(`${hostURL}/${path}`, options)
         const data = await response.json();
         if (data.err) {
             console.warn(data.err);
@@ -533,9 +808,227 @@ async function getAllUsers() {
     }
 }
 
-module.exports = { getAllHabits, getAllUsers }
-},{"./auth":1}],8:[function(require,module,exports){
+
+async function postData(path, formData) {
+    try {
+        const options = {
+            method: 'POST',
+            headers: new Headers({
+                'Authorization': localStorage.getItem('token'),
+                'Content-Type': 'application/json'
+            }),
+            body: JSON.stringify(formData)
+        }
+        const response = await fetch(`${hostURL}/${path}`, options);
+        return response.json();
+    } catch (err) {
+        console.warn(err);
+    }
+}
+
+async function deleteData(path) {
+    try {
+        const options = {
+            method: 'DELETE',
+            headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
+        }
+        await fetch(`${hostURL}/${path}`, options);
+        return
+    } catch (err) {
+        console.warn(err);
+    }
+}
+
+module.exports = { getData, postData, deleteData }
+
+},{}],10:[function(require,module,exports){
 "use strict";function e(e){this.message=e}e.prototype=new Error,e.prototype.name="InvalidCharacterError";var r="undefined"!=typeof window&&window.atob&&window.atob.bind(window)||function(r){var t=String(r).replace(/=+$/,"");if(t.length%4==1)throw new e("'atob' failed: The string to be decoded is not correctly encoded.");for(var n,o,a=0,i=0,c="";o=t.charAt(i++);~o&&(n=a%4?64*n+o:o,a++%4)?c+=String.fromCharCode(255&n>>(-2*a&6)):0)o="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".indexOf(o);return c};function t(e){var t=e.replace(/-/g,"+").replace(/_/g,"/");switch(t.length%4){case 0:break;case 2:t+="==";break;case 3:t+="=";break;default:throw"Illegal base64url string!"}try{return function(e){return decodeURIComponent(r(e).replace(/(.)/g,(function(e,r){var t=r.charCodeAt(0).toString(16).toUpperCase();return t.length<2&&(t="0"+t),"%"+t})))}(t)}catch(e){return r(t)}}function n(e){this.message=e}function o(e,r){if("string"!=typeof e)throw new n("Invalid token specified");var o=!0===(r=r||{}).header?0:1;try{return JSON.parse(t(e.split(".")[o]))}catch(e){throw new n("Invalid token specified: "+e.message)}}n.prototype=new Error,n.prototype.name="InvalidTokenError";const a=o;a.default=o,a.InvalidTokenError=n,module.exports=a;
 
 
-},{}]},{},[4]);
+},{}],11:[function(require,module,exports){
+// shim for using process in browser
+var process = module.exports = {};
+
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+} ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+};
+
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) { return [] }
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
+
+},{}]},{},[5]);

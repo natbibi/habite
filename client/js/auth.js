@@ -1,9 +1,6 @@
 const jwt_decode = require('jwt-decode')
 
-const hostURL = "http://localhost:3000"; // Should this be an ENV variable?
-
 async function requestLogin(e){
-    e.preventDefault();
     try {
         const options = {
             method: 'POST',
@@ -12,15 +9,14 @@ async function requestLogin(e){
         }
         const r = await fetch(`${hostURL}/auth/login`, options)
         const data = await r.json()
-        if (!data.success) { throw new Error('Login not authorised'); }
+        if (!data.success) { throw new Error(data.err); }
         login(data.token);
     } catch (err) {
-        console.warn(err);
+        throw err;
     }
 }
 
 async function requestRegistration(e) {
-    e.preventDefault();
     try {
         const options = {
             method: 'POST',
@@ -32,9 +28,10 @@ async function requestRegistration(e) {
         if (data.err){ throw Error(data.err) }
         requestLogin(e);
     } catch (err) {
-        console.warn(err);
+        throw err;
     }
 }
+
 
 function login(token){
     const user = jwt_decode(token);
