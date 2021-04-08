@@ -9,7 +9,7 @@ const router = express.Router();
 async function showAllHabits(req, res) {
   try {
     const habits = await Habit.all;
-    res.json(habits)
+    res.status(200).json(habits)
   } catch (err) {
     res.status(403).send({ err: err })
   }
