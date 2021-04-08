@@ -22,11 +22,12 @@ async function streaksHelper() {
     const streaksHeading = document.createElement('h2')
     streaksHeading.className = "streaks-heading"
     streaksHeading.textContent = "🔥 Streaks"
+    main.append(streaks)
     streaks.appendChild(streaksHeading);
 
     const streaksContainer = document.createElement('div')
     streaksContainer.className = "streaks-container"
-    main.appendChild(streaksContainer)
+    streaks.appendChild(streaksContainer)
 
     // insert GET request for habit completed here
     userData.forEach(streaks => {
