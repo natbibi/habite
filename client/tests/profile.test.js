@@ -1,5 +1,12 @@
+global.fetch = require('jest-fetch-mock');
+
+const requests = require('./requests');
+const jwt_decode = require('jwt-decode');
+jest.mock('jwt-decode', () => () => ({}))
+
 let profile;
-describe('form rendering', () => {
+describe('profile rendering', () => {
+    let e;
     let header;
     let footer;
     let main;
@@ -15,6 +22,10 @@ describe('form rendering', () => {
     beforeEach(() => {
         header.innerHTML = '';
         main.innerHTML = '';
+
+        fetch.resetMocks();
+        e = { preventDefault: jest.fn() }
+
         profile.streaksHelper();
         profile.habitsHelper();
     });
@@ -30,4 +41,12 @@ describe('form rendering', () => {
             expect(greeting.textContent).toContain('Hi');
         });
     });
+
+    describe('should make a GET request to /auth/register with register form data', () => {
+        it('...', () => {
+
+        });
+
+    });
+
 });
