@@ -38,8 +38,7 @@ async function deleteData(path) {
             method: 'DELETE',
             headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
         }
-        const r = await fetch(`}/auth/register`, options)
-        await fetch(`${process.env.API_URL}/${path}`, options);
+        const r = await fetch(`${process.env.API_URL}/${path}`, options);
         return
     } catch (err) {
         console.warn(err);
