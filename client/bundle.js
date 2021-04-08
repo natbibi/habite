@@ -134,7 +134,12 @@ function createDeleteHabitForm() {
     return form;
 }
 
-module.exports = { renderAddHabitsPage };
+module.exports = { 
+    renderAddHabitsPage,
+    createAddHabitForm,
+    createDeleteHabitForm,
+    createNewHabitForm
+};
 },{"./auth":2,"./forms":4,"./requests":9}],2:[function(require,module,exports){
 const jwt_decode = require('jwt-decode')
 

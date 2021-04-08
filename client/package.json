@@ -18,7 +18,7 @@
     "watchify": "^4.0.0"
   },
   "scripts": {
-    "test": "jest --watchAll --silent",
+    "test": "jest --watchAll",
     "coverage": "jest --coverage ",
     "dev": "concurrently \"watchify ./js/index.js -o bundle.js\" \"http-server -c-1\""
   },
