@@ -622,7 +622,8 @@ async function habitsHelper() {
 
         // POST: Increment habit 
         habitIncreaseFrequency.addEventListener('click', () => {
-            currentHabitTotal += 1
+            if (currentHabitTotal >= habit.max_frequency) {
+            } else {currentHabitTotal++}
             try {
                 const data = { user_habit_id: currentHabitID, completed: true }
                 requests.postData(`users/${username}/habits/entries`, data);
@@ -634,7 +635,8 @@ async function habitsHelper() {
 
         // DELETE: Decrement habit
         habitMinus.addEventListener('click', () => {
-            currentHabitTotal -= 1
+            if (currentHabitTotal === 0) {
+            } else {currentHabitTotal--}
             try {
                 requests.deleteData(`users/${username}/habits/entries/${currentHabitID}`);
                 updateProgressBar()

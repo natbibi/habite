@@ -14,10 +14,10 @@ VALUES
 
 INSERT INTO user_habits (user_id, habit_id, frequency, created_at) 
 VALUES
-(1,1,3, current_timestamp - INTERVAL '2 day'),
+(1,1,3, current_timestamp - INTERVAL '3 day'),
 (1,2,4, current_timestamp - INTERVAL '1 day'),
 (2,1,2, current_timestamp - INTERVAL '2 day'),
-(2,1,3, current_timestamp);
+(2,3,3, current_timestamp);
 
 INSERT INTO  habit_entries (user_habit_id, completed, completed_at)
 VALUES
@@ -31,6 +31,10 @@ VALUES
 (1,TRUE, current_timestamp - INTERVAL '2 day'),
 (1,TRUE, current_timestamp - INTERVAL '2 day'),
 (1,FALSE, current_timestamp - INTERVAL '2 day'),
+
+(1,TRUE, current_timestamp - INTERVAL '3 day'),
+(1,FALSE, current_timestamp - INTERVAL '3 day'),
+(1,FALSE, current_timestamp - INTERVAL '3 day'),
 
 (2,TRUE, current_timestamp),
 (2,TRUE, current_timestamp),
