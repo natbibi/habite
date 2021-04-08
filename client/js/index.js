@@ -12,9 +12,7 @@ function initBindings() {
     // e.preventDefault();
     // Initial bindings
     console.log('You found our javaScript')
-
     layout.updateContent();
-    
     window.addEventListener('hashchange', layout.updateContent);
 
     // Click event delegation
@@ -24,7 +22,6 @@ function initBindings() {
 
     main.addEventListener('click', formHandler);
     profile.addEventListener('click', navFunc);
-    bottomNav.addEventListener('click', navHandler);
 }
 
 function formHandler(e) {
@@ -32,16 +29,6 @@ function formHandler(e) {
     switch(target) {
         case 'register-link': window.location.hash = 'register'; break;
         case 'login-link': window.location.hash = 'login'; break;
-        default: break;
-    }
-}
-
-function navHandler(e) {
-    const target = e.target.id;
-    switch(target) {
-        case 'logout': auth.logout(); break;
-        case 'add-habit': /*TODO add page*/ break;
-        case 'show-habits': window.location.hash = 'profile'; break;
         default: break;
     }
 }

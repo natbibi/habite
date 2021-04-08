@@ -2,6 +2,8 @@ const { Habit, UserHabit } = require('../models/Habit');
 
 const express = require('express');
 const streak = require('../helpers/streak');
+const formatData = require('../helpers/formatHabits');
+
 const router = express.Router();
 
 async function showAllHabits(req, res) {
@@ -103,8 +105,9 @@ async function getUserHabitEntries(req, res) {
       const userHabits = await UserHabit.getUserHabitEntries(req.params.username)
       const habitsList = await UserHabit.getUserHabits(req.params.username)
       const streakData = streak(userHabits.allEntries)
-      const habitsData = formatHabbit(habitsList, userHabits)
-      res.json({list: habitsList, data: userHabits.habits, streakData: streakData})
+      const result = formatData(habitsList, userHabits.habits, streakData)
+      res.json(result)
+      // res.json(result)
   } catch (err) {
     res.status(403).send({ err: err })
   }

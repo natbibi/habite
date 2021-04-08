@@ -6,7 +6,7 @@ body{
 }
 
 header {
-    min-height: 100px;
+    min-height: 70px;
     text-align: center;
 }
 
@@ -44,30 +44,50 @@ header {
 
 .habit-container{
     display: grid;
-    grid-template-columns: 2fr 3fr 1fr 1fr;
+    grid-template-columns: 3fr 3fr 1fr 1fr 1fr;
     grid-gap: 20px;
-    /* justify-content: center; */
+    padding: 3px;
     align-items: center;
     margin: 10px;
+    border: 2px solid green;
+}
+
+.habit-extras-container {
+    display: grid;
+    grid-column: 1 / 6;
+    grid-gap: 20px;
+    margin: 10px;
+    flex-direction: row;
+    border: 2px solid green;
+    align-items: center;
+}
+
+.extras-date {
+    display: grid;
+    grid-row: 1;
+    grid-column: 2 / 6;
+}
+
+.extras-progress {
+    display: grid;
+    grid-row: 1;
+    grid-column: 4 / 6;
 }
 
 progress {
     height: 30px
 }
 
-.increase-freq-btn .minus-btn {
-  font-size: 25px;
+button, .increase-freq-btn, .minus-btn, .see-more-btn {
+  font-size: 18px;
   cursor: pointer;
-  display: flex;
-  justify-content: flex-end;
+  border: none;
+  background-color: white;
+  margin-right: 2px;
 }
 
-.increase-freq-btn:hover {
-    transform: scale(1.05);
-}
-
-.minus-btn:hover {
-    transform: scale(1.05);
+button:hover {
+    transform: scale(1.04);
 }
 
 footer {
@@ -126,3 +146,10 @@ footer {
         display: block;
         text-align: left;
     }
+
+@media screen and (min-width: 1000px) {
+    footer {
+        position: relative;
+       
+    }
+}
