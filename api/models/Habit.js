@@ -116,7 +116,7 @@ class UserHabit extends Habit {
         console.log(checkMax)
         console.log(findFreq)
         if (checkMax.rows[0].count < findFreq.rows[0].frequency) {
-          const result = await db.query(SQL`INSERT INTO habit_entries (user_habit_id, completed) VALUES (${data.user_habit_id}, ${data.completed}) RETURNING *;`);
+          const result = await db.query(SQL`INSERT INTO habit_entries (user_habit_id, completed, completed_at) VALUES (${data.user_habit_id}, ${data.completed}, ${data.date}) RETURNING *;`);
           const newHabitEntry = result.rows[0];
           resolve(newHabitEntry)
         } else  {

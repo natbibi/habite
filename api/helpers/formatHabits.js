@@ -5,6 +5,7 @@ function zeroize(str){
               arr[i] = "0" + arr[i]
           }
         }
+
         return arr.join("-")
     }
 
@@ -17,6 +18,7 @@ function getDate(n) {
   }
 
 function formatData(listInfo, dataInfo, streakInfo) {
+
     const requiredData = [];
     const listArray = listInfo.map(item => {
       return {
@@ -42,6 +44,7 @@ function formatData(listInfo, dataInfo, streakInfo) {
     listArray.forEach(habit => {
       requiredData.push(habit);
     })
+
   
   
     //Append streakInfo to relevant requiredData objects
@@ -53,13 +56,14 @@ function formatData(listInfo, dataInfo, streakInfo) {
         data: streakInfo[i]
       });
     }
-  
+
     requiredData.forEach(item => {
       streakArray.forEach(streak => {
         if (streak.name === item.name) {
           item.streakData = streak.data
         }
       })
+
       dataInfo.forEach(entry => {
         item.day_entries.forEach(day => {
           if (day.date === entry.date && item.user_habit_id === entry.user_habit_id) {
