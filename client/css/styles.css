@@ -10,6 +10,12 @@ header {
     text-align: center;
 }
 
+h1 {
+    font-size: 18px;
+    padding-bottom: 5px;
+    color: rgb(80, 80, 80);
+}
+
 /* .heading {
     background-color: pink;
     border-radius: 15%;
