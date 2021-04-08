@@ -22,12 +22,26 @@ async function streaksHelper() {
     const streaksHeading = document.createElement('h2')
     streaksHeading.className = "streaks-heading"
     streaksHeading.textContent = "🔥 Streaks"
+
     main.append(streaks)
     streaks.appendChild(streaksHeading);
+
 
     const streaksContainer = document.createElement('div')
     streaksContainer.className = "streaks-container"
     streaks.appendChild(streaksContainer)
+
+    const streaksSeeMore = document.createElement('button')
+    streaksSeeMore.innerHTML = `<i class="fas fa-chevron-down streaks-see-more-btn"></i>`
+    streaksHeading.appendChild(streaksSeeMore)
+
+    streaksSeeMore.addEventListener('click', () => {
+        if (streaksContainer.style.display === "grid") {
+            streaksContainer.style.display = "none";
+        } else {
+            streaksContainer.style.display = "grid";
+        }
+    })
 
     // insert GET request for habit completed here
     userData.forEach(streaks => {
@@ -37,28 +51,28 @@ async function streaksHelper() {
         let streakName = document.createElement('h5');
         streakName.textContent = streaks.name;
         streakContainer.appendChild(streakName);
-        
+
         let currentStreakTotal = streaks.streakData.current_streak;
 
         let dayNumber = '';
         console.log(dayNumber);
-        if(currentStreakTotal===1){
-            dayNumber='day'
+        if (currentStreakTotal === 1) {
+            dayNumber = '🔥'
         } else {
-            dayNumber='days'
+            dayNumber = '🔥'
         };
-    
+
         let message;
 
-        if(currentStreakTotal===0) {
+        if (currentStreakTotal === 0) {
             message = "Crumbs ... let's get back in the habite!";
-        } else if (currentStreakTotal>0 && currentStreakTotal<=2) {
+        } else if (currentStreakTotal > 0 && currentStreakTotal <= 2) {
             message = "Great start!  Keep at it!";
-        } else if (currentStreakTotal>2 && currentStreakTotal<=7) {
+        } else if (currentStreakTotal > 2 && currentStreakTotal <= 7) {
             message = `A habit a day keeps procrastination away!`;
-        } else if (currentStreakTotal>7 && currentStreakTotal<=14) {
+        } else if (currentStreakTotal > 7 && currentStreakTotal <= 14) {
             message = "More than a week effort!";
-        } else if (currentStreakTotal>14) {
+        } else if (currentStreakTotal > 14) {
             message = "Rehabite-ation not required here!";
         } else {
             message = "Whoops.  No streakers here!";
@@ -70,7 +84,7 @@ async function streaksHelper() {
 
         let topStreak = streaks.streakData.top_streak;
         let topStreakMessage = document.createElement('p');
-        topStreakMessage.textContent = `Your PB is ${topStreak}!`;
+        topStreakMessage.textContent = `✨ Your PB is ${topStreak}! ✨`;
         streakContainer.appendChild(topStreakMessage);
 
         streaksContainer.appendChild(streakContainer);
@@ -97,13 +111,14 @@ async function habitsHelper() {
         habitContainer.className = "habit-container"
 
         let currentHabitTotal = habit.day_entries[0].total
+        let maxFrequency = habit.max_frequency
         let currentHabitID = habit.user_habit_id
 
-        let habitName = document.createElement('p')
+        let habitName = document.createElement('h5')
         habitName.textContent = habit.name
 
         let habitFrequency = document.createElement('progress')
-        habitFrequency.setAttribute('max', habit.max_frequency)
+        habitFrequency.setAttribute('max', maxFrequency)
         habitFrequency.setAttribute('value', currentHabitTotal)
 
         function updateProgressBar() {
@@ -123,8 +138,9 @@ async function habitsHelper() {
 
         // POST: Increment habit 
         habitIncreaseFrequency.addEventListener('click', () => {
-            if (currentHabitTotal >= habit.max_frequency) {
-            } else {currentHabitTotal++}
+            // currentHabitTotal += 1
+            if (currentHabitTotal >= maxFrequency) {
+            } else { currentHabitTotal++ }
             try {
                 const data = { user_habit_id: currentHabitID, completed: true }
                 requests.postData(`users/${username}/habits/entries`, data);
@@ -136,8 +152,9 @@ async function habitsHelper() {
 
         // DELETE: Decrement habit
         habitMinus.addEventListener('click', () => {
+            // currentHabitTotal -= 1
             if (currentHabitTotal === 0) {
-            } else {currentHabitTotal--}
+            } else { currentHabitTotal-- }
             try {
                 requests.deleteData(`users/${username}/habits/entries/${currentHabitID}`);
                 updateProgressBar()
@@ -146,52 +163,52 @@ async function habitsHelper() {
             }
         });
 
-        let habitExtrasContainer = document.createElement('div')
-        habitExtrasContainer.className = "habit-extras-container"
+        let habitsExtrasContainer = document.createElement('div')
+        habitsExtrasContainer.className = "habits-extras-container"
 
         habitSeeMore.addEventListener('click', () => {
 
-            if (habitExtrasContainer.style.display === "grid") {
-                habitExtrasContainer.style.display = "none";
+            if (habitsExtrasContainer.style.display === "grid") {
+                habitsExtrasContainer.style.display = "none";
             } else {
-                habitExtrasContainer.style.display = "grid";
+                habitsExtrasContainer.style.display = "grid";
             }
 
-            let habitExtrasDate = document.createElement('p')
-            habitExtrasDate.className = "extras-date"
-            habitExtrasDate.textContent = habit.day_entries[1].date
+            habitsExtrasContainer.innerHTML = ""
 
-            let habitExtrasFrequency = document.createElement('progress')
-            habitExtrasFrequency.className = "extras-progress"
-            habitExtrasFrequency.setAttribute('max', `${habit.max_frequency}`)
-            habitExtrasFrequency.setAttribute('value', `${habit.day_entries[1].total}`)
+            const dayEntries = habit.day_entries
 
-            // let habitExtrasDateTwo = document.createElement('p')
-            // habitExtrasDateTwo.className = "extras-date-two"
-            // habitExtrasDateTwo.textContent = habit.day_entries[2].date
-            // console.log(habit.day_entries[2].date)
+            const olderEntries = dayEntries.slice(1) // Returns all except first array element i.e. today
+            const validEntries = olderEntries.filter(entry => entry.total !== null)
+            validEntries.forEach(entry => {
+                let habitExtrasContainer = document.createElement('div')
+                habitExtrasContainer.className = "habit-extra-item"
+                let habitExtrasDate = document.createElement('p')
+                habitExtrasDate.className = "extras-date"
+                habitExtrasDate.textContent = new Date(entry.date).toLocaleDateString()
+                let habitExtrasFrequency = document.createElement('progress')
+                habitExtrasFrequency.className = "extras-progress"
+                habitExtrasFrequency.setAttribute('max', maxFrequency)
+                habitExtrasFrequency.setAttribute('value', entry.total)
+                let habitExtraResult = document.createElement('p')
+                habitExtraResult.className = "extras-result"
+                habitExtraResult.textContent = `${entry.total} / ${maxFrequency}`
 
-            // let habitExtrasFrequencyTwo = document.createElement('progress')
-            // habitExtrasFrequencyTwo.className = "extras-progress-two"
-            // habitExtrasFrequencyTwo.setAttribute('max', `${habit.max_frequency}`)
-            // habitExtrasFrequencyTwo.setAttribute('value', `${habit.day_entries[2].total}`)
+                habitExtrasContainer.appendChild(habitExtrasDate)
+                habitExtrasContainer.appendChild(habitExtrasFrequency)
+                habitExtrasContainer.appendChild(habitExtraResult)
+                habitsExtrasContainer.appendChild(habitExtrasContainer)
 
-            habitContainer.appendChild(habitExtrasContainer)
-            habitExtrasContainer.appendChild(habitExtrasDate)
-            habitExtrasContainer.appendChild(habitExtrasFrequency)
-            // habitExtrasContainer.appendChild(habitExtrasDateTwo)
-            // habitExtrasContainer.appendChild(habitExtrasFrequencyTwo)
+            })
+            habitContainer.appendChild(habitsExtrasContainer)
         })
-
         habitsContainer.appendChild(habitContainer)
-        // habitContainer.appendChild(habitDate)
         habitContainer.appendChild(habitName)
         habitContainer.appendChild(habitFrequency)
         habitContainer.appendChild(habitMinus)
         habitContainer.appendChild(habitIncreaseFrequency)
         habitContainer.appendChild(habitSeeMore)
     })
-
     habits.appendChild(habitsHeading)
     habits.appendChild(habitsContainer)
 }

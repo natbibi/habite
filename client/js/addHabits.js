@@ -133,4 +133,9 @@ function createDeleteHabitForm() {
     return form;
 }
 
-module.exports = { renderAddHabitsPage };
+module.exports = { 
+    renderAddHabitsPage,
+    createAddHabitForm,
+    createDeleteHabitForm,
+    createNewHabitForm
+};

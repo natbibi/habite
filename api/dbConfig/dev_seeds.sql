@@ -6,11 +6,11 @@ VALUES
 
 INSERT INTO habits (name) 
 VALUES
-('drink water'),
-('workout'),
-('eat breakfast'),
-('eat vegetables'),
-('meditate');
+('💧 drink water'),
+('🏃🏻‍♀️ workout'),
+('🍳 eat breakfast'),
+('🥗 eat vegetables'),
+('🧘🏻‍♀️ meditate');
 
 INSERT INTO user_habits (user_id, habit_id, frequency, created_at) 
 VALUES

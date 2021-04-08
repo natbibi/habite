@@ -31,7 +31,7 @@ function updateMain(path) {
                 forms.renderLoginLink();
                 break;
             case '#profile':
-                content.renderStreaks(); content.renderMyHabits(); break;
+                content.renderProfile(); break;
             case '#addhabits':
                 addHabits.renderAddHabitsPage();
                 break;

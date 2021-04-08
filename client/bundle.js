@@ -134,8 +134,14 @@ function createDeleteHabitForm() {
     return form;
 }
 
-module.exports = { renderAddHabitsPage };
+module.exports = { 
+    renderAddHabitsPage,
+    createAddHabitForm,
+    createDeleteHabitForm,
+    createNewHabitForm
+};
 },{"./auth":2,"./forms":4,"./requests":9}],2:[function(require,module,exports){
+(function (process){(function (){
 const jwt_decode = require('jwt-decode')
 
 async function requestLogin(e){
@@ -145,7 +151,7 @@ async function requestLogin(e){
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(Object.fromEntries(new FormData(e.target)))
         }
-        const r = await fetch(`${hostURL}/auth/login`, options)
+        const r = await fetch(`${process.env.API || "http://localhost:3000"}/auth/login`, options)
         const data = await r.json()
         if (!data.success) { throw new Error(data.err); }
         login(data.token);
@@ -161,7 +167,7 @@ async function requestRegistration(e) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(Object.fromEntries(new FormData(e.target)))
         }
-        const r = await fetch(`${hostURL}/auth/register`, options)
+        const r = await fetch(`${process.env.API || "http://localhost:3000"}/auth/register`, options)
         const data = await r.json()
         if (data.err){ throw Error(data.err) }
         requestLogin(e);
@@ -195,7 +201,8 @@ module.exports = {
     login,
     logout
 }
-},{"jwt-decode":10}],3:[function(require,module,exports){
+}).call(this)}).call(this,require('_process'))
+},{"_process":11,"jwt-decode":10}],3:[function(require,module,exports){
 const rHelpers = require('./renderHelpers');
 const forms = require('./forms');
 const requests = require('./requests')
@@ -223,10 +230,12 @@ function renderLandingPage() {
 function renderStreaks() {
     profile.streaksHelper();
 }
-
-
 function renderMyHabits() {
     profile.habitsHelper();
+}
+async function renderProfile() {
+    await renderStreaks();
+    await renderMyHabits();
 }
 
 // *******************************************************************
@@ -246,7 +255,7 @@ function render404() {
 }
 
 
-module.exports = { renderStreaks, renderMyHabits, renderLandingPage, render404 }
+module.exports = { renderProfile, renderLandingPage, render404 }
 },{"./auth":2,"./forms":4,"./profile":7,"./renderHelpers":8,"./requests":9}],4:[function(require,module,exports){
 const auth = require("./auth");
 const main = document.querySelector('main');
@@ -270,12 +279,10 @@ function renderLoginForm() {
         try {
             await auth.requestLogin(e);
         } catch (err) {
-
             const username = document.getElementById("username");
             const password = document.getElementById("password");
             username.classList.add("input-invalid");
             password.classList.add("input-invalid");
-
         }
     });
 
@@ -385,13 +392,13 @@ module.exports = {
     createForm
 }
 },{"./auth":2}],5:[function(require,module,exports){
-(function (process,global){(function (){
+(function (process){(function (){
 // Import js files
 // Rendering
 const layout = require('./layout');
 const content = require('./content');
 
-global.hostURL = process.env.HOST_URL || "http://localhost:3000";
+process.env.API || "http://localhost:3000";
 
 // Create initial bindings
 function initBindings() {
@@ -431,7 +438,7 @@ function navFunc() {
 initBindings();
 
 
-}).call(this)}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+}).call(this)}).call(this,require('_process'))
 },{"./content":3,"./layout":6,"_process":11}],6:[function(require,module,exports){
 const content = require('./content')
 const addHabits = require('./addHabits');
@@ -466,7 +473,7 @@ function updateMain(path) {
                 forms.renderLoginLink();
                 break;
             case '#profile':
-                content.renderStreaks(); content.renderMyHabits(); break;
+                content.renderProfile(); break;
             case '#addhabits':
                 addHabits.renderAddHabitsPage();
                 break;
@@ -521,12 +528,26 @@ async function streaksHelper() {
     const streaksHeading = document.createElement('h2')
     streaksHeading.className = "streaks-heading"
     streaksHeading.textContent = "🔥 Streaks"
+
     main.append(streaks)
     streaks.appendChild(streaksHeading);
+
 
     const streaksContainer = document.createElement('div')
     streaksContainer.className = "streaks-container"
     streaks.appendChild(streaksContainer)
+
+    const streaksSeeMore = document.createElement('button')
+    streaksSeeMore.innerHTML = `<i class="fas fa-chevron-down streaks-see-more-btn"></i>`
+    streaksHeading.appendChild(streaksSeeMore)
+
+    streaksSeeMore.addEventListener('click', () => {
+        if (streaksContainer.style.display === "grid") {
+            streaksContainer.style.display = "none";
+        } else {
+            streaksContainer.style.display = "grid";
+        }
+    })
 
     // insert GET request for habit completed here
     userData.forEach(streaks => {
@@ -536,28 +557,28 @@ async function streaksHelper() {
         let streakName = document.createElement('h5');
         streakName.textContent = streaks.name;
         streakContainer.appendChild(streakName);
-        
+
         let currentStreakTotal = streaks.streakData.current_streak;
 
         let dayNumber = '';
         console.log(dayNumber);
-        if(currentStreakTotal===1){
-            dayNumber='day'
+        if (currentStreakTotal === 1) {
+            dayNumber = '🔥'
         } else {
-            dayNumber='days'
+            dayNumber = '🔥'
         };
-    
+
         let message;
 
-        if(currentStreakTotal===0) {
+        if (currentStreakTotal === 0) {
             message = "Crumbs ... let's get back in the habite!";
-        } else if (currentStreakTotal>0 && currentStreakTotal<=2) {
+        } else if (currentStreakTotal > 0 && currentStreakTotal <= 2) {
             message = "Great start!  Keep at it!";
-        } else if (currentStreakTotal>2 && currentStreakTotal<=7) {
+        } else if (currentStreakTotal > 2 && currentStreakTotal <= 7) {
             message = `A habit a day keeps procrastination away!`;
-        } else if (currentStreakTotal>7 && currentStreakTotal<=14) {
+        } else if (currentStreakTotal > 7 && currentStreakTotal <= 14) {
             message = "More than a week effort!";
-        } else if (currentStreakTotal>14) {
+        } else if (currentStreakTotal > 14) {
             message = "Rehabite-ation not required here!";
         } else {
             message = "Whoops.  No streakers here!";
@@ -569,7 +590,7 @@ async function streaksHelper() {
 
         let topStreak = streaks.streakData.top_streak;
         let topStreakMessage = document.createElement('p');
-        topStreakMessage.textContent = `Your PB is ${topStreak}!`;
+        topStreakMessage.textContent = `✨ Your PB is ${topStreak}! ✨`;
         streakContainer.appendChild(topStreakMessage);
 
         streaksContainer.appendChild(streakContainer);
@@ -596,13 +617,14 @@ async function habitsHelper() {
         habitContainer.className = "habit-container"
 
         let currentHabitTotal = habit.day_entries[0].total
+        let maxFrequency = habit.max_frequency
         let currentHabitID = habit.user_habit_id
 
-        let habitName = document.createElement('p')
+        let habitName = document.createElement('h5')
         habitName.textContent = habit.name
 
         let habitFrequency = document.createElement('progress')
-        habitFrequency.setAttribute('max', habit.max_frequency)
+        habitFrequency.setAttribute('max', maxFrequency)
         habitFrequency.setAttribute('value', currentHabitTotal)
 
         function updateProgressBar() {
@@ -622,8 +644,9 @@ async function habitsHelper() {
 
         // POST: Increment habit 
         habitIncreaseFrequency.addEventListener('click', () => {
-            if (currentHabitTotal >= habit.max_frequency) {
-            } else {currentHabitTotal++}
+            // currentHabitTotal += 1
+            if (currentHabitTotal >= maxFrequency) {
+            } else { currentHabitTotal++ }
             try {
                 const data = { user_habit_id: currentHabitID, completed: true }
                 requests.postData(`users/${username}/habits/entries`, data);
@@ -635,8 +658,9 @@ async function habitsHelper() {
 
         // DELETE: Decrement habit
         habitMinus.addEventListener('click', () => {
+            // currentHabitTotal -= 1
             if (currentHabitTotal === 0) {
-            } else {currentHabitTotal--}
+            } else { currentHabitTotal-- }
             try {
                 requests.deleteData(`users/${username}/habits/entries/${currentHabitID}`);
                 updateProgressBar()
@@ -645,52 +669,52 @@ async function habitsHelper() {
             }
         });
 
-        let habitExtrasContainer = document.createElement('div')
-        habitExtrasContainer.className = "habit-extras-container"
+        let habitsExtrasContainer = document.createElement('div')
+        habitsExtrasContainer.className = "habits-extras-container"
 
         habitSeeMore.addEventListener('click', () => {
 
-            if (habitExtrasContainer.style.display === "grid") {
-                habitExtrasContainer.style.display = "none";
+            if (habitsExtrasContainer.style.display === "grid") {
+                habitsExtrasContainer.style.display = "none";
             } else {
-                habitExtrasContainer.style.display = "grid";
+                habitsExtrasContainer.style.display = "grid";
             }
 
-            let habitExtrasDate = document.createElement('p')
-            habitExtrasDate.className = "extras-date"
-            habitExtrasDate.textContent = habit.day_entries[1].date
+            habitsExtrasContainer.innerHTML = ""
 
-            let habitExtrasFrequency = document.createElement('progress')
-            habitExtrasFrequency.className = "extras-progress"
-            habitExtrasFrequency.setAttribute('max', `${habit.max_frequency}`)
-            habitExtrasFrequency.setAttribute('value', `${habit.day_entries[1].total}`)
+            const dayEntries = habit.day_entries
 
-            // let habitExtrasDateTwo = document.createElement('p')
-            // habitExtrasDateTwo.className = "extras-date-two"
-            // habitExtrasDateTwo.textContent = habit.day_entries[2].date
-            // console.log(habit.day_entries[2].date)
+            const olderEntries = dayEntries.slice(1) // Returns all except first array element i.e. today
+            const validEntries = olderEntries.filter(entry => entry.total !== null)
+            validEntries.forEach(entry => {
+                let habitExtrasContainer = document.createElement('div')
+                habitExtrasContainer.className = "habit-extra-item"
+                let habitExtrasDate = document.createElement('p')
+                habitExtrasDate.className = "extras-date"
+                habitExtrasDate.textContent = new Date(entry.date).toLocaleDateString()
+                let habitExtrasFrequency = document.createElement('progress')
+                habitExtrasFrequency.className = "extras-progress"
+                habitExtrasFrequency.setAttribute('max', maxFrequency)
+                habitExtrasFrequency.setAttribute('value', entry.total)
+                let habitExtraResult = document.createElement('p')
+                habitExtraResult.className = "extras-result"
+                habitExtraResult.textContent = `${entry.total} / ${maxFrequency}`
 
-            // let habitExtrasFrequencyTwo = document.createElement('progress')
-            // habitExtrasFrequencyTwo.className = "extras-progress-two"
-            // habitExtrasFrequencyTwo.setAttribute('max', `${habit.max_frequency}`)
-            // habitExtrasFrequencyTwo.setAttribute('value', `${habit.day_entries[2].total}`)
+                habitExtrasContainer.appendChild(habitExtrasDate)
+                habitExtrasContainer.appendChild(habitExtrasFrequency)
+                habitExtrasContainer.appendChild(habitExtraResult)
+                habitsExtrasContainer.appendChild(habitExtrasContainer)
 
-            habitContainer.appendChild(habitExtrasContainer)
-            habitExtrasContainer.appendChild(habitExtrasDate)
-            habitExtrasContainer.appendChild(habitExtrasFrequency)
-            // habitExtrasContainer.appendChild(habitExtrasDateTwo)
-            // habitExtrasContainer.appendChild(habitExtrasFrequencyTwo)
+            })
+            habitContainer.appendChild(habitsExtrasContainer)
         })
-
         habitsContainer.appendChild(habitContainer)
-        // habitContainer.appendChild(habitDate)
         habitContainer.appendChild(habitName)
         habitContainer.appendChild(habitFrequency)
         habitContainer.appendChild(habitMinus)
         habitContainer.appendChild(habitIncreaseFrequency)
         habitContainer.appendChild(habitSeeMore)
     })
-
     habits.appendChild(habitsHeading)
     habits.appendChild(habitsContainer)
 }
@@ -768,16 +792,16 @@ module.exports = {
     renderHeading
 }
 },{}],9:[function(require,module,exports){
+(function (process){(function (){
 async function getData(path) {
     try {
         const options = {
             headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
         }
-        const response = await fetch(`${hostURL}/${path}`, options)
+        const response = await fetch(`${process.env.API || "http://localhost:3000"}/${path}`, options)
         const data = await response.json();
         if (data.err) {
             console.warn(data.err);
-            logout();
         }
         return data;
     } catch (err) {
@@ -796,7 +820,7 @@ async function postData(path, formData) {
             }),
             body: JSON.stringify(formData)
         }
-        const response = await fetch(`${hostURL}/${path}`, options);
+        const response = await fetch(`${process.env.API || "http://localhost:3000"}/${path}`, options);
         return response.json();
     } catch (err) {
         console.warn(err);
@@ -809,7 +833,7 @@ async function deleteData(path) {
             method: 'DELETE',
             headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
         }
-        await fetch(`${hostURL}/${path}`, options);
+        const r = await fetch(`${process.env.API || "http://localhost:3000"}/${path}`, options);
         return
     } catch (err) {
         console.warn(err);
@@ -818,7 +842,8 @@ async function deleteData(path) {
 
 module.exports = { getData, postData, deleteData }
 
-},{}],10:[function(require,module,exports){
+}).call(this)}).call(this,require('_process'))
+},{"_process":11}],10:[function(require,module,exports){
 "use strict";function e(e){this.message=e}e.prototype=new Error,e.prototype.name="InvalidCharacterError";var r="undefined"!=typeof window&&window.atob&&window.atob.bind(window)||function(r){var t=String(r).replace(/=+$/,"");if(t.length%4==1)throw new e("'atob' failed: The string to be decoded is not correctly encoded.");for(var n,o,a=0,i=0,c="";o=t.charAt(i++);~o&&(n=a%4?64*n+o:o,a++%4)?c+=String.fromCharCode(255&n>>(-2*a&6)):0)o="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".indexOf(o);return c};function t(e){var t=e.replace(/-/g,"+").replace(/_/g,"/");switch(t.length%4){case 0:break;case 2:t+="==";break;case 3:t+="=";break;default:throw"Illegal base64url string!"}try{return function(e){return decodeURIComponent(r(e).replace(/(.)/g,(function(e,r){var t=r.charCodeAt(0).toString(16).toUpperCase();return t.length<2&&(t="0"+t),"%"+t})))}(t)}catch(e){return r(t)}}function n(e){this.message=e}function o(e,r){if("string"!=typeof e)throw new n("Invalid token specified");var o=!0===(r=r||{}).header?0:1;try{return JSON.parse(t(e.split(".")[o]))}catch(e){throw new n("Invalid token specified: "+e.message)}}n.prototype=new Error,n.prototype.name="InvalidTokenError";const a=o;a.default=o,a.InvalidTokenError=n,module.exports=a;
 
 
