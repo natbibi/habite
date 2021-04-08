@@ -585,7 +585,7 @@ async function streaksHelper() {
 
         let topStreak = streaks.streakData.top_streak;
         let topStreakMessage = document.createElement('p');
-        topStreakMessage.textContent = `Your PB is ${topStreak}!`;
+        topStreakMessage.textContent = `✨ Your PB is ${topStreak}! ✨`;
         streakContainer.appendChild(topStreakMessage);
 
         streaksContainer.appendChild(streakContainer);
