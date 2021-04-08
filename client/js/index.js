@@ -3,7 +3,7 @@
 const layout = require('./layout');
 const content = require('./content');
 
-process.env.HOST_URL || "http://localhost:3000";
+process.env.API || "http://localhost:3000";
 
 // Create initial bindings
 function initBindings() {
