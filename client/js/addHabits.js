@@ -14,7 +14,8 @@ function renderAddHabitsPage() {
 
     // render add habit form
     const addHabitForm = document.createElement("div");
-    addHabitForm.className = "form add-habit-form";
+    addHabitForm.id = "add-habit-form";
+    addHabitForm.className = "form";
     const addHabitFormHeading = document.createElement("h2");
     addHabitFormHeading.textContent = "Track a habit";
 
@@ -23,7 +24,8 @@ function renderAddHabitsPage() {
 
     // render create habit form
     const newHabitForm = document.createElement("div");
-    newHabitForm.className = "form new-habit-form";
+    newHabitForm.id = "new-habit-form";
+    newHabitForm.className = "form";
     const newHabitFormHeading = document.createElement("h2");
     newHabitFormHeading.textContent = "Create a new habit";
 
@@ -31,7 +33,8 @@ function renderAddHabitsPage() {
     newHabitForm.appendChild(createNewHabitForm());
 
     const deleteHabitForm = document.createElement("div");
-    deleteHabitForm.className = "form delete-habit-form";
+    deleteHabitForm.id = "delete-habit-form";
+    deleteHabitForm.className = "form";
     const deleteHabitFormHeading = document.createElement("h2");
     deleteHabitFormHeading.textContent = "Stop tracking a habit";
 
@@ -96,7 +99,10 @@ function createNewHabitForm() {
     form.onsubmit = async (e) => {
         e.preventDefault();
         const data = { name: nameInput.value }
-        req.postData(`habits`, data);
+        await req.postData(`habits`, data);
+        nameInput.value = "";
+        console.log(document.getElementById("add-habit-form"));
+        await refreshForm(document.getElementById("add-habit-form"))
     };
 
     return form;
@@ -127,10 +133,29 @@ function createDeleteHabitForm() {
     form.onsubmit = async (e) => {
         e.preventDefault();
         const selected = userHabitsDropdown.options[userHabitsDropdown.selectedIndex].getAttribute('data-id');
-        req.deleteData(`users/${auth.currentUser()}/habits/${selected}`);
+        await req.deleteData(`users/${auth.currentUser()}/habits/${selected}`);
+        await refreshForm(document.getElementById("delete-habit-form"))
     };
 
     return form;
+}
+
+async function refreshForm(container) {
+    const formName = container.id;
+  
+    let newForm;
+    switch(formName) {
+        case "add-habit-form": newForm = await createAddHabitForm(); break;
+        case "new-habit-form": newForm = await createNewHabitForm(); break;
+        case "delete-habit-form": newForm = await createDeleteHabitForm(); break;
+        default: break;
+    }
+
+    const oldForm = container.querySelector("form");
+
+    console.log(newForm);
+    console.log(oldForm);
+    container.replaceChild(newForm, oldForm);
 }
 
 module.exports = { 
