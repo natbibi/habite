@@ -31,8 +31,10 @@ function updateMain(path) {
                 forms.renderLoginLink();
                 break;
             case '#profile':
+                rHelpers.renderHeading();
                 content.renderProfile(); break;
             case '#addhabits':
+                rHelpers.renderHeading()
                 addHabits.renderAddHabitsPage();
                 break;
             case '#logout':

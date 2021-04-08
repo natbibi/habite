@@ -16,30 +16,36 @@
     box-shadow: 0 0 4px 2px rgb(255, 68, 68);
 }
 
-#title-icon {
-    border: 2px solid yellow;
+#regiser-sbmt:hover {
+    transform: scale(1.01);
 }
 
-#app-name {
-    border: 2px solid purple
-}
-
-#tagline {
-    border: 2px solid green;
-}
-
-#register-sbmt {
-    border: 2px solid orange;
-}
-
-#login-sbmt {
+#login-sbmt, #register-sbmt {
     border: 2px solid blue;
+    width: 90%;
 }
 
-input#username {
-    border: 2px solid pink;
+#login-sbmt:hover {
+    transform: scale(1.01);
 }
 
-input#password, input#password-check {
-    border: 2px solid pink;
+input#username, input#password, input#password-check {
+    border: 2px solid rgb(158, 187, 250);
+}
+
+#username-label, #password-label {
+    font-size: 12px;
+}
+
+#robot-label {
+    padding-bottom: 10px;
+}
+
+.register-element, .login-element {
+    margin-top: 30px;
+    text-align: center;
+}
+
+#register-link, #login-link {
+    font-size: 15px;
 }
