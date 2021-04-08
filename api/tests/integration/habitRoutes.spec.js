@@ -37,12 +37,13 @@ describe('habit endpoints', () => {
           expect(res.body).toEqual([{created_at: "04-08-2021", frequency: 5, habit_id: 1, habit_name: "habit1", id: 1, user_id: 1,username: "user1"}, {created_at: "04-08-2021", frequency: 8, habit_id: 2, habit_name: "habit2", id: 2, user_id: 1, username: "user1"}]);
         });
         it("should create a new user habit", async () => {
+            const date = new Date(new Date().toLocaleString('en-GB', {timeZone: 'Europe/London'})).toISOString()
             const res = await request(api)
               .post("/users/user1/habits")
               .send({habit_id: 3, frequency: 2});
             expect(res.statusCode).toEqual(200);
             expect(res.body).toEqual({
-                created_at: new Date(new Date().toLocaleString('en-GB', {timeZone: 'Europe/London'})).toISOString(),
+                created_at: date,
                 frequency: 2,
                 habit_id: 3,
                 user_id:1,
@@ -116,6 +117,7 @@ describe('habit endpoints', () => {
     })
 
     it("should create a new habit entry", async () => {
+        const date = new Date(new Date().toLocaleString('en-GB', {timeZone: 'Europe/London'})).toISOString()
         const res = await request(api)
         .post("/users/user1/habits/entries")
         .send({user_habit_id: 1, completed: true})
@@ -123,10 +125,23 @@ describe('habit endpoints', () => {
       expect(res.body).toEqual({
           completed: true,
           id: 9,
-          completed_at: new Date(new Date().toLocaleString('en-GB', {timeZone: 'Europe/London'})).toISOString(),
+          completed_at: date,
           user_habit_id: 1
       })
     })
+
+    it("should not create a new habit entry if maximum frequency has been met", async () => {
+        for (let i = 0; i < 5; i++) {
+            await request(api)
+            .post("/users/user1/habits/entries")
+            .send({user_habit_id: 1, completed: true})
+          }
+        const res = await request(api)
+        .post("/users/user1/habits/entries")
+        .send({user_habit_id: 1, completed: true})
+      expect(res.statusCode).toEqual(403);
+      expect(res.body.err).toEqual("Could not create habit")
+    },10000)
 
     it("should delete a habit entry", async () => {
         const res = await request(api)
@@ -134,5 +149,16 @@ describe('habit endpoints', () => {
       expect(res.statusCode).toEqual(200);
       expect(res.body).toEqual("deleted succesfully")
       })
+
+      it("should not delete a habit entry if no entries exists for that day", async () => {
+        for (let i = 0; i < 5; i++) {
+            await request(api)
+            .delete("/users/user1/habits/entries/1")
+          }
+          const res = await request(api)
+          .delete("/users/user1/habits/entries/1")
+        expect(res.statusCode).toEqual(200);
+        expect(res.body).toEqual("could not delete")
+      }, 1000)
 
 })
