@@ -473,16 +473,15 @@ const nav = document.querySelector('nav');
 const heading = document.querySelector('header');
 const main = document.querySelector('main');
 
-function streaksHelper() {
+async function streaksHelper() {
     const showFooter = document.getElementById('footer')
     showFooter.style.display = 'block';
     const greeting = document.createElement('h1')
     greeting.textContent = `Hi there, ${localStorage.getItem('username')}!`;
     heading.appendChild(greeting);
 
-    // const getHabits = await getAllHabits();
-    // if (getHabits.err) { return }
-    // const renderHabit = habitData => {
+    const habitsList = await requests.getData(`users/${username}/habits/entries`);
+    if (requests.getData.err) { return }
     const streaks = document.createElement('div')
     streaks.className = "streaks-list"
     const streaksHeading = document.createElement('h2')
@@ -490,17 +489,20 @@ function streaksHelper() {
     streaksHeading.textContent = "🔥 Streaks"
     const streaksBody = document.createElement('div')
     streaksBody.className = "streaks-body"
-    // insert GET request for habit completed here
 
-    main.appendChild(streaks)
-    streaks.appendChild(streaksHeading)
-    streaks.appendChild(streaksBody)
-    // streaks.appendChild(getHabits)
+    // insert GET request for habit completed here
+    habitsList.forEach(habit => {
+
+
+        main.appendChild(streaks)
+        streaks.appendChild(streaksHeading)
+        streaks.appendChild(streaksBody)
+        // streaks.appendChild(getHabits)
+    })
 }
 
 async function habitsHelper() {
     const habitsList = await requests.getData(`users/${username}/habits/entries`);
-    console.log(habitsList)
     if (habitsList.err) { return }
     const habits = document.createElement('div')
     habits.className = "habits-list"
