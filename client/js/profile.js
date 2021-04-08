@@ -34,7 +34,8 @@ function streaksHelper() {
 }
 
 async function habitsHelper() {
-    const habitsList = await requests.getAllHabits();
+    const habitsList = await requests.getData(`users/${username}/habits/entries`);
+    console.log(habitsList)
     if (habitsList.err) { return }
     const habits = document.createElement('div')
     habits.className = "habits-list"
@@ -81,9 +82,8 @@ async function habitsHelper() {
         habitIncreaseFrequency.addEventListener('click', () => {
             currentHabitTotal += 1
             try {
-                const url = `http://localhost:3000/users/${username}/habits/entries`
                 const data = { user_habit_id: currentHabitID, completed: true }
-                requests.postData(url, data);
+                requests.postData(`users/${username}/habits/entries`, data);
                 updateProgressBar()
             } catch (err) {
                 throw err
@@ -94,9 +94,7 @@ async function habitsHelper() {
         habitMinus.addEventListener('click', () => {
             currentHabitTotal -= 1
             try {
-                const url = `http://localhost:3000/users/${username}/habits/entries/${currentHabitID}`
-                // const data = { user_habit_id: currentHabitID, completed: false }
-                requests.deleteData(url, data);
+                requests.deleteData(`users/${username}/habits/entries/${currentHabitID}`);
                 updateProgressBar()
             } catch (err) {
                 throw err

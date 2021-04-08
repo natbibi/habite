@@ -5,10 +5,6 @@ const auth = require('./auth')
 const heading = document.querySelector('header');
 const main = document.querySelector('main');
 
-const hostURL = "http://localhost:3000";
-const username = auth.currentUser();
-
-
 function renderAddHabitsPage() {
     const showFooter = document.getElementById('footer')
     showFooter.style.display = 'block';
@@ -51,11 +47,12 @@ function renderAddHabitsPage() {
 function createAddHabitForm() {
     // form fields
     fields = [
-        { tag: 'label', attributes: { class: 'add-habits-dropdown', for: 'habits-dropdown' }, text: 'Choose a habit:' },
-        { tag: 'select', attributes: { class: 'add-habits-dropdown', name: 'habits-dropdown' } },
-        { tag: 'label', attributes: { class: 'add-habits-frequency', for: 'frequency' }, text: 'How often?' },
-        { tag: 'input', attributes: { class: 'add-habits-frequency', name: 'frequency', type: 'number', placeholder: '3', min: "1", max: "24" } },
-        { tag: 'input', attributes: { class: 'add-habits-btn', type: 'submit', name: 'habit-sbmt', value: 'Track Habit' } }
+        { tag: 'label', attributes: { id: 'add-habits-dropdown', for: 'habits-dropdown' }, text: 'Choose a habit:' },
+        { tag: 'select', attributes:{ id: 'add-habits-dropdown', name: 'habits-dropdown' } },
+        { tag: 'label', attributes: { id: 'add-habits-frequency', for: 'frequency' }, text: 'How often?' },
+        { tag: 'input', attributes: { id: 'add-habits-frequency', name: 'frequency', type: 'number', placeholder: '3', min: "1", max: "24", required: "true" } },
+        { tag: 'p', attributes: {},  text: "times per day" },
+        { tag: 'input', attributes: { id: 'add-habits-btn', type: 'submit', name: 'habit-sbmt', value: 'Track Habit' } }
     ];
 
     const form = forms.createForm(fields);
@@ -63,7 +60,7 @@ function createAddHabitForm() {
     const habitsDropdown = form.querySelector("select");
 
     // add habits to dropdown     
-    req.get('habits')
+    req.getData('habits')
         .then(habits => {
             habits.forEach(habit => {
                 const option = document.createElement("option");
@@ -73,32 +70,16 @@ function createAddHabitForm() {
             })
         });
 
-    // send
     form.onsubmit = (e) => {
         e.preventDefault();
         const selected = habitsDropdown.options[habitsDropdown.selectedIndex].getAttribute('data-id');
-        const url = `${hostURL}/users/${username}/habits`
+        const path = `users/${auth.currentUser()}/habits`
         const data = {
             habit_id: selected,
             frequency: freqInput.value
         }
-        req.postData(url, data);
-        location.reload();
-        // window.location.hash = "#addhabits"
+        req.postData(path, data);
     };
-
-    // send
-    // form.onsubmit = (e) => {
-    //     e.preventDefault();
-    //     const selected = habitsDropdown.options[habitsDropdown.selectedIndex].getAttribute('data-id');
-    //     const url = `${hostURL}/users/${username}/habits`
-    //     const data = {
-    //         habit_id: selected,
-    //         frequency: freqInput.value
-    //     }
-    //     req.addUserhabit(data);
-    //     location.reload();
-    // };
 
     return form;
 }
@@ -106,7 +87,7 @@ function createAddHabitForm() {
 function createNewHabitForm() {
     fields = [
         { tag: 'label', attributes: { class: 'new-habit-name', for: 'new-habit-name' }, text: 'Add a custom habit' },
-        { tag: 'input', attributes: { class: 'new-habit-name', name: 'new-habit-name', type: 'text', placeholder: 'use habite' }, text: 'Add a custom habit' },
+        { tag: 'input', attributes: { class: 'new-habit-name', name: 'new-habit-name', type: 'text', placeholder: 'use habite', required: "true" }, text: 'Add a custom habit' },
         { tag: 'input', attributes: { class: 'new-habit-btn', type: 'submit', name: 'new-habit-sbmt' } }
     ];
 
@@ -115,14 +96,8 @@ function createNewHabitForm() {
 
     form.onsubmit = async (e) => {
         e.preventDefault();
-        const url = `http://localhost:3000/users/${username}/habit`
         const data = { name: nameInput.value }
-        req.postData(url, data);
-        location.reload();
-        // window.location.hash = "#addhabits"
-        // if (data.err) {
-        //     console.warn(data.err);
-        // logout();
+        req.postData(`habits`, data);
     };
 
     return form;
@@ -139,12 +114,12 @@ function createDeleteHabitForm() {
     const form = forms.createForm(fields);
     const userHabitsDropdown = form.querySelector("select");
 
-    req.getUserHabits()
+    req.getData(`users/${auth.currentUser()}/habits`)
         .then(habits => {
             habits.forEach(habit => {
                 const option = document.createElement("option");
                 option.textContent = habit.habit_name;
-                option.setAttribute('data-id', habit.habit_id);
+                option.setAttribute('data-id', habit.id);
                 userHabitsDropdown.appendChild(option)
             })
         });
@@ -153,9 +128,7 @@ function createDeleteHabitForm() {
     form.onsubmit = async (e) => {
         e.preventDefault();
         const selected = userHabitsDropdown.options[userHabitsDropdown.selectedIndex].getAttribute('data-id');
-        const url = `${hostURL}/users/${username}/habits/${selected}`
-        req.deleteData(url, selected);
-        location.reload();
+        req.deleteData(`users/${auth.currentUser()}/habits/${selected}`);
     };
 
     return form;
@@ -378,14 +351,13 @@ module.exports = {
     createForm
 }
 },{"./auth":2}],5:[function(require,module,exports){
+(function (process,global){(function (){
 // Import js files
 // Rendering
 const layout = require('./layout');
 const content = require('./content');
-// const navResponse = require('./navResponse');
-// Authentication
-const auth = require('./auth');
-const requests = require('./requests')
+
+global.hostURL = process.env.HOST_URL || "http://localhost:3000";
 
 // Create initial bindings
 function initBindings() {
@@ -425,7 +397,8 @@ function navFunc() {
 initBindings();
 
 
-},{"./auth":2,"./content":3,"./layout":6,"./requests":9}],6:[function(require,module,exports){
+}).call(this)}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./content":3,"./layout":6,"_process":11}],6:[function(require,module,exports){
 const content = require('./content')
 const addHabits = require('./addHabits');
 const rHelpers = require('./renderHelpers');
@@ -526,7 +499,8 @@ function streaksHelper() {
 }
 
 async function habitsHelper() {
-    const habitsList = await requests.getAllHabits();
+    const habitsList = await requests.getData(`users/${username}/habits/entries`);
+    console.log(habitsList)
     if (habitsList.err) { return }
     const habits = document.createElement('div')
     habits.className = "habits-list"
@@ -573,9 +547,8 @@ async function habitsHelper() {
         habitIncreaseFrequency.addEventListener('click', () => {
             currentHabitTotal += 1
             try {
-                const url = `http://localhost:3000/users/${username}/habits/entries`
                 const data = { user_habit_id: currentHabitID, completed: true }
-                requests.postData(url, data);
+                requests.postData(`users/${username}/habits/entries`, data);
                 updateProgressBar()
             } catch (err) {
                 throw err
@@ -586,9 +559,7 @@ async function habitsHelper() {
         habitMinus.addEventListener('click', () => {
             currentHabitTotal -= 1
             try {
-                const url = `http://localhost:3000/users/${username}/habits/entries/${currentHabitID}`
-                // const data = { user_habit_id: currentHabitID, completed: false }
-                requests.deleteData(url, data);
+                requests.deleteData(`users/${username}/habits/entries/${currentHabitID}`);
                 updateProgressBar()
             } catch (err) {
                 throw err
@@ -718,19 +689,13 @@ module.exports = {
     renderHeading
 }
 },{}],9:[function(require,module,exports){
-const auth = require('./auth')
-const hostURL = "http://localhost:3000";
-const username = auth.currentUser();
-
-async function getAllHabits() {
+async function getData(path) {
     try {
         const options = {
             headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
         }
-        const response = await fetch(`${hostURL}/users/${username}/habits/entries`, options)
-        // https://habit-your-way.herokuapp.com/habits 
+        const response = await fetch(`${hostURL}/${path}`, options)
         const data = await response.json();
-
         if (data.err) {
             console.warn(data.err);
             logout();
@@ -741,7 +706,8 @@ async function getAllHabits() {
     }
 }
 
-async function postData(url = '', formData = {}) {
+
+async function postData(path, formData) {
     try {
         const options = {
             method: 'POST',
@@ -751,88 +717,216 @@ async function postData(url = '', formData = {}) {
             }),
             body: JSON.stringify(formData)
         }
-        const response = await fetch(url, options);
+        const response = await fetch(`${hostURL}/${path}`, options);
         return response.json();
     } catch (err) {
         console.warn(err);
     }
 }
 
-async function deleteData(url = '', id) {
+async function deleteData(path) {
     try {
         const options = {
             method: 'DELETE',
             headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
         }
-        await fetch(url, options);
-        location.reload();
+        await fetch(`${hostURL}/${path}`, options);
+        return
     } catch (err) {
         console.warn(err);
     }
 }
 
-async function get(path) {
-    try {
-        const options = {
-            headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
-        }
-        const response = await fetch(`${hostURL}/${path}`, options)
-        const data = await response.json();
-        // if (data.err) {
-        //     console.warn(data.err);
-        //     logout();
-        // }
-        return data;
-    } catch (err) {
-        console.warn(err);
-    }
-}
+module.exports = { getData, postData, deleteData }
 
-const getUserHabits = () => get(`users/${username}/habits`);
-
-// async function decrementHabit(id) {
-//     try {
-//         const options = {
-//             method: 'DELETE',
-//             headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
-//         }
-//         await fetch(`${hostURL}/users/${username}/habits/entries/${id}`, options);
-//         window.location.hash = `#profile`
-//     } catch (err) {
-//         console.warn(err);
-//     }
-// }
-
-// async function addUserhabit(formData) {
-//     try {
-//         const options = {
-//             method: 'POST',
-//             headers: new Headers({
-//                 'Authorization': localStorage.getItem('token'),
-//                 'Content-Type': 'application/json'
-//             }),
-//             body: JSON.stringify(formData)
-//         }
-//         console.log((options.body));
-//         const response = await fetch(`${hostURL}/users/${username}/habits`, options);
-//         const data = await response.json();
-//         window.location.hash = "addhabits"
-//         if (data.err) {
-//             console.warn(data.err);
-//             // logout();
-//         }
-//         console.log("Added ");
-//         return data;
-//     } catch (err) {
-//         console.warn(err);
-//     }
-// }
-
-
-module.exports = { getAllHabits, getUserHabits, get, postData, deleteData }
-
-},{"./auth":2}],10:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 "use strict";function e(e){this.message=e}e.prototype=new Error,e.prototype.name="InvalidCharacterError";var r="undefined"!=typeof window&&window.atob&&window.atob.bind(window)||function(r){var t=String(r).replace(/=+$/,"");if(t.length%4==1)throw new e("'atob' failed: The string to be decoded is not correctly encoded.");for(var n,o,a=0,i=0,c="";o=t.charAt(i++);~o&&(n=a%4?64*n+o:o,a++%4)?c+=String.fromCharCode(255&n>>(-2*a&6)):0)o="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".indexOf(o);return c};function t(e){var t=e.replace(/-/g,"+").replace(/_/g,"/");switch(t.length%4){case 0:break;case 2:t+="==";break;case 3:t+="=";break;default:throw"Illegal base64url string!"}try{return function(e){return decodeURIComponent(r(e).replace(/(.)/g,(function(e,r){var t=r.charCodeAt(0).toString(16).toUpperCase();return t.length<2&&(t="0"+t),"%"+t})))}(t)}catch(e){return r(t)}}function n(e){this.message=e}function o(e,r){if("string"!=typeof e)throw new n("Invalid token specified");var o=!0===(r=r||{}).header?0:1;try{return JSON.parse(t(e.split(".")[o]))}catch(e){throw new n("Invalid token specified: "+e.message)}}n.prototype=new Error,n.prototype.name="InvalidTokenError";const a=o;a.default=o,a.InvalidTokenError=n,module.exports=a;
 
+
+},{}],11:[function(require,module,exports){
+// shim for using process in browser
+var process = module.exports = {};
+
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+} ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+};
+
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) { return [] }
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
 
 },{}]},{},[5]);
