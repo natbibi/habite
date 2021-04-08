@@ -43,7 +43,9 @@ header {
 }
 
 .streaks-heading, .habits-heading {
-    padding: 5px;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: 5fr 1fr;
 }
 
 .habit-container{
@@ -93,6 +95,10 @@ header {
     border: 2px solid hotpink;
     grid-column: 1 / 3;
     font-size: 17px;
+}
+
+.streaks-container {
+    display: none;
 }
 
 .streak-container p:nth-child(2) {

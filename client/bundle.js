@@ -489,12 +489,26 @@ async function streaksHelper() {
     const streaksHeading = document.createElement('h2')
     streaksHeading.className = "streaks-heading"
     streaksHeading.textContent = "🔥 Streaks"
+
     main.append(streaks)
     streaks.appendChild(streaksHeading);
+
 
     const streaksContainer = document.createElement('div')
     streaksContainer.className = "streaks-container"
     streaks.appendChild(streaksContainer)
+
+    const streaksSeeMore = document.createElement('button')
+    streaksSeeMore.innerHTML = `<i class="fas fa-chevron-down streaks-see-more-btn"></i>`
+    streaksHeading.appendChild(streaksSeeMore)
+
+    streaksSeeMore.addEventListener('click', () => {
+        if (streaksContainer.style.display === "grid") {
+            streaksContainer.style.display = "none";
+        } else {
+            streaksContainer.style.display = "grid";
+        }
+    })
 
     // insert GET request for habit completed here
     userData.forEach(streaks => {
