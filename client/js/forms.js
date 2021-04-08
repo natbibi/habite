@@ -96,6 +96,7 @@ function renderRegisterLink() {
     const registerPageBtn = document.createElement('button');
     const registerText = document.createElement('p');
     const registerElement = document.createElement('div');
+    registerElement.className = "register-element"
 
     registerPageBtn.textContent = "Register";
     registerPageBtn.id = "register-link";
@@ -112,6 +113,7 @@ function renderLoginLink() {
     const loginPageBtn = document.createElement('button');
     const loginText = document.createElement('p');
     const loginElement = document.createElement('div');
+    loginElement.className = "login-element"
 
     loginPageBtn.textContent = "Login";
     loginPageBtn.id = "login-link";

@@ -355,6 +355,7 @@ function renderRegisterLink() {
     const registerPageBtn = document.createElement('button');
     const registerText = document.createElement('p');
     const registerElement = document.createElement('div');
+    registerElement.className = "register-element"
 
     registerPageBtn.textContent = "Register";
     registerPageBtn.id = "register-link";
@@ -371,6 +372,7 @@ function renderLoginLink() {
     const loginPageBtn = document.createElement('button');
     const loginText = document.createElement('p');
     const loginElement = document.createElement('div');
+    loginElement.className = "login-element"
 
     loginPageBtn.textContent = "Login";
     loginPageBtn.id = "login-link";
@@ -473,8 +475,10 @@ function updateMain(path) {
                 forms.renderLoginLink();
                 break;
             case '#profile':
+                rHelpers.renderHeading();
                 content.renderProfile(); break;
             case '#addhabits':
+                rHelpers.renderHeading()
                 addHabits.renderAddHabitsPage();
                 break;
             case '#logout':
@@ -518,7 +522,7 @@ async function streaksHelper() {
     const showFooter = document.getElementById('footer')
     showFooter.style.display = 'block';
     const greeting = document.createElement('h1')
-    greeting.textContent = `Hi there, ${localStorage.getItem('username')}!`;
+    greeting.textContent = `Hi there, ${localStorage.getItem('username')}! 👋🏼`;
     heading.appendChild(greeting);
 
     const userData = await requests.getData(`users/${username}/habits/entries`);
@@ -761,27 +765,27 @@ function renderHeading() {
     const iconDiv = document.createElement('div');
     iconDiv.id = "icon-div";
 
-    const icon = document.createElement('i');
-    icon.className = "fas fa-fist-raised";
-    icon.id = "title-icon";
+    const icon = document.createElement('img');
+    icon.src = '/images/habite-logo.png';
+    // icon.id = "title-icon";
     iconDiv.appendChild(icon);
 
     const title = document.createElement('div');
     title.id = "title";
 
-    const appName = document.createElement('h1');
-    appName.id = "app-name";
-    appName.textContent = "habite";
+    // const appName = document.createElement('h1');
+    // appName.id = "app-name";
+    // appName.textContent = "habite";
 
-    const tagline = document.createElement('h5');
-    tagline.id = "tagline";
-    tagline.textContent = "habite your way";
+    // const tagline = document.createElement('h5');
+    // tagline.id = "tagline";
+    // tagline.textContent = "habite your way";
 
-    title.appendChild(appName);
-    title.appendChild(tagline);
+    // title.appendChild(appName);
+    // title.appendChild(tagline);
 
     heading.appendChild(iconDiv);
-    heading.appendChild(title);
+    // heading.appendChild(title);
 
     header.appendChild(heading);
 }
