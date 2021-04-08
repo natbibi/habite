@@ -586,8 +586,8 @@ async function habitsHelper() {
         habitMinus.addEventListener('click', () => {
             currentHabitTotal -= 1
             try {
-                const url = `http://localhost:3000/users/${username}/habits/entries`
-                const data = { user_habit_id: currentHabitID, completed: false }
+                const url = `http://localhost:3000/users/${username}/habits/entries/${currentHabitID}`
+                // const data = { user_habit_id: currentHabitID, completed: false }
                 requests.deleteData(url, data);
                 updateProgressBar()
             } catch (err) {
