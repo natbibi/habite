@@ -2,10 +2,8 @@
 // Rendering
 const layout = require('./layout');
 const content = require('./content');
-// const navResponse = require('./navResponse');
-// Authentication
-const auth = require('./auth');
-const requests = require('./requests')
+
+global.hostURL = process.env.HOST_URL || "http://localhost:3000";
 
 // Create initial bindings
 function initBindings() {
@@ -22,7 +20,6 @@ function initBindings() {
 
     main.addEventListener('click', formHandler);
     profile.addEventListener('click', navFunc);
-    bottomNav.addEventListener('click', navHandler);
 }
 
 function formHandler(e) {
