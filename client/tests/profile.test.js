@@ -19,9 +19,15 @@ describe('form rendering', () => {
         profile.habitsHelper();
     });
 
-    describe('footer', () => {
-        it('should be visible', () => {
+    describe('streaks', () => {
+        it('should have a visible footer', () => {
+            expect(footer.style.display).toBe('block');
+        });
 
+        it('should have a greeting in the header', () => {
+            let greeting = header.querySelector('h1');
+            expect(greeting).toBeTruthy();
+            expect(greeting.textContent).toContain('Hi');
         });
     });
 });
