@@ -74,11 +74,15 @@ header {
     grid-column: 4 / 6;
 }
 
-.streaks-container {
-
+.streak-container {
+    display: grid;
+    grid-template-columns: 3fr 3fr;
+    grid-gap: 20px;
+    padding: 3px;
+    align-items: center;
+    margin: 10px;
+    border: 2px solid purple;
 }
-
-streaks
 
 progress {
     height: 30px
