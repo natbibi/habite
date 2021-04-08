@@ -162,7 +162,7 @@ function createDeleteHabitForm() {
 }
 
 module.exports = { renderAddHabitsPage };
-},{"./auth":2,"./forms":4,"./requests":8}],2:[function(require,module,exports){
+},{"./auth":2,"./forms":4,"./requests":9}],2:[function(require,module,exports){
 const jwt_decode = require('jwt-decode')
 
 const hostURL = "http://localhost:3000"; // Should this be an ENV variable?
@@ -225,17 +225,19 @@ module.exports = {
     login,
     logout
 }
-},{"jwt-decode":9}],3:[function(require,module,exports){
+},{"jwt-decode":10}],3:[function(require,module,exports){
 const rHelpers = require('./renderHelpers');
 const forms = require('./forms');
 const requests = require('./requests')
 const auth = require('./auth')
+const profile = require('./profile');
 
 const username = auth.currentUser();
 const nav = document.querySelector('nav');
 const heading = document.querySelector('header');
 const main = document.querySelector('main');
 // const newDiv = document.createElement('div').cloneNode();
+
 // Landing Page flow
 function renderLandingPage() {
     rHelpers.renderHeading();
@@ -249,149 +251,15 @@ function renderLandingPage() {
 // render profile page, main page:
 // aysnc  
 function renderStreaks() {
-    const showFooter = document.getElementById('footer')
-    showFooter.style.display = 'block';
-    const greeting = document.createElement('h1')
-    greeting.textContent = `Hi there, ${localStorage.getItem('username')}!`;
-    heading.appendChild(greeting);
-
-    // const getHabits = await getAllHabits();
-    // if (getHabits.err) { return }
-    // const renderHabit = habitData => {
-    const streaks = document.createElement('div')
-    streaks.className = "streaks-list"
-    const streaksHeading = document.createElement('h2')
-    streaksHeading.className = "streaks-heading"
-    streaksHeading.textContent = "🔥 Streaks"
-    const streaksBody = document.createElement('div')
-    streaksBody.className = "streaks-body"
-    // insert GET request for habit completed here
-
-    main.appendChild(streaks)
-    streaks.appendChild(streaksHeading)
-    streaks.appendChild(streaksBody)
-    // streaks.appendChild(getHabits)
+    profile.streaksHelper();
 }
 
 
-async function renderMyHabits() {
-    const habitsList = await requests.getAllHabits();
-    console.log(habitsList)
-    if (habitsList.err) { return }
-    const habits = document.createElement('div')
-    habits.className = "habits-list"
-    const habitsHeading = document.createElement('h2')
-    habitsHeading.className = "habits-heading"
-    habitsHeading.textContent = "💙 My Habits"
-    const habitsContainer = document.createElement('div')
-    habitsContainer.className = "habits-container"
-    main.append(habits)
-
-    // insert GET request for user habits here
-    habitsList.forEach(habit => {
-
-        // function getHabitList
-        let habitContainer = document.createElement('div')
-        habitContainer.className = "habit-container"
-
-        // let habitDate = document.createElement('p')
-        // habitDate.textContent = habit.day_entries[0].date
-        // console.log(habit.day_entries[0].date)
-
-        let habitName = document.createElement('p')
-        habitName.textContent = habit.name
-
-        let habitFrequency = document.createElement('progress')
-        habitFrequency.setAttribute('max', `${habit.max_frequency}`)
-        habitFrequency.setAttribute('value', `${habit.day_entries[0].total}`)
-
-        let habitMinus = document.createElement('button')
-        habitMinus.innerHTML = `<i class="fas fa-minus minus-btn"></i>`
-
-        let habitIncreaseFrequency = document.createElement('button')
-        habitIncreaseFrequency.id = "increase-freq-btn"
-        habitIncreaseFrequency.innerHTML = `<i class="fas fa-plus"></i>`
-
-        let habitSeeMore = document.createElement('button')
-        habitSeeMore.innerHTML = `<i class="fas fa-ellipsis-h see-more-btn"></i>`
-
-        // POST: Increment habit 
-        habitIncreaseFrequency.addEventListener('click', () => {
-            console.log('w')
-            try {
-                console.log('hello')
-                // e.preventDefault();
-                const url = `http://localhost:3000/users/${username}/habit/entries`
-                const data = { user_habit_id: 1 }
-                requests.postData(url, data);
-                location.reload();
-            } catch (err) {
-                throw err
-            }
-        });
-
-        // DELETE: Decrement habit
-        habitMinus.addEventListener('click', () => {
-            console.log('byee')
-            try {
-                const url = `http://localhost:3000/users/${username}/habits/${habit_id}`
-                const selected = userHabitsDropdown.options[userHabitsDropdown.selectedIndex].getAttribute('data-id');
-                requests.deleteData(url, selected);
-                location.reload();
-            } catch (err) {
-                throw err
-            }
-        });
-
-        let habitExtrasContainer = document.createElement('div')
-        habitExtrasContainer.className = "habit-extras-container"
-
-        habitSeeMore.addEventListener('click', () => {
-
-            if (habitExtrasContainer.style.display === "grid") {
-                habitExtrasContainer.style.display = "none";
-            } else {
-                habitExtrasContainer.style.display = "grid";
-            }
-
-            let habitExtrasDate = document.createElement('p')
-            habitExtrasDate.className = "extras-date"
-            habitExtrasDate.textContent = habit.day_entries[1].date
-
-            let habitExtrasFrequency = document.createElement('progress')
-            habitExtrasFrequency.className = "extras-progress"
-            habitExtrasFrequency.setAttribute('max', `${habit.max_frequency}`)
-            habitExtrasFrequency.setAttribute('value', `${habit.day_entries[1].total}`)
-
-            // let habitExtrasDateTwo = document.createElement('p')
-            // habitExtrasDateTwo.className = "extras-date-two"
-            // habitExtrasDateTwo.textContent = habit.day_entries[2].date
-            // console.log(habit.day_entries[2].date)
-
-            // let habitExtrasFrequencyTwo = document.createElement('progress')
-            // habitExtrasFrequencyTwo.className = "extras-progress-two"
-            // habitExtrasFrequencyTwo.setAttribute('max', `${habit.max_frequency}`)
-            // habitExtrasFrequencyTwo.setAttribute('value', `${habit.day_entries[2].total}`)
-
-            habitContainer.appendChild(habitExtrasContainer)
-            habitExtrasContainer.appendChild(habitExtrasDate)
-            habitExtrasContainer.appendChild(habitExtrasFrequency)
-            // habitExtrasContainer.appendChild(habitExtrasDateTwo)
-            // habitExtrasContainer.appendChild(habitExtrasFrequencyTwo)
-        })
-
-        habitsContainer.appendChild(habitContainer)
-        // habitContainer.appendChild(habitDate)
-        habitContainer.appendChild(habitName)
-        habitContainer.appendChild(habitFrequency)
-        habitContainer.appendChild(habitMinus)
-        habitContainer.appendChild(habitIncreaseFrequency)
-        habitContainer.appendChild(habitSeeMore)
-    })
-
-    habits.appendChild(habitsHeading)
-    habits.appendChild(habitsContainer)
+function renderMyHabits() {
+    profile.habitsHelper();
 }
+
+// *******************************************************************
 
 
 function renderMenuMessage() {
@@ -409,7 +277,7 @@ function render404() {
 
 
 module.exports = { renderStreaks, renderMyHabits, renderLandingPage, render404 }
-},{"./auth":2,"./forms":4,"./renderHelpers":7,"./requests":8}],4:[function(require,module,exports){
+},{"./auth":2,"./forms":4,"./profile":7,"./renderHelpers":8,"./requests":9}],4:[function(require,module,exports){
 const auth = require("./auth");
 const main = document.querySelector('main');
 
@@ -558,7 +426,7 @@ function navFunc() {
 initBindings();
 
 
-},{"./auth":2,"./content":3,"./layout":6,"./requests":8}],6:[function(require,module,exports){
+},{"./auth":2,"./content":3,"./layout":6,"./requests":9}],6:[function(require,module,exports){
 const content = require('./content')
 const addHabits = require('./addHabits');
 const rHelpers = require('./renderHelpers');
@@ -622,7 +490,163 @@ function updateContent() {
 }
 
 module.exports = { updateContent };
-},{"./addHabits":1,"./auth":2,"./content":3,"./forms":4,"./renderHelpers":7}],7:[function(require,module,exports){
+},{"./addHabits":1,"./auth":2,"./content":3,"./forms":4,"./renderHelpers":8}],7:[function(require,module,exports){
+const rHelpers = require('./renderHelpers');
+const forms = require('./forms');
+const requests = require('./requests')
+const auth = require('./auth')
+
+const username = auth.currentUser();
+const nav = document.querySelector('nav');
+const heading = document.querySelector('header');
+const main = document.querySelector('main');
+
+function streaksHelper() {
+    const showFooter = document.getElementById('footer')
+    showFooter.style.display = 'block';
+    const greeting = document.createElement('h1')
+    greeting.textContent = `Hi there, ${localStorage.getItem('username')}!`;
+    heading.appendChild(greeting);
+
+    // const getHabits = await getAllHabits();
+    // if (getHabits.err) { return }
+    // const renderHabit = habitData => {
+    const streaks = document.createElement('div')
+    streaks.className = "streaks-list"
+    const streaksHeading = document.createElement('h2')
+    streaksHeading.className = "streaks-heading"
+    streaksHeading.textContent = "🔥 Streaks"
+    const streaksBody = document.createElement('div')
+    streaksBody.className = "streaks-body"
+    // insert GET request for habit completed here
+
+    main.appendChild(streaks)
+    streaks.appendChild(streaksHeading)
+    streaks.appendChild(streaksBody)
+    // streaks.appendChild(getHabits)
+}
+
+async function habitsHelper() {
+    const habitsList = await requests.getAllHabits();
+    console.log(habitsList)
+    if (habitsList.err) { return }
+    const habits = document.createElement('div')
+    habits.className = "habits-list"
+    const habitsHeading = document.createElement('h2')
+    habitsHeading.className = "habits-heading"
+    habitsHeading.textContent = "💙 My Habits"
+    const habitsContainer = document.createElement('div')
+    habitsContainer.className = "habits-container"
+    main.append(habits)
+
+    // insert GET request for user habits here
+    habitsList.forEach(habit => {
+
+        // function getHabitList
+        let habitContainer = document.createElement('div')
+        habitContainer.className = "habit-container"
+
+        // let habitDate = document.createElement('p')
+        // habitDate.textContent = habit.day_entries[0].date
+        // console.log(habit.day_entries[0].date)
+
+        let habitName = document.createElement('p')
+        habitName.textContent = habit.name
+
+        let habitFrequency = document.createElement('progress')
+        habitFrequency.setAttribute('max', `${habit.max_frequency}`)
+        habitFrequency.setAttribute('value', `${habit.day_entries[0].total}`)
+
+        let habitMinus = document.createElement('button')
+        habitMinus.innerHTML = `<i class="fas fa-minus minus-btn"></i>`
+
+        let habitIncreaseFrequency = document.createElement('button')
+        habitIncreaseFrequency.id = "increase-freq-btn"
+        habitIncreaseFrequency.innerHTML = `<i class="fas fa-plus"></i>`
+
+        let habitSeeMore = document.createElement('button')
+        habitSeeMore.innerHTML = `<i class="fas fa-ellipsis-h see-more-btn"></i>`
+
+        // POST: Increment habit 
+        habitIncreaseFrequency.addEventListener('click', () => {
+            console.log('w')
+            try {
+                console.log('hello')
+                // e.preventDefault();
+                const url = `http://localhost:3000/users/${username}/habit/entries`
+                const data = { user_habit_id: 1 }
+                requests.postData(url, data);
+                location.reload();
+            } catch (err) {
+                throw err
+            }
+        });
+
+        // DELETE: Decrement habit
+        habitMinus.addEventListener('click', () => {
+            console.log('byee')
+            try {
+                const url = `http://localhost:3000/users/${username}/habits/${habit_id}`
+                const selected = userHabitsDropdown.options[userHabitsDropdown.selectedIndex].getAttribute('data-id');
+                requests.deleteData(url, selected);
+                location.reload();
+            } catch (err) {
+                throw err
+            }
+        });
+
+        let habitExtrasContainer = document.createElement('div')
+        habitExtrasContainer.className = "habit-extras-container"
+
+        habitSeeMore.addEventListener('click', () => {
+
+            if (habitExtrasContainer.style.display === "grid") {
+                habitExtrasContainer.style.display = "none";
+            } else {
+                habitExtrasContainer.style.display = "grid";
+            }
+
+            let habitExtrasDate = document.createElement('p')
+            habitExtrasDate.className = "extras-date"
+            habitExtrasDate.textContent = habit.day_entries[1].date
+
+            let habitExtrasFrequency = document.createElement('progress')
+            habitExtrasFrequency.className = "extras-progress"
+            habitExtrasFrequency.setAttribute('max', `${habit.max_frequency}`)
+            habitExtrasFrequency.setAttribute('value', `${habit.day_entries[1].total}`)
+
+            // let habitExtrasDateTwo = document.createElement('p')
+            // habitExtrasDateTwo.className = "extras-date-two"
+            // habitExtrasDateTwo.textContent = habit.day_entries[2].date
+            // console.log(habit.day_entries[2].date)
+
+            // let habitExtrasFrequencyTwo = document.createElement('progress')
+            // habitExtrasFrequencyTwo.className = "extras-progress-two"
+            // habitExtrasFrequencyTwo.setAttribute('max', `${habit.max_frequency}`)
+            // habitExtrasFrequencyTwo.setAttribute('value', `${habit.day_entries[2].total}`)
+
+            habitContainer.appendChild(habitExtrasContainer)
+            habitExtrasContainer.appendChild(habitExtrasDate)
+            habitExtrasContainer.appendChild(habitExtrasFrequency)
+            // habitExtrasContainer.appendChild(habitExtrasDateTwo)
+            // habitExtrasContainer.appendChild(habitExtrasFrequencyTwo)
+        })
+
+        habitsContainer.appendChild(habitContainer)
+        // habitContainer.appendChild(habitDate)
+        habitContainer.appendChild(habitName)
+        habitContainer.appendChild(habitFrequency)
+        habitContainer.appendChild(habitMinus)
+        habitContainer.appendChild(habitIncreaseFrequency)
+        habitContainer.appendChild(habitSeeMore)
+    })
+
+    habits.appendChild(habitsHeading)
+    habits.appendChild(habitsContainer)
+}
+
+module.exports = { streaksHelper, habitsHelper }
+},{"./auth":2,"./forms":4,"./renderHelpers":8,"./requests":9}],8:[function(require,module,exports){
 let nav;
 let header;
 
@@ -693,7 +717,7 @@ module.exports = {
     renderNavBar,
     renderHeading
 }
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 const auth = require('./auth')
 const hostURL = "http://localhost:3000";
 const username = auth.currentUser();
@@ -807,7 +831,7 @@ const getUserHabits = () => get(`users/${username}/habits`);
 
 module.exports = { getAllHabits, getUserHabits, get, postData, deleteData }
 
-},{"./auth":2}],9:[function(require,module,exports){
+},{"./auth":2}],10:[function(require,module,exports){
 "use strict";function e(e){this.message=e}e.prototype=new Error,e.prototype.name="InvalidCharacterError";var r="undefined"!=typeof window&&window.atob&&window.atob.bind(window)||function(r){var t=String(r).replace(/=+$/,"");if(t.length%4==1)throw new e("'atob' failed: The string to be decoded is not correctly encoded.");for(var n,o,a=0,i=0,c="";o=t.charAt(i++);~o&&(n=a%4?64*n+o:o,a++%4)?c+=String.fromCharCode(255&n>>(-2*a&6)):0)o="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".indexOf(o);return c};function t(e){var t=e.replace(/-/g,"+").replace(/_/g,"/");switch(t.length%4){case 0:break;case 2:t+="==";break;case 3:t+="=";break;default:throw"Illegal base64url string!"}try{return function(e){return decodeURIComponent(r(e).replace(/(.)/g,(function(e,r){var t=r.charCodeAt(0).toString(16).toUpperCase();return t.length<2&&(t="0"+t),"%"+t})))}(t)}catch(e){return r(t)}}function n(e){this.message=e}function o(e,r){if("string"!=typeof e)throw new n("Invalid token specified");var o=!0===(r=r||{}).header?0:1;try{return JSON.parse(t(e.split(".")[o]))}catch(e){throw new n("Invalid token specified: "+e.message)}}n.prototype=new Error,n.prototype.name="InvalidTokenError";const a=o;a.default=o,a.InvalidTokenError=n,module.exports=a;
 
 
