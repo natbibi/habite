@@ -12,7 +12,7 @@ async function streaksHelper() {
     const showFooter = document.getElementById('footer')
     showFooter.style.display = 'block';
     const greeting = document.createElement('h1')
-    greeting.textContent = `Hi there, ${localStorage.getItem('username')}!`;
+    greeting.textContent = `Hi there, ${localStorage.getItem('username')}! 👋🏼`;
     heading.appendChild(greeting);
 
     const userData = await requests.getData(`users/${username}/habits/entries`);

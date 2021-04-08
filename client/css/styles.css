@@ -10,17 +10,27 @@ header {
     text-align: center;
 }
 
-.heading {
+h1 {
+    font-size: 18px;
+    padding-bottom: 5px;
+    color: rgb(80, 80, 80);
+}
+
+/* .heading {
     background-color: pink;
     border-radius: 15%;
     padding-top: 3rem;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
-}
+} */
 
 #title-icon {
     font-size: 100px;
+}
+
+img {
+    max-width: 400px;
 }
 
 .container {
