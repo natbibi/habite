@@ -60,7 +60,7 @@ class UserHabit extends Habit {
       try {
         const user = await User.find(username);
         const result = await db.query(
-          SQL`INSERT INTO user_habits (habit_id, user_id, frequency) VALUES (${data.habit_id}, ${user.id}, ${data.frequency}) RETURNING *;`
+          SQL`INSERT INTO user_habits (habit_id, user_id, frequency, created_at) VALUES (${data.habit_id}, ${user.id}, ${data.frequency}, ${data.date}) RETURNING *;`
         );
         const newUserHabit = result.rows[0];
         resolve(newUserHabit);
@@ -87,7 +87,7 @@ class UserHabit extends Habit {
     return new Promise(async (resolve, reject) => {
       try {
         const result = await db.query(SQL`
-        select users.username, user_habits.id AS id, users.id AS user_id, habits.id AS habit_id, habits.name AS habit_name, user_habits.frequency FROM user_habits
+        select users.username, user_habits.id AS id, users.id AS user_id, habits.id AS habit_id, habits.name AS habit_name, to_char(user_habits.created_at, 'MM-DD-YYYY') as created_at, user_habits.frequency FROM user_habits
         JOIN
         habits on user_habits.habit_id = habits.id
         JOIN 
@@ -99,6 +99,7 @@ class UserHabit extends Habit {
           habit_id: habit.habit_id,
           frequency: habit.frequency,
           user_id: habit.user_id,
+          created_at: habit.created_at,
           id: habit.id
         }));
         resolve(habits);

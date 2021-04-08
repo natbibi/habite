@@ -9,7 +9,8 @@ CREATE TABLE user_habits (
     id serial PRIMARY KEY,
     user_id int references users(id) ON DELETE CASCADE ON UPDATE CASCADE,
     habit_id int references habits(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    frequency int
+    frequency int,
+    created_at timestamp DEFAULT CURRENT_timestamp
 );
 
 DROP TABLE IF EXISTS habit_entries;

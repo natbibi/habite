@@ -25,6 +25,7 @@ function formatData(listInfo, dataInfo, streakInfo) {
         max_frequency: item.frequency,
         name: item.habit_name,
         user_habit_id: item.id,
+        created_at: item.created_at,
         streakData: {
             current_streak: 0,
             top_streak: 0
@@ -35,6 +36,14 @@ function formatData(listInfo, dataInfo, streakInfo) {
           },
           {
             date: getDate(1),
+            total: 0
+          },
+          {
+            date: getDate(2),
+            total: 0
+          },
+          {
+            date: getDate(3),
             total: 0
           }
         ]
@@ -68,6 +77,9 @@ function formatData(listInfo, dataInfo, streakInfo) {
         item.day_entries.forEach(day => {
           if (day.date === entry.date && item.user_habit_id === entry.user_habit_id) {
             day.total = entry.total_completed
+          }
+          if (day.date < item.created_at) {
+            day.total = null
           }
         })
       })
