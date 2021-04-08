@@ -20,12 +20,10 @@ function renderLoginForm() {
         try {
             await auth.requestLogin(e);
         } catch (err) {
-
             const username = document.getElementById("username");
             const password = document.getElementById("password");
             username.classList.add("input-invalid");
             password.classList.add("input-invalid");
-
         }
     });
 
