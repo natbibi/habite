@@ -27,14 +27,14 @@ footer {
 .bottom-nav {
     display: flex;
     justify-content: space-evenly;
-    background-color: grey;
+    background-color: rgb(158, 187, 250);
 }
 
 /* Style nav bar links */
 .bottom-nav a {
     float: left;
     display: block;
-    color: honeydew;
+    color: rgb(229, 250, 229);
     text-align: center;
     padding: 1rem 1rem;
     text-decoration: none;
