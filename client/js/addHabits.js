@@ -4,10 +4,6 @@ const auth = require('./auth')
 const heading = document.querySelector('header');
 const main = document.querySelector('main');
 
-const hostURL = "http://localhost:3000";
-const username = auth.currentUser();
-
-
 function renderAddHabitsPage() {
     const showFooter = document.getElementById('footer')
     showFooter.style.display = 'block';
@@ -50,11 +46,12 @@ function renderAddHabitsPage() {
 function createAddHabitForm() {
     // form fields
     fields = [
-        { tag: 'label', attributes: { class: 'add-habits-dropdown', for: 'habits-dropdown' }, text: 'Choose a habit:' },
-        { tag: 'select', attributes: { class: 'add-habits-dropdown', name: 'habits-dropdown' } },
-        { tag: 'label', attributes: { class: 'add-habits-frequency', for: 'frequency' }, text: 'How often?' },
-        { tag: 'input', attributes: { class: 'add-habits-frequency', name: 'frequency', type: 'number', placeholder: '3', min: "1", max: "24" } },
-        { tag: 'input', attributes: { class: 'add-habits-btn', type: 'submit', name: 'habit-sbmt', value: 'Track Habit' } }
+        { tag: 'label', attributes: { id: 'add-habits-dropdown', for: 'habits-dropdown' }, text: 'Choose a habit:' },
+        { tag: 'select', attributes:{ id: 'add-habits-dropdown', name: 'habits-dropdown' } },
+        { tag: 'label', attributes: { id: 'add-habits-frequency', for: 'frequency' }, text: 'How often?' },
+        { tag: 'input', attributes: { id: 'add-habits-frequency', name: 'frequency', type: 'number', placeholder: '3', min: "1", max: "24", required: "true" } },
+        { tag: 'p', attributes: {},  text: "times per day" },
+        { tag: 'input', attributes: { id: 'add-habits-btn', type: 'submit', name: 'habit-sbmt', value: 'Track Habit' } }
     ];
 
     const form = forms.createForm(fields);
@@ -62,7 +59,7 @@ function createAddHabitForm() {
     const habitsDropdown = form.querySelector("select");
 
     // add habits to dropdown     
-    req.get('habits')
+    req.getData('habits')
         .then(habits => {
             habits.forEach(habit => {
                 const option = document.createElement("option");
@@ -72,32 +69,16 @@ function createAddHabitForm() {
             })
         });
 
-    // send
     form.onsubmit = (e) => {
         e.preventDefault();
         const selected = habitsDropdown.options[habitsDropdown.selectedIndex].getAttribute('data-id');
-        const url = `${hostURL}/users/${username}/habits`
+        const path = `users/${auth.currentUser()}/habits`
         const data = {
             habit_id: selected,
             frequency: freqInput.value
         }
-        req.postData(url, data);
-        location.reload();
-        // window.location.hash = "#addhabits"
+        req.postData(path, data);
     };
-
-    // send
-    // form.onsubmit = (e) => {
-    //     e.preventDefault();
-    //     const selected = habitsDropdown.options[habitsDropdown.selectedIndex].getAttribute('data-id');
-    //     const url = `${hostURL}/users/${username}/habits`
-    //     const data = {
-    //         habit_id: selected,
-    //         frequency: freqInput.value
-    //     }
-    //     req.addUserhabit(data);
-    //     location.reload();
-    // };
 
     return form;
 }
@@ -105,7 +86,7 @@ function createAddHabitForm() {
 function createNewHabitForm() {
     fields = [
         { tag: 'label', attributes: { class: 'new-habit-name', for: 'new-habit-name' }, text: 'Add a custom habit' },
-        { tag: 'input', attributes: { class: 'new-habit-name', name: 'new-habit-name', type: 'text', placeholder: 'use habite' }, text: 'Add a custom habit' },
+        { tag: 'input', attributes: { class: 'new-habit-name', name: 'new-habit-name', type: 'text', placeholder: 'use habite', required: "true" }, text: 'Add a custom habit' },
         { tag: 'input', attributes: { class: 'new-habit-btn', type: 'submit', name: 'new-habit-sbmt' } }
     ];
 
@@ -114,14 +95,8 @@ function createNewHabitForm() {
 
     form.onsubmit = async (e) => {
         e.preventDefault();
-        const url = `http://localhost:3000/users/${username}/habit`
         const data = { name: nameInput.value }
-        req.postData(url, data);
-        location.reload();
-        // window.location.hash = "#addhabits"
-        // if (data.err) {
-        //     console.warn(data.err);
-        // logout();
+        req.postData(`habits`, data);
     };
 
     return form;
@@ -138,12 +113,12 @@ function createDeleteHabitForm() {
     const form = forms.createForm(fields);
     const userHabitsDropdown = form.querySelector("select");
 
-    req.getUserHabits()
+    req.getData(`users/${auth.currentUser()}/habits`)
         .then(habits => {
             habits.forEach(habit => {
                 const option = document.createElement("option");
                 option.textContent = habit.habit_name;
-                option.setAttribute('data-id', habit.habit_id);
+                option.setAttribute('data-id', habit.id);
                 userHabitsDropdown.appendChild(option)
             })
         });
@@ -152,9 +127,7 @@ function createDeleteHabitForm() {
     form.onsubmit = async (e) => {
         e.preventDefault();
         const selected = userHabitsDropdown.options[userHabitsDropdown.selectedIndex].getAttribute('data-id');
-        const url = `${hostURL}/users/${username}/habits/${selected}`
-        req.deleteData(url, selected);
-        location.reload();
+        req.deleteData(`users/${auth.currentUser()}/habits/${selected}`);
     };
 
     return form;
