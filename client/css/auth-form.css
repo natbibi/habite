@@ -28,11 +28,11 @@
     border: 2px solid green;
 }
 
-#register-link, #register-sbmt {
+#register-sbmt {
     border: 2px solid orange;
 }
 
-#login-sbmt, #login-link {
+#login-sbmt {
     border: 2px solid blue;
 }
 

@@ -134,7 +134,12 @@ function createDeleteHabitForm() {
     return form;
 }
 
-module.exports = { renderAddHabitsPage };
+module.exports = { 
+    renderAddHabitsPage,
+    createAddHabitForm,
+    createDeleteHabitForm,
+    createNewHabitForm
+};
 },{"./auth":2,"./forms":4,"./requests":9}],2:[function(require,module,exports){
 const jwt_decode = require('jwt-decode')
 
@@ -445,7 +450,7 @@ const heading = document.querySelector('header');
 const main = document.querySelector('main');
 
 const publicRoutes = ['#', '#login', '#register'];
-const privateRoutes = ['#profile, #addhabits']; // add #profile and #addhabits
+const privateRoutes = []; // add #profile and #addhabits
 
 // window.addEventListener('hashchange', updateContent);
 
@@ -490,8 +495,8 @@ function updateContent() {
     const path = window.location.hash;
     if (privateRoutes.includes(path) && !auth.currentUser()) {
         window.location.hash = ''
-    // } else if (!privateRoutes.includes(path) && auth.currentUser()) {
-    //     window.location.hash = 'profile';
+        // } else if (!privateRoutes.includes(path) && auth.currentUser()) {
+        //     window.location.hash = 'profile';
     } else {
         updateMain(path);
     }
@@ -585,7 +590,7 @@ async function streaksHelper() {
 
         let topStreak = streaks.streakData.top_streak;
         let topStreakMessage = document.createElement('p');
-        topStreakMessage.textContent = `Your PB is ${topStreak}!`;
+        topStreakMessage.textContent = `✨ Your PB is ${topStreak}! ✨`;
         streakContainer.appendChild(topStreakMessage);
 
         streaksContainer.appendChild(streakContainer);
