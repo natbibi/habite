@@ -53,16 +53,19 @@ async function habitsHelper() {
         let habitContainer = document.createElement('div')
         habitContainer.className = "habit-container"
 
-        // let habitDate = document.createElement('p')
-        // habitDate.textContent = habit.day_entries[0].date
-        // console.log(habit.day_entries[0].date)
+        let currentHabitTotal = habit.day_entries[0].total
+        let currentHabitID = habit.user_habit_id
 
         let habitName = document.createElement('p')
         habitName.textContent = habit.name
 
         let habitFrequency = document.createElement('progress')
-        habitFrequency.setAttribute('max', `${habit.max_frequency}`)
-        habitFrequency.setAttribute('value', `${habit.day_entries[0].total}`)
+        habitFrequency.setAttribute('max', habit.max_frequency)
+        habitFrequency.setAttribute('value', currentHabitTotal)
+
+        function updateProgressBar() {
+            habitFrequency.setAttribute('value', currentHabitTotal)
+        }
 
         let habitMinus = document.createElement('button')
         habitMinus.innerHTML = `<i class="fas fa-minus minus-btn"></i>`
@@ -74,16 +77,14 @@ async function habitsHelper() {
         let habitSeeMore = document.createElement('button')
         habitSeeMore.innerHTML = `<i class="fas fa-ellipsis-h see-more-btn"></i>`
 
+
         // POST: Increment habit 
         habitIncreaseFrequency.addEventListener('click', () => {
-            console.log('w')
+            currentHabitTotal += 1
             try {
-                console.log('hello')
-                // e.preventDefault();
-                const url = `http://localhost:3000/users/${username}/habit/entries`
-                const data = { user_habit_id: 1 }
-                requests.postData(url, data);
-                location.reload();
+                const data = { user_habit_id: currentHabitID, completed: true }
+                requests.postData(`users/${username}/habits/entries`, data);
+                updateProgressBar()
             } catch (err) {
                 throw err
             }
@@ -91,12 +92,10 @@ async function habitsHelper() {
 
         // DELETE: Decrement habit
         habitMinus.addEventListener('click', () => {
-            console.log('byee')
+            currentHabitTotal -= 1
             try {
-                const url = `http://localhost:3000/users/${username}/habits/${habit_id}`
-                const selected = userHabitsDropdown.options[userHabitsDropdown.selectedIndex].getAttribute('data-id');
-                requests.deleteData(url, selected);
-                location.reload();
+                requests.deleteData(`users/${username}/habits/entries/${currentHabitID}`);
+                updateProgressBar()
             } catch (err) {
                 throw err
             }
