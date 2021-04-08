@@ -77,11 +77,33 @@ header {
 .streak-container {
     display: grid;
     grid-template-columns: 3fr 3fr;
-    grid-gap: 20px;
+    grid-gap: 10px;
     padding: 3px;
     align-items: center;
-    margin: 10px;
+    margin: 3px;
     border: 2px solid purple;
+}
+
+.streak-container h5 {
+    display: grid;
+    border: 2px solid hotpink;
+    grid-column: 1 / 3;
+    font-size: 17px;
+}
+
+.streak-container p:nth-child(2) {
+    display: grid;
+    grid-column: 3 / 6;
+    font-size: 15px;
+    border: 2px solid yellow;
+}
+
+.streak-container p:nth-child(3) {
+    display: grid;
+    grid-column: 1 / 6;
+    justify-content: center;
+    font-size: 15px;
+    border: 2px solid lightcoral;
 }
 
 progress {
