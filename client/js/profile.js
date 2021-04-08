@@ -163,52 +163,51 @@ async function habitsHelper() {
             }
         });
 
-        let habitExtrasContainer = document.createElement('div')
-        habitExtrasContainer.className = "habit-extras-container"
+        let habitsExtrasContainer = document.createElement('div')
+        habitsExtrasContainer.className = "habits-extras-container"
 
         habitSeeMore.addEventListener('click', () => {
 
-            if (habitExtrasContainer.style.display === "grid") {
-                habitExtrasContainer.style.display = "none";
+            if (habitsExtrasContainer.style.display === "grid") {
+                habitsExtrasContainer.style.display = "none";
             } else {
-                habitExtrasContainer.style.display = "grid";
+                habitsExtrasContainer.style.display = "grid";
             }
 
-            let habitExtrasDate = document.createElement('p')
-            habitExtrasDate.className = "extras-date"
-            habitExtrasDate.textContent = habit.day_entries[1].date
+            habitsExtrasContainer.innerHTML = ""
 
-            let habitExtrasFrequency = document.createElement('progress')
-            habitExtrasFrequency.className = "extras-progress"
-            habitExtrasFrequency.setAttribute('max', `${habit.max_frequency}`)
-            habitExtrasFrequency.setAttribute('value', `${habit.day_entries[1].total}`)
+            const dayEntries = habit.day_entries
 
-            // let habitExtrasDateTwo = document.createElement('p')
-            // habitExtrasDateTwo.className = "extras-date-two"
-            // habitExtrasDateTwo.textContent = habit.day_entries[2].date
-            // console.log(habit.day_entries[2].date)
+            const validEntries = dayEntries.filter(entry => entry.total !== null)
+            validEntries.forEach(entry => {
+                let habitExtrasContainer = document.createElement('div')
+                habitExtrasContainer.className = "habit-extra-item"
+                let habitExtrasDate = document.createElement('p')
+                habitExtrasDate.className = "extras-date"
+                habitExtrasDate.textContent = new Date(entry.date).toLocaleDateString()
+                let habitExtrasFrequency = document.createElement('progress')
+                habitExtrasFrequency.className = "extras-progress"
+                habitExtrasFrequency.setAttribute('max', maxFrequency)
+                habitExtrasFrequency.setAttribute('value', entry.total)
+                let habitExtraResult = document.createElement('p')
+                habitExtraResult.className = "extras-result"
+                habitExtraResult.textContent = `${entry.total} / ${maxFrequency}`
 
-            // let habitExtrasFrequencyTwo = document.createElement('progress')
-            // habitExtrasFrequencyTwo.className = "extras-progress-two"
-            // habitExtrasFrequencyTwo.setAttribute('max', `${habit.max_frequency}`)
-            // habitExtrasFrequencyTwo.setAttribute('value', `${habit.day_entries[2].total}`)
+                habitExtrasContainer.appendChild(habitExtrasDate)
+                habitExtrasContainer.appendChild(habitExtrasFrequency)
+                habitExtrasContainer.appendChild(habitExtraResult)
+                habitsExtrasContainer.appendChild(habitExtrasContainer)
 
-            habitContainer.appendChild(habitExtrasContainer)
-            habitExtrasContainer.appendChild(habitExtrasDate)
-            habitExtrasContainer.appendChild(habitExtrasFrequency)
-            // habitExtrasContainer.appendChild(habitExtrasDateTwo)
-            // habitExtrasContainer.appendChild(habitExtrasFrequencyTwo)
+            })
+            habitContainer.appendChild(habitsExtrasContainer)
         })
-
         habitsContainer.appendChild(habitContainer)
-        // habitContainer.appendChild(habitDate)
         habitContainer.appendChild(habitName)
         habitContainer.appendChild(habitFrequency)
         habitContainer.appendChild(habitMinus)
         habitContainer.appendChild(habitIncreaseFrequency)
         habitContainer.appendChild(habitSeeMore)
     })
-
     habits.appendChild(habitsHeading)
     habits.appendChild(habitsContainer)
 }

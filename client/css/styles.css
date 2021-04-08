@@ -58,7 +58,7 @@ header {
     border: 2px solid green;
 }
 
-.habit-extras-container {
+.habits-extras-container {
     display: grid;
     grid-column: 1 / 6;
     grid-gap: 20px;
@@ -68,17 +68,51 @@ header {
     align-items: center;
 }
 
-.extras-date {
+.habit-extra-item {
     display: grid;
-    grid-row: 1;
-    grid-column: 2 / 6;
+}
+
+.extras-date {
+    grid-column: 1 / 2;
 }
 
 .extras-progress {
-    display: grid;
-    grid-row: 1;
-    grid-column: 4 / 6;
+    grid-column: 2 / 4;
+
 }
+
+.extras-result {
+    grid-column: 5 / 6;
+}
+
+/* .extras-date, .extras-date-two, .extras-date-three {
+    display: grid;
+    grid-column: 1 / 2;
+    align-items: center;
+}
+
+.extras-date, .extras-progress, .extras-result {
+    grid-row: 1;
+}
+
+.extras-date-two, .extras-progress-two, .extras-result-two {
+    grid-row: 2;
+}
+
+.extras-date-three, .extras-progress-three, .extra-results-three {
+    grid-row: 3;
+}
+
+.extras-progress, .extras-progress-two, .extras-progress-three {
+    display: grid;
+    grid-column: 3 / 4;
+    align-items: center;
+}
+
+.extras-result, .extras-result-two, .extra-results-three {
+    grid-column: 5 / 6;
+} */
+
 
 .streak-container {
     display: grid;
