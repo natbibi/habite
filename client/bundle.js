@@ -487,11 +487,12 @@ async function streaksHelper() {
     const streaksHeading = document.createElement('h2')
     streaksHeading.className = "streaks-heading"
     streaksHeading.textContent = "🔥 Streaks"
+    main.append(streaks)
     streaks.appendChild(streaksHeading);
 
     const streaksContainer = document.createElement('div')
     streaksContainer.className = "streaks-container"
-    main.appendChild(streaksContainer)
+    streaks.appendChild(streaksContainer)
 
     // insert GET request for habit completed here
     userData.forEach(streaks => {
@@ -501,32 +502,32 @@ async function streaksHelper() {
         let streakName = document.createElement('p');
         streakName.textContent = streaks.name;
         streakContainer.appendChild(streakName);
-        
+
         let currentstreakTotal = document.createElement('p');
-        currentstreakTotal.textContent = streaks.streakData.currentStreak;
+        currentstreakTotal.textContent = streaks.streakData.current_streak;
         streakContainer.appendChild(currentstreakTotal);
 
         let topStreak = document.createElement('p');
-        topStreak.textContent = streaks.streakData.topStreak;
+        topStreak.textContent = streaks.streakData.top_streak;
         streakContainer.appendChild(topStreak);
 
         let message = document.createElement('h5');
         streakContainer.appendChild(message);
 
 
-        if(!currentstreakTotal.textContent) {
+        if/*(!currentstreakTotal.textContent) {
             message.textContent = "Whoops.  No streakers here!"
-        } else if (currentstreakTotal.textContent===0) {
+        } else if */(currentstreakTotal.textContent === 0) {
             message.textContent = "Crumbs ... let's get back in the habite!";
-        } else if (currentstreakTotal.textContent>0 && currentstreakTotal.textContent<=2) {
+        } else if (currentstreakTotal.textContent > 0 && currentstreakTotal.textContent <= 2) {
             message.textContent = "Great start!  Keep at it!";
-        } else if (currentstreakTotal.textContent>2 && currentstreakTotal.textContent<=7) {
+        } else if (currentstreakTotal.textContent > 2 && currentstreakTotal.textContent <= 7) {
             message.textContent = `A habit a day keeps procrastination away!`;
-        } else if (currentstreakTotal.textContent>7 && currentstreakTotal.textContent<=14) {
+        } else if (currentstreakTotal.textContent > 7 && currentstreakTotal.textContent <= 14) {
             message.textContent = "More than a week effort!";
-        } else if (currentstreakTotal.textContent>14) {
+        } else if (currentstreakTotal.textContent > 14) {
             message.textContent = "Rehabite-ation not required here!";
-        }        
+        }
         streaksContainer.appendChild(streakContainer);
     })
 }
