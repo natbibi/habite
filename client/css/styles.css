@@ -166,3 +166,10 @@ button:hover {
     transform: scale(1.04);
 }
 
+input[type='submit'] {
+    cursor: pointer;
+}
+
+input[type='submit']:hover {
+    background-color: rgb(110, 110, 110);
+}
