@@ -589,7 +589,7 @@ async function streaksHelper() {
         }
 
         let currentStreakMessage = document.createElement('p');
-        currentStreakMessage.textContent = `${currentStreakTotal} ${dayNumber}, ${message}`;
+        currentStreakMessage.textContent = `${currentStreakTotal} ${dayNumber} ${message}`;
         streakContainer.appendChild(currentStreakMessage);
 
         let topStreak = streaks.streakData.top_streak;
