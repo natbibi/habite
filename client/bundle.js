@@ -151,7 +151,7 @@ async function requestLogin(e){
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(Object.fromEntries(new FormData(e.target)))
         }
-        const r = await fetch(`${process.env.API_URL}/auth/login`, options)
+        const r = await fetch(`${process.env.API_URL || 'localhost:3000'}/auth/login`, options)
         const data = await r.json()
         if (!data.success) { throw new Error(data.err); }
         login(data.token);
@@ -167,7 +167,7 @@ async function requestRegistration(e) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(Object.fromEntries(new FormData(e.target)))
         }
-        const r = await fetch(`${process.env.API_URL}/auth/register`, options)
+        const r = await fetch(`${process.env.API_URL || 'localhost:3000'}/auth/register`, options)
         const data = await r.json()
         if (data.err){ throw Error(data.err) }
         requestLogin(e);
@@ -797,7 +797,7 @@ async function getData(path) {
         const options = {
             headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
         }
-        const response = await fetch(`${process.env.API_URL}/${path}`, options)
+        const response = await fetch(`${process.env.API_URL || 'localhost:3000'}/${path}`, options)
         const data = await response.json();
         if (data.err) {
             console.warn(data.err);
@@ -819,7 +819,7 @@ async function postData(path, formData) {
             }),
             body: JSON.stringify(formData)
         }
-        const response = await fetch(`${process.env.API_URL}/${path}`, options);
+        const response = await fetch(`${process.env.API_URL || 'localhost:3000'}/${path}`, options);
         return response.json();
     } catch (err) {
         console.warn(err);
@@ -832,7 +832,7 @@ async function deleteData(path) {
             method: 'DELETE',
             headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
         }
-        const r = await fetch(`${process.env.API_URL}/${path}`, options);
+        const r = await fetch(`${process.env.API_URL || 'localhost:3000'}/${path}`, options);
         return
     } catch (err) {
         console.warn(err);
