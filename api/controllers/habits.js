@@ -80,7 +80,8 @@ async function createHabitEntry(req, res) {
   try {
     //check if valid jwt is for the requested user
     // if (res.locals.user !== req.params.username) throw err
-    const habitEntry = await UserHabit.createHabitEntry({ ...req.body });
+    const jsDate = new Date().toLocaleString('en-GB', {timeZone: 'Europe/London'})
+    const habitEntry = await UserHabit.createHabitEntry({ ...req.body, date: jsDate});
     res.json(habitEntry)
   } catch (err) {
     res.status(403).send({ err: err })
