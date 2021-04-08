@@ -26,16 +26,20 @@ header {
 .container {
     border: solid 2px red;
     min-height: 100vh;
+    display: grid;
+    grid-template-rows: min-content;
 }
 
 .streaks-list {
     border: lightblue 2px solid;
     margin: 5px;
+    grid-row: 2 / 2;
 }
 
 .habits-list {
     border: lightblue 2px solid;
     margin: 5px;
+    grid-row: 1 / 2;
 }
 
 .streaks-heading, .habits-heading {
