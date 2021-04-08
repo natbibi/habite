@@ -43,9 +43,9 @@ async function streaksHelper() {
         let dayNumber = '';
         console.log(dayNumber);
         if(currentStreakTotal===1){
-            dayNumber==='day'
+            dayNumber='day'
         } else {
-            dayNumber==='days'
+            dayNumber='days'
         };
     
         let message;
