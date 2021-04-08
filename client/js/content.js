@@ -25,10 +25,12 @@ function renderLandingPage() {
 function renderStreaks() {
     profile.streaksHelper();
 }
-
-
 function renderMyHabits() {
     profile.habitsHelper();
+}
+async function renderProfile() {
+    await renderStreaks();
+    await renderMyHabits();
 }
 
 // *******************************************************************
@@ -48,4 +50,4 @@ function render404() {
 }
 
 
-module.exports = { renderStreaks, renderMyHabits, renderLandingPage, render404 }
+module.exports = { renderProfile, renderLandingPage, render404 }
