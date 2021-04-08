@@ -114,7 +114,7 @@ async function habitsHelper() {
         let maxFrequency = habit.max_frequency
         let currentHabitID = habit.user_habit_id
 
-        let habitName = document.createElement('p')
+        let habitName = document.createElement('h5')
         habitName.textContent = habit.name
 
         let habitFrequency = document.createElement('progress')
@@ -178,7 +178,8 @@ async function habitsHelper() {
 
             const dayEntries = habit.day_entries
 
-            const validEntries = dayEntries.filter(entry => entry.total !== null)
+            const olderEntries = dayEntries.slice(1) // Returns all except first array element i.e. today
+            const validEntries = olderEntries.filter(entry => entry.total !== null)
             validEntries.forEach(entry => {
                 let habitExtrasContainer = document.createElement('div')
                 habitExtrasContainer.className = "habit-extra-item"
