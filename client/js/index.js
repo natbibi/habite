@@ -22,7 +22,6 @@ function initBindings() {
 
     main.addEventListener('click', formHandler);
     profile.addEventListener('click', navFunc);
-    bottomNav.addEventListener('click', navHandler);
 }
 
 function formHandler(e) {
