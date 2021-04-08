@@ -30,14 +30,14 @@ header {
 }
 
 .streaks-list {
-    border: lightblue 2px solid;
+    border: rgb(158, 187, 250) 2px solid;
     border-radius: 10px;
     margin: 5px;
     grid-row: 2 / 2;
 }
 
 .habits-list {
-    border: lightblue 2px solid;
+    border: rgb(158, 187, 250) 2px solid;
     border-radius: 10px;
     margin: 5px;
     grid-row: 1 / 2;
