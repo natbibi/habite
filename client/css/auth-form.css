@@ -1,9 +1,19 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 .auth-form {
     display: flex;
     flex-direction: column;
     justify-content: center;
     text-align: center;
     align-items: center;
+}
+
+.input-invalid {
+    box-shadow: 0 0 4px 2px rgb(255, 68, 68);
 }
 
 #title-icon {

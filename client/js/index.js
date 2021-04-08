@@ -25,8 +25,8 @@ function initBindings() {
 function formHandler(e) {
     const target = e.target.id;
     switch(target) {
-        case 'register-link': window.location.hash = 'register'; break;
-        case 'login-link': window.location.hash = 'login'; break;
+        case 'register-link': window.location.hash = '#register'; break;
+        case 'login-link': window.location.hash = '#login'; break;
         default: break;
     }
 }

@@ -138,10 +138,7 @@ module.exports = { renderAddHabitsPage };
 },{"./auth":2,"./forms":4,"./requests":9}],2:[function(require,module,exports){
 const jwt_decode = require('jwt-decode')
 
-const hostURL = "http://localhost:3000"; // Should this be an ENV variable?
-
 async function requestLogin(e){
-    e.preventDefault();
     try {
         const options = {
             method: 'POST',
@@ -150,15 +147,14 @@ async function requestLogin(e){
         }
         const r = await fetch(`${hostURL}/auth/login`, options)
         const data = await r.json()
-        if (!data.success) { throw new Error('Login not authorised'); }
+        if (!data.success) { throw new Error(data.err); }
         login(data.token);
     } catch (err) {
-        console.warn(err);
+        throw err;
     }
 }
 
 async function requestRegistration(e) {
-    e.preventDefault();
     try {
         const options = {
             method: 'POST',
@@ -170,9 +166,10 @@ async function requestRegistration(e) {
         if (data.err){ throw Error(data.err) }
         requestLogin(e);
     } catch (err) {
-        console.warn(err);
+        throw err;
     }
 }
+
 
 function login(token){
     const user = jwt_decode(token);
@@ -257,35 +254,72 @@ const main = document.querySelector('main');
 function renderLoginForm() {
     // Define form fields
     const authFields = [
-        { tag: 'label', attributes: { id: 'username-label', for: 'username' }, text: 'Username'},
-        { tag: 'input', attributes: { id: 'username', name: 'username', placeholder: 'Enter your username', } },
-        { tag: 'label', attributes: { id: 'password-label', for: 'password' } , text: 'Password' },
-        { tag: 'input', attributes: { id: 'password', type: 'password', name: 'password', placeholder: 'Enter your password', } },
+        { tag: 'label', attributes: { id: 'username-label', for: 'username' }, text: 'Username' },
+        { tag: 'input', attributes: { id: 'username', name: 'username', placeholder: 'Enter your username', required: true } },
+        { tag: 'label', attributes: { id: 'password-label', for: 'password' }, text: 'Password' },
+        { tag: 'input', attributes: { id: 'password', type: 'password', name: 'password', placeholder: 'Enter your password', required: true } },
         { tag: 'label', attributes: { id: 'robot-label', for: 'robot-check' }, text: 'Not a robot, (bzzt, dzzt).' },
-        { tag: 'input', attributes: { id: 'robot-check', type: 'checkbox', name: 'robot-check', } },       
+        { tag: 'input', attributes: { id: 'robot-check', type: 'checkbox', required: true } },
         { tag: 'input', attributes: { id: 'login-sbmt', type: 'submit', name: 'login-sbmt', value: 'Login', } }
     ];
 
     const form = createForm(authFields)
     form.className = "login-form auth-form";
-    form.addEventListener('submit', auth.requestLogin);
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        try {
+            await auth.requestLogin(e);
+        } catch (err) {
+
+            const username = document.getElementById("username");
+            const password = document.getElementById("password");
+            username.classList.add("input-invalid");
+            password.classList.add("input-invalid");
+
+        }
+    });
+
+
     main.appendChild(form);
 }
 
 function renderRegisterForm() {
     const authFields = [
         { tag: 'label', attributes: { id: 'username-label', for: 'username' }, text: 'Username' },
-        { tag: 'input', attributes: { id: 'username', name: 'username', placeholder: 'Enter your username', } },
-        { tag: 'label', attributes: { id: 'password-label', for: 'password'}, text: 'Password'  },
-        { tag: 'input', attributes: { id: 'password', type: 'password', name: 'password', placeholder: 'Enter your password', } },
-        { tag: 'input', attributes: { id: 'password-check', type: 'password', name: 'password', placeholder: 'Confirm password', } },
-        { tag: 'label', attributes: { id: 'robot-label', for: 'robot-check' }, text: 'Not a robot, (bzzt, dzzt).' },
-        { tag: 'input', attributes: { id: 'robot-check', type: 'checkbox', name: 'robot-check', } },
+        { tag: 'input', attributes: { id: 'username', name: 'username', placeholder: 'Enter your username', required: true } },
+        { tag: 'label', attributes: { id: 'password-label', for: 'password' }, text: 'Password' },
+        { tag: 'input', attributes: { id: 'password', type: 'password', name: 'password', placeholder: 'Enter your password', required: true } },
+        { tag: 'input', attributes: { id: 'password-check', type: 'password', name: 'password', placeholder: 'Confirm password', required: true } },
+        { tag: 'label', attributes: { id: 'robot-label', for: 'robot-check', required: true }, text: 'Not a robot, (bzzt, dzzt).' },
+        { tag: 'input', attributes: { id: 'robot-check', type: 'checkbox', required: true } },
         { tag: 'input', attributes: { id: 'register-sbmt', type: 'submit', name: 'register-sbmt', value: 'Register', } }
     ];
     const form = createForm(authFields)
     form.className = "register-form auth-form";
-    form.addEventListener('submit', auth.requestRegistration);
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault()
+
+        const pass = document.getElementById("password");
+        const confirm = document.getElementById("password-check");
+        console.log(document.getElementById("password-check"));
+
+        if (pass.value === confirm.value) {
+            try {
+                await auth.requestRegistration(e);
+            } catch (err) {
+                if (err.message.includes("duplicate")) {
+                    const username = document.getElementById("username");
+                    username.classList.add("input-invalid");
+                    username.setAttribute('placeholder', `Sorry, ${username.value} is taken!`)
+                    username.value = "";
+                }
+            }
+        } else {
+            confirm.classList.add("input-invalid");
+        }
+    });
+
     main.appendChild(form);
 }
 
@@ -317,7 +351,7 @@ function renderRegisterLink() {
 
     registerPageBtn.textContent = "Register";
     registerPageBtn.id = "register-link";
-    
+
     registerText.textContent = "Don't have an account? Click here to create one!"
 
     registerElement.appendChild(registerText);
@@ -333,7 +367,7 @@ function renderLoginLink() {
 
     loginPageBtn.textContent = "Login";
     loginPageBtn.id = "login-link";
-    
+
     loginText.textContent = "Already have an account? Click here to login!"
 
     loginElement.appendChild(loginText);
@@ -379,8 +413,8 @@ function initBindings() {
 function formHandler(e) {
     const target = e.target.id;
     switch(target) {
-        case 'register-link': window.location.hash = 'register'; break;
-        case 'login-link': window.location.hash = 'login'; break;
+        case 'register-link': window.location.hash = '#register'; break;
+        case 'login-link': window.location.hash = '#login'; break;
         default: break;
     }
 }
@@ -409,7 +443,7 @@ const heading = document.querySelector('header');
 const main = document.querySelector('main');
 
 const publicRoutes = ['#', '#login', '#register'];
-const privateRoutes = []; // add #profile and #addhabits
+const privateRoutes = ['#profile, #addhabits']; // add #profile and #addhabits
 
 // window.addEventListener('hashchange', updateContent);
 
@@ -454,8 +488,8 @@ function updateContent() {
     const path = window.location.hash;
     if (privateRoutes.includes(path) && !auth.currentUser()) {
         window.location.hash = ''
-        // } else if (!privateRoutes.includes(path) && auth.currentUser()) {
-        //     window.location.hash = 'profile';
+    // } else if (!privateRoutes.includes(path) && auth.currentUser()) {
+    //     window.location.hash = 'profile';
     } else {
         updateMain(path);
     }
