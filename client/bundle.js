@@ -143,6 +143,7 @@ module.exports = {
 },{"./auth":2,"./forms":4,"./requests":9}],2:[function(require,module,exports){
 (function (process){(function (){
 const jwt_decode = require('jwt-decode')
+const apiUrl = process.env.API_URL || 'https://habit-your-way.herokuapp.com'
 
 async function requestLogin(e){
     try {
@@ -151,7 +152,7 @@ async function requestLogin(e){
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(Object.fromEntries(new FormData(e.target)))
         }
-        const r = await fetch(`${process.env.API || "http://localhost:3000"}/auth/login`, options)
+        const r = await fetch(`${apiUrl}/auth/login`, options)
         const data = await r.json()
         if (!data.success) { throw new Error(data.err); }
         login(data.token);
@@ -167,7 +168,7 @@ async function requestRegistration(e) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(Object.fromEntries(new FormData(e.target)))
         }
-        const r = await fetch(`${process.env.API || "http://localhost:3000"}/auth/register`, options)
+        const r = await fetch(`${apiUrl}/auth/register`, options)
         const data = await r.json()
         if (data.err){ throw Error(data.err) }
         requestLogin(e);
@@ -523,6 +524,7 @@ async function streaksHelper() {
 
     const userData = await requests.getData(`users/${username}/habits/entries`);
     if (requests.getData.err) { return }
+    console.log(userData)
     const streaks = document.createElement('div')
     streaks.className = "streaks-list"
     const streaksHeading = document.createElement('h2')
@@ -792,13 +794,14 @@ module.exports = {
     renderHeading
 }
 },{}],9:[function(require,module,exports){
-(function (process){(function (){
+const apiUrl = 'https://habit-your-way.herokuapp.com' // http://localhost:3000
+
 async function getData(path) {
     try {
         const options = {
             headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
         }
-        const response = await fetch(`${process.env.API || "http://localhost:3000"}/${path}`, options)
+        const response = await fetch(`${apiUrl}/${path}`, options)
         const data = await response.json();
         if (data.err) {
             console.warn(data.err);
@@ -820,7 +823,7 @@ async function postData(path, formData) {
             }),
             body: JSON.stringify(formData)
         }
-        const response = await fetch(`${process.env.API || "http://localhost:3000"}/${path}`, options);
+        const response = await fetch(`${apiUrl}/${path}`, options);
         return response.json();
     } catch (err) {
         console.warn(err);
@@ -833,7 +836,7 @@ async function deleteData(path) {
             method: 'DELETE',
             headers: new Headers({ 'Authorization': localStorage.getItem('token') }),
         }
-        const r = await fetch(`${process.env.API || "http://localhost:3000"}/${path}`, options);
+        const r = await fetch(`${apiUrl}/${path}`, options);
         return
     } catch (err) {
         console.warn(err);
@@ -842,8 +845,7 @@ async function deleteData(path) {
 
 module.exports = { getData, postData, deleteData }
 
-}).call(this)}).call(this,require('_process'))
-},{"_process":11}],10:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 "use strict";function e(e){this.message=e}e.prototype=new Error,e.prototype.name="InvalidCharacterError";var r="undefined"!=typeof window&&window.atob&&window.atob.bind(window)||function(r){var t=String(r).replace(/=+$/,"");if(t.length%4==1)throw new e("'atob' failed: The string to be decoded is not correctly encoded.");for(var n,o,a=0,i=0,c="";o=t.charAt(i++);~o&&(n=a%4?64*n+o:o,a++%4)?c+=String.fromCharCode(255&n>>(-2*a&6)):0)o="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".indexOf(o);return c};function t(e){var t=e.replace(/-/g,"+").replace(/_/g,"/");switch(t.length%4){case 0:break;case 2:t+="==";break;case 3:t+="=";break;default:throw"Illegal base64url string!"}try{return function(e){return decodeURIComponent(r(e).replace(/(.)/g,(function(e,r){var t=r.charCodeAt(0).toString(16).toUpperCase();return t.length<2&&(t="0"+t),"%"+t})))}(t)}catch(e){return r(t)}}function n(e){this.message=e}function o(e,r){if("string"!=typeof e)throw new n("Invalid token specified");var o=!0===(r=r||{}).header?0:1;try{return JSON.parse(t(e.split(".")[o]))}catch(e){throw new n("Invalid token specified: "+e.message)}}n.prototype=new Error,n.prototype.name="InvalidTokenError";const a=o;a.default=o,a.InvalidTokenError=n,module.exports=a;
 
 

@@ -14,7 +14,7 @@ function getDate(n) {
     const newDay = new Date(today)
     newDay.setDate(newDay.getDate() - n)
     newDay.toDateString()
-    return zeroize(newDay.toLocaleDateString('en-GB').replace(/\//g, "-"))
+    return zeroize(newDay.toLocaleDateString('en-US').replace(/\//g, "-"))
   }
 
 function formatData(listInfo, dataInfo, streakInfo) {
@@ -78,7 +78,7 @@ function formatData(listInfo, dataInfo, streakInfo) {
           if (day.date === entry.date && item.user_habit_id === entry.user_habit_id) {
             day.total = entry.total_completed
           }
-          if (day.date < item.created_at) {
+          if (new Date(day.date) < new Date(item.created_at)) {
             day.total = null
           }
         })

@@ -1,5 +1,5 @@
 const jwt_decode = require('jwt-decode')
-const apiUrl = process.env.API || 'https://habit-your-way.herokuapp.com'
+const apiUrl = 'https://habit-your-way.herokuapp.com' // http://localhost:3000
 
 async function requestLogin(e){
     try {

@@ -17,6 +17,7 @@ async function streaksHelper() {
 
     const userData = await requests.getData(`users/${username}/habits/entries`);
     if (requests.getData.err) { return }
+    console.log(userData)
     const streaks = document.createElement('div')
     streaks.className = "streaks-list"
     const streaksHeading = document.createElement('h2')
