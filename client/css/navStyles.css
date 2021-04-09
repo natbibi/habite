@@ -21,8 +21,9 @@ footer {
     display: none;
     position: fixed;
     bottom: 0;
-    width: 100%;
+    width: 101%;
     max-width: 500px;
+    z-index: 5;
 }
 
 .bottom-nav {

@@ -58,6 +58,17 @@ To teardown docker compose completely
 - Connect front end to backend via fetch requests to api and database  
 - Improve test coverage  
 
+# Bugs 
+- [x] navHandler is not defined on console
+- [x] Logout button is broken - says can’t find that page / doesnt work on mobile
+- [x] Register works if I just click register e.g not entering username or password values
+- [ ] Register button should lead to #addhabits page - at this point profile is blank / but for users logging in, it makes sense to go to #profile
+- [ ] Create new habit requires refresh before it appear on page
+- [ ] Habits not appearing after login until page refresh 
+- [ ] Buttons won't press on mobile.. too small? 
+- [ ] Authentication cannot take place unless the "I am not a robot" checkbox has been checked
+- [ ] Date in wrong format
+- [ ] Streaks not working 
 
 # Wins & Challenges 
 
@@ -71,6 +82,9 @@ To teardown docker compose completely
 - Issues with date formatting  
 - Time!  
 
+# Code Snippet
+
+[![code-snippet-rate-limiter.png](https://i.postimg.cc/6Q3HzDBk/code-snippet-rate-limiter.png)](https://postimg.cc/68kLpb2c)
 
 Should have:
 
@@ -81,5 +95,4 @@ Could have:
 Badges
 Contribution guide
 Code snippets
-Bugs
 Future features
