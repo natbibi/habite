@@ -52,7 +52,7 @@ function createAddHabitForm() {
     fields = [
         { tag: 'label', attributes: { id: 'add-habits-dropdown-label', for: 'habits-dropdown' }, text: 'I want to' },
         { tag: 'select', attributes:{ id: 'add-habits-dropdown', name: 'habits-dropdown' } },
-        { tag: 'input', attributes: { id: 'add-habits-frequency', name: 'frequency', type: 'number', placeholder: '3', min: "1", max: "24", required: "true" } },
+        { tag: 'input', attributes: { id: 'add-habits-frequency', name: 'frequency', type: 'number', placeholder: 'e.g 3', min: "1", max: "24", required: "true" } },
         { tag: 'label', attributes: { id: 'add-habits-frequency-label', for: 'frequency' }, text: 'times per day' },
         { tag: 'button', attributes: { class: 'add-habit-btn', type: 'submit', name: 'habit-sbmt'}, text: "Track"}
     ];
@@ -101,8 +101,8 @@ function createAddHabitForm() {
 
 function createNewHabitForm() {
     fields = [
-        { tag: 'label', attributes: { class: 'new-habit-name', for: 'new-habit-name' }, text: 'Custom habit' },
-        { tag: 'input', attributes: { class: 'new-habit-name', name: 'new-habit-name', type: 'text', placeholder: 'use habite', required: "true" }, text: 'Add a custom habit' },
+        { tag: 'label', attributes: { class: 'new-habit-name', for: 'new-habit-name' }, text: 'Habit name' },
+        { tag: 'input', attributes: { class: 'new-habit-name', name: 'new-habit-name', type: 'text', placeholder: 'e.g noodle farming', required: "true" }, text: 'Add a custom habit' },
         { tag: 'button', attributes: { class: 'new-habit-btn', type: 'submit', name: 'new-habit-sbmt' }, text: "Add" }
     ];
 
@@ -291,9 +291,9 @@ function renderStreaks() {
 function renderMyHabits() {
     profile.habitsHelper();
 }
-async function renderProfile() {
-    await renderStreaks();
-    await renderMyHabits();
+ function renderProfile() {
+     renderStreaks();
+     renderMyHabits();
 }
 
 // *******************************************************************
@@ -508,7 +508,6 @@ const main = document.querySelector('main');
 const publicRoutes = ['#', '#login', '#register'];
 const privateRoutes = ['#profile', '#addhabits']; // add #profile and #addhabits
 
-// window.addEventListener('hashchange', updateContent);
 
 function updateMain(path) {
     // Clear page
@@ -528,14 +527,18 @@ function updateMain(path) {
                 forms.renderLoginLink();
                 break;
             case '#profile':
-                rHelpers.renderHeading();
-                content.renderProfile(); break;
+                rHelpers.renderHeading("small");
+                content.renderProfile(); 
+                break;
+
             case '#addhabits':
-                rHelpers.renderHeading()
+                rHelpers.renderHeading("small")
                 addHabits.renderAddHabitsPage();
+               
                 break;
             case '#logout':
-                auth.logout(); break;
+                rHelpers.renderHeading()
+                auth.logout(); hideFooter(); break;
             default:
                 content.render404(); break;
         }
@@ -553,6 +556,11 @@ function updateContent() {
     } else {
         updateMain(path);
     }
+}
+
+function hideFooter() {
+    const showFooter = document.getElementById('footer')
+    showFooter.style.display = 'none';    
 }
 
 module.exports = { updateContent };
@@ -805,7 +813,7 @@ function renderNavBar() {
     nav.appendChild(loginLink);
 }
 
-function renderHeading() {
+function renderHeading(size) {
     header = document.querySelector('header');
 
     const heading = document.createElement('div');
@@ -815,7 +823,11 @@ function renderHeading() {
     iconDiv.id = "icon-div";
 
     const icon = document.createElement('img');
-    icon.src = '/images/habite-logo.png';
+    icon.src = '/images/logo.png';
+
+    if (size === "small") {
+        header.style.maxWidth = "300px";
+    }
     // icon.id = "title-icon";
     iconDiv.appendChild(icon);
 
