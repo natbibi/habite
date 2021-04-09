@@ -203,7 +203,7 @@ module.exports = {
 };
 },{"./auth":2,"./forms":4,"./requests":9}],2:[function(require,module,exports){
 const jwt_decode = require('jwt-decode')
-const apiUrl = 'https://habit-your-way.herokuapp.com' // http://localhost:3000
+const apiUrl = 'https://debug3213123.herokuapp.com' // http://localhost:3000
 
 async function requestLogin(e){
     try {
@@ -507,7 +507,6 @@ const main = document.querySelector('main');
 const publicRoutes = ['#', '#login', '#register'];
 const privateRoutes = ['#profile', '#addhabits']; // add #profile and #addhabits
 
-// window.addEventListener('hashchange', updateContent);
 
 function updateMain(path) {
     // Clear page
@@ -534,7 +533,7 @@ function updateMain(path) {
                 addHabits.renderAddHabitsPage();
                 break;
             case '#logout':
-                auth.logout(); break;
+                auth.logout(); hideFooter(); break;
             default:
                 content.render404(); break;
         }
@@ -552,6 +551,11 @@ function updateContent() {
     } else {
         updateMain(path);
     }
+}
+
+function hideFooter() {
+    const showFooter = document.getElementById('footer')
+    showFooter.style.display = 'none';    
 }
 
 module.exports = { updateContent };
@@ -845,7 +849,7 @@ module.exports = {
     renderHeading
 }
 },{}],9:[function(require,module,exports){
-const apiUrl = 'https://habit-your-way.herokuapp.com' // http://localhost:3000
+const apiUrl = 'https://debug3213123.herokuapp.com' // http://localhost:3000
 
 async function getData(path) {
     try {

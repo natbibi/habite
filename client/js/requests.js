@@ -1,4 +1,4 @@
-const apiUrl = 'https://habit-your-way.herokuapp.com' // http://localhost:3000
+const apiUrl = 'https://debug3213123.herokuapp.com' // http://localhost:3000
 
 async function getData(path) {
     try {
