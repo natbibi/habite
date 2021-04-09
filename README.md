@@ -2,14 +2,15 @@
 
 📝 [![Netlify Status](https://api.netlify.com/api/v1/badges/9d4282f1-2e4a-4d3c-baa0-580d6a1dbbb0/deploy-status)](https://app.netlify.com/sites/condescending-yalow-091244/deploys)  🚀  ![Heroku](https://pyheroku-badge.herokuapp.com/?app=habit-your-way&style=flat)  ⚖️  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A mobile friendly web-app that allows users to register for their own account. They can easily log and record their progress for any habits they wish to track, mark habits as complete for the day, and see their most recent completion streaks. The data is persists in a Postgres Database connected to Heroku.  
+A mobile friendly web-app that allows users to register for their own account. They can easily log and record their progress for any habits they wish to track, mark habits as complete for the day, and see their most recent completion streaks. The data is persisted in a Postgres Database connected to Heroku.  
 
 # Description
 
 Habité! The name itself comes from the French word for “live”, which means our app is more than just a tool.  It’s a way for people to define their lifestyle choices and, more importantly, to do it their way!  
-
-<include screenshots here>
-
+  
+<img width="1000" alt="habite" src="https://user-images.githubusercontent.com/58271566/114206025-cf58bf80-9952-11eb-9d02-2afd378417ab.png">
+  
+  
 # Installation & usage
 
 ### For our app to be run on your local machine:
@@ -30,12 +31,12 @@ To teardown docker compose completely
 
 # Technologies
 
-## Dependencies:
+### Dependencies:
 **Api:** cors, express, bcrypt, dotenv, jsonwebtoken, pg, sql-template-strings, express-rate-limit  
 
 **Client:** http-server, jwt-decode  
 
-## DevDependencies:
+### DevDependencies:
 **Api:** jest, supertest, nodemon
 
 **Client:** watchify, concurrently, jest, jest-fetch-mock, coverage, dotenv, 
@@ -83,16 +84,14 @@ To teardown docker compose completely
 - Time!  
 
 # Code Snippet
+<img src="https://user-images.githubusercontent.com/58271566/114206148-f6af8c80-9952-11eb-90ae-eb6cbc47eaf9.png" width="600">
 
-[![code-snippet-rate-limiter.png](https://i.postimg.cc/6Q3HzDBk/code-snippet-rate-limiter.png)](https://postimg.cc/68kLpb2c)
-
-Should have:
-
-Screenshots/Images
-
-Could have:
-
-Badges
-Contribution guide
-Code snippets
-Future features
+# Future Features
+- Graphs
+- Refresh Tokens
+- Email notifications / reminders
+- Social networking (add friends and compete!)
+- Login API integration
+- Progress sharing
+- Password recovery
+- Dark mode
