@@ -29,7 +29,7 @@ function renderNavBar() {
     nav.appendChild(loginLink);
 }
 
-function renderHeading() {
+function renderHeading(size) {
     header = document.querySelector('header');
 
     const heading = document.createElement('div');
@@ -39,7 +39,11 @@ function renderHeading() {
     iconDiv.id = "icon-div";
 
     const icon = document.createElement('img');
-    icon.src = '/images/habite-logo.png';
+    icon.src = '/images/logo.png';
+
+    if (size === "small") {
+        header.style.maxWidth = "300px";
+    }
     // icon.id = "title-icon";
     iconDiv.appendChild(icon);
 

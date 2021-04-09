@@ -29,13 +29,17 @@ function updateMain(path) {
                 forms.renderLoginLink();
                 break;
             case '#profile':
-                rHelpers.renderHeading();
-                content.renderProfile(); break;
+                rHelpers.renderHeading("small");
+                content.renderProfile(); 
+                break;
+
             case '#addhabits':
-                rHelpers.renderHeading()
+                rHelpers.renderHeading("small")
                 addHabits.renderAddHabitsPage();
+               
                 break;
             case '#logout':
+                rHelpers.renderHeading()
                 auth.logout(); hideFooter(); break;
             default:
                 content.render404(); break;

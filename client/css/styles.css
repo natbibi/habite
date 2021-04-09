@@ -8,22 +8,24 @@ body{
 header {
     min-height: 70px;
     text-align: center;
+    margin: 20px auto;
 }
 
 h1 {
+    margin: 10px 0;
     font-size: 18px;
     padding-bottom: 5px;
     color: rgb(80, 80, 80);
 }
 
-/* .heading {
-    background-color: pink;
-    border-radius: 15%;
-    padding-top: 3rem;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-} */
+.heading {
+    margin: 2em auto;
+}
+
+#icon-div>img {
+    position: relative;
+    width: 80%;    
+}
 
 #title-icon {
     font-size: 100px;
