@@ -75,6 +75,7 @@ function formatData(listInfo, dataInfo, streakInfo) {
 
       dataInfo.forEach(entry => {
         item.day_entries.forEach(day => {
+           (day.date, entry.date)
           if (day.date === entry.date && item.user_habit_id === entry.user_habit_id) {
             day.total = entry.total_completed
           }
