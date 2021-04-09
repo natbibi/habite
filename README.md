@@ -1,9 +1,14 @@
-# co-habiters
+# Project: Habité
 
 📝 [![Netlify Status](https://api.netlify.com/api/v1/badges/9d4282f1-2e4a-4d3c-baa0-580d6a1dbbb0/deploy-status)](https://app.netlify.com/sites/condescending-yalow-091244/deploys)  🚀  ![Heroku](https://pyheroku-badge.herokuapp.com/?app=habit-your-way&style=flat)  ⚖️  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-# Project description
+A mobile friendly web-app that allows users to register for their own account. They can easily log and record their progress for any habits they wish to track, mark habits as complete for the day, and see their most recent completion streaks. The data is persists in a Postgres Database connected to Heroku.  
 
+# Description
+
+Habité! The name itself comes from the French word for “live”, which means our app is more than just a tool.  It’s a way for people to define their lifestyle choices and, more importantly, to do it their way!  
+
+<include screenshots here>
 
 # Installation & usage
 
@@ -26,36 +31,45 @@ To teardown docker compose completely
 # Technologies
 
 ## Dependencies:
-**Server:** cors, express, bcrypt, dotenv, jsonwebtoken, pg, sql-template-strings, express-rate-limit  
+**Api:** cors, express, bcrypt, dotenv, jsonwebtoken, pg, sql-template-strings, express-rate-limit  
 
-**Client:** 
+**Client:** http-server, jwt-decode  
 
 ## DevDependencies:
-**Server:** jest, supertest, nodemon
+**Api:** jest, supertest, nodemon
 
-**Client:** watchify, concurrently, jest, jest-fetch-mock, coverage
-
+**Client:** watchify, concurrently, jest, jest-fetch-mock, coverage, dotenv, 
 
 # Process
 1. Plan design and project's MoSCoW  
-2. Set up Docker Compose containers for Client, Server, Database  
-3. Set up file structure 
-4. Server up and running, database seeds and schema created, client skeleton added 
-5. Deploy Client to Netlify and API to Heroku with Heroku Postgres database add-on  
+2. Create a mockup of design, layout and basic functionality  
+3. Set up Docker Compose containers for Client, Server, Database  
+4. Set up file structure 
+5. Server up and running, database seeds and schema created, client skeleton added 
+6. Deploy Client to Netlify and API to Heroku with Heroku Postgres database add-on  
 
 ### API
 
 ### Client 
 - Write layout tests
+- Set up file structure, link stylesheets, packages, fonts, and bundle js files 
+- Download necessary packages, dockerfile and test suites
+- Split up tasks for layout, content, requests, auth, and testing    
+- Connect front end to backend via fetch requests to api and database  
+- Improve test coverage  
 
 
 # Wins & Challenges 
 
 ## Wins 
+- Working great together between front end and back end  
+- Testing! Functions are split up and easy to test  
 
 ## Challenges 
 - Setting up Heroku Postgres - issues with SSL and database credentials
 - Writing a lot of js before bundling 
+- Issues with date formatting  
+- Time!  
 
 
 Should have:
