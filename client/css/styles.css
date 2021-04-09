@@ -171,3 +171,12 @@ input[type='submit'] {
 input[type='submit']:hover {
     background-color: rgb(110, 110, 110);
 }
+
+.input-success {
+    background-color: rgb(109, 204, 109);
+}
+
+
+.input-fail {
+    background-color: rgb(196, 107, 107);
+}
