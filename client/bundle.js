@@ -141,8 +141,8 @@ module.exports = {
     createNewHabitForm
 };
 },{"./auth":2,"./forms":4,"./requests":9}],2:[function(require,module,exports){
-(function (process){(function (){
 const jwt_decode = require('jwt-decode')
+const apiUrl = 'https://habit-your-way.herokuapp.com' // http://localhost:3000
 
 async function requestLogin(e){
     try {
@@ -151,7 +151,7 @@ async function requestLogin(e){
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(Object.fromEntries(new FormData(e.target)))
         }
-        const r = await fetch(`${process.env.API || "http://localhost:3000"}/auth/login`, options)
+        const r = await fetch(`${apiUrl}/auth/login`, options)
         const data = await r.json()
         if (!data.success) { throw new Error(data.err); }
         login(data.token);
@@ -167,7 +167,7 @@ async function requestRegistration(e) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(Object.fromEntries(new FormData(e.target)))
         }
-        const r = await fetch(`${process.env.API || "http://localhost:3000"}/auth/register`, options)
+        const r = await fetch(`${apiUrl}/auth/register`, options)
         const data = await r.json()
         if (data.err){ throw Error(data.err) }
         requestLogin(e);
@@ -201,8 +201,7 @@ module.exports = {
     login,
     logout
 }
-}).call(this)}).call(this,require('_process'))
-},{"_process":11,"jwt-decode":10}],3:[function(require,module,exports){
+},{"jwt-decode":10}],3:[function(require,module,exports){
 const rHelpers = require('./renderHelpers');
 const forms = require('./forms');
 const requests = require('./requests')
