@@ -51,7 +51,7 @@ function createAddHabitForm() {
     fields = [
         { tag: 'label', attributes: { id: 'add-habits-dropdown-label', for: 'habits-dropdown' }, text: 'I want to' },
         { tag: 'select', attributes:{ id: 'add-habits-dropdown', name: 'habits-dropdown' } },
-        { tag: 'input', attributes: { id: 'add-habits-frequency', name: 'frequency', type: 'number', placeholder: '3', min: "1", max: "24", required: "true" } },
+        { tag: 'input', attributes: { id: 'add-habits-frequency', name: 'frequency', type: 'number', placeholder: 'e.g 3', min: "1", max: "24", required: "true" } },
         { tag: 'label', attributes: { id: 'add-habits-frequency-label', for: 'frequency' }, text: 'times per day' },
         { tag: 'button', attributes: { class: 'add-habit-btn', type: 'submit', name: 'habit-sbmt'}, text: "Track"}
     ];
@@ -100,8 +100,8 @@ function createAddHabitForm() {
 
 function createNewHabitForm() {
     fields = [
-        { tag: 'label', attributes: { class: 'new-habit-name', for: 'new-habit-name' }, text: 'Custom habit' },
-        { tag: 'input', attributes: { class: 'new-habit-name', name: 'new-habit-name', type: 'text', placeholder: 'use habite', required: "true" }, text: 'Add a custom habit' },
+        { tag: 'label', attributes: { class: 'new-habit-name', for: 'new-habit-name' }, text: 'Habit name' },
+        { tag: 'input', attributes: { class: 'new-habit-name', name: 'new-habit-name', type: 'text', placeholder: 'e.g noodle farming', required: "true" }, text: 'Add a custom habit' },
         { tag: 'button', attributes: { class: 'new-habit-btn', type: 'submit', name: 'new-habit-sbmt' }, text: "Add" }
     ];
 

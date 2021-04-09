@@ -25,9 +25,9 @@ function renderStreaks() {
 function renderMyHabits() {
     profile.habitsHelper();
 }
-async function renderProfile() {
-    await renderStreaks();
-    await renderMyHabits();
+ function renderProfile() {
+     renderStreaks();
+     renderMyHabits();
 }
 
 // *******************************************************************
