@@ -7,16 +7,13 @@ process.env.API || "http://localhost:3000";
 
 // Create initial bindings
 function initBindings() {
-    // e.preventDefault();
     // Initial bindings
-    console.log('You found our javaScript')
     layout.updateContent();
     window.addEventListener('hashchange', layout.updateContent);
 
     // Click event delegation
     const main = document.querySelector('main');
     const profile = document.getElementById('profile');
-    const bottomNav = document.getElementById('bottom-nav-bar');
 
     main.addEventListener('click', formHandler);
     profile.addEventListener('click', navFunc);

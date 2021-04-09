@@ -15,7 +15,8 @@ function renderAddHabitsPage() {
 
     // render add habit form
     const addHabitForm = document.createElement("div");
-    addHabitForm.className = "form add-habit-form";
+    addHabitForm.id = "add-habit-form";
+    addHabitForm.className = "form-container";
     const addHabitFormHeading = document.createElement("h2");
     addHabitFormHeading.textContent = "Track a habit";
 
@@ -24,7 +25,8 @@ function renderAddHabitsPage() {
 
     // render create habit form
     const newHabitForm = document.createElement("div");
-    newHabitForm.className = "form new-habit-form";
+    newHabitForm.id = "new-habit-form";
+    newHabitForm.className = "form-container";
     const newHabitFormHeading = document.createElement("h2");
     newHabitFormHeading.textContent = "Create a new habit";
 
@@ -32,7 +34,8 @@ function renderAddHabitsPage() {
     newHabitForm.appendChild(createNewHabitForm());
 
     const deleteHabitForm = document.createElement("div");
-    deleteHabitForm.className = "form delete-habit-form";
+    deleteHabitForm.id = "delete-habit-form";
+    deleteHabitForm.className = "form-container";
     const deleteHabitFormHeading = document.createElement("h2");
     deleteHabitFormHeading.textContent = "Stop tracking a habit";
 
@@ -47,12 +50,11 @@ function renderAddHabitsPage() {
 function createAddHabitForm() {
     // form fields
     fields = [
-        { tag: 'label', attributes: { id: 'add-habits-dropdown', for: 'habits-dropdown' }, text: 'Choose a habit:' },
+        { tag: 'label', attributes: { id: 'add-habits-dropdown-label', for: 'habits-dropdown' }, text: 'I want to' },
         { tag: 'select', attributes:{ id: 'add-habits-dropdown', name: 'habits-dropdown' } },
-        { tag: 'label', attributes: { id: 'add-habits-frequency', for: 'frequency' }, text: 'How often?' },
         { tag: 'input', attributes: { id: 'add-habits-frequency', name: 'frequency', type: 'number', placeholder: '3', min: "1", max: "24", required: "true" } },
-        { tag: 'p', attributes: {},  text: "times per day" },
-        { tag: 'input', attributes: { id: 'add-habits-btn', type: 'submit', name: 'habit-sbmt', value: 'Track Habit' } }
+        { tag: 'label', attributes: { id: 'add-habits-frequency-label', for: 'frequency' }, text: 'times per day' },
+        { tag: 'button', attributes: { class: 'add-habit-btn', type: 'submit', name: 'habit-sbmt'}, text: "Track"}
     ];
 
     const form = forms.createForm(fields);
@@ -70,15 +72,28 @@ function createAddHabitForm() {
             })
         });
 
-    form.onsubmit = (e) => {
+    form.onsubmit = async (e) => {
         e.preventDefault();
         const selected = habitsDropdown.options[habitsDropdown.selectedIndex].getAttribute('data-id');
-        const path = `users/${auth.currentUser()}/habits`
-        const data = {
-            habit_id: selected,
-            frequency: freqInput.value
+        // check if habit is already being tracked
+        const currentHabits = await req.getData(`users/${auth.currentUser()}/habits`);
+        const isTracked = currentHabits.some(habit => habit.habit_id == selected);
+        const btn = e.target.querySelector('button');
+
+        if (!isTracked) {
+            const path = `users/${auth.currentUser()}/habits`
+            const data = {
+                habit_id: selected,
+                frequency: freqInput.value
+            }
+            req.postData(path, data);
+
+            inputFeedback(btn, "Tracked!", true);
+
+        } else {
+            inputFeedback(btn, "Already tracked!", false);
         }
-        req.postData(path, data);
+        form.reset();
     };
 
     return form;
@@ -86,9 +101,9 @@ function createAddHabitForm() {
 
 function createNewHabitForm() {
     fields = [
-        { tag: 'label', attributes: { class: 'new-habit-name', for: 'new-habit-name' }, text: 'Add a custom habit' },
+        { tag: 'label', attributes: { class: 'new-habit-name', for: 'new-habit-name' }, text: 'Custom habit' },
         { tag: 'input', attributes: { class: 'new-habit-name', name: 'new-habit-name', type: 'text', placeholder: 'use habite', required: "true" }, text: 'Add a custom habit' },
-        { tag: 'input', attributes: { class: 'new-habit-btn', type: 'submit', name: 'new-habit-sbmt' } }
+        { tag: 'button', attributes: { class: 'new-habit-btn', type: 'submit', name: 'new-habit-sbmt' }, text: "Add" }
     ];
 
     const form = forms.createForm(fields);
@@ -96,8 +111,22 @@ function createNewHabitForm() {
 
     form.onsubmit = async (e) => {
         e.preventDefault();
-        const data = { name: nameInput.value }
-        req.postData(`habits`, data);
+
+        const allHabits = await req.getData(`habits`);
+        const exists = allHabits.some(habit => habit.name.includes(nameInput.value));
+
+        const btn = e.target.querySelector('button');
+
+        if (!exists) {
+            const data = { name: nameInput.value }
+            await req.postData(`habits`, data);
+            form.reset();
+            await refreshForm(document.getElementById("add-habit-form"));
+            inputFeedback(btn, "Added!", true);
+        } else {
+            inputFeedback(btn, "Exists!", false);
+        }
+        
     };
 
     return form;
@@ -105,11 +134,10 @@ function createNewHabitForm() {
 
 function createDeleteHabitForm() {
     fields = [
-        { tag: 'label', attributes: { class: 'delete-habit', for: 'delete-habit-dropdown' }, text: 'Habit' },
+        { tag: 'label', attributes: { class: 'delete-habit', for: 'delete-habit-dropdown' }, text: "I don't want to" },
         { tag: 'select', attributes: { class: 'delete-habit', name: 'delete-habit-dropdown' } },
-        { tag: 'input', attributes: { class: 'new-habit-btn', type: 'submit', name: 'new-habit-sbmt' } }
+        { tag: 'button', attributes: { class: 'delete-habit-btn', type: 'submit', name: 'delete-habit-sbmt' }, text: "Delete" }
     ];
-
 
     const form = forms.createForm(fields);
     const userHabitsDropdown = form.querySelector("select");
@@ -125,13 +153,46 @@ function createDeleteHabitForm() {
         });
 
 
+
     form.onsubmit = async (e) => {
         e.preventDefault();
+        const btn = e.target.querySelector('button');
         const selected = userHabitsDropdown.options[userHabitsDropdown.selectedIndex].getAttribute('data-id');
-        req.deleteData(`users/${auth.currentUser()}/habits/${selected}`);
+        await req.deleteData(`users/${auth.currentUser()}/habits/${selected}`);
+        form.reset();
+        
+        await refreshForm(document.getElementById("delete-habit-form"));
+        
+       
     };
 
     return form;
+}
+
+async function refreshForm(container) {
+    const formName = container.id;
+  
+    let newForm;
+    switch(formName) {
+        case "add-habit-form": newForm = await createAddHabitForm(); break;
+        case "new-habit-form": newForm = await createNewHabitForm(); break;
+        case "delete-habit-form": newForm = await createDeleteHabitForm(); break;
+        default: break;
+    }
+
+    const oldForm = container.querySelector("form");
+    container.replaceChild(newForm, oldForm);
+}
+
+function inputFeedback(element, text, success) {
+    const prevText = element.textContent;
+    element.textContent = text;
+    const className = success ? "input-success" : "input-fail";
+    element.classList.toggle(className);
+    setTimeout(() => {
+        element.textContent = prevText;
+        element.classList.toggle(className);
+    }, 2000)
 }
 
 module.exports = { 
@@ -209,9 +270,6 @@ const requests = require('./requests')
 const auth = require('./auth')
 const profile = require('./profile');
 
-const username = auth.currentUser();
-const nav = document.querySelector('nav');
-const heading = document.querySelector('header');
 const main = document.querySelector('main');
 // const newDiv = document.createElement('div').cloneNode();
 
@@ -309,7 +367,6 @@ function renderRegisterForm() {
 
         const pass = document.getElementById("password");
         const confirm = document.getElementById("password-check");
-        console.log(document.getElementById("password-check"));
 
         if (pass.value === confirm.value) {
             try {
@@ -449,13 +506,12 @@ const heading = document.querySelector('header');
 const main = document.querySelector('main');
 
 const publicRoutes = ['#', '#login', '#register'];
-const privateRoutes = []; // add #profile and #addhabits
+const privateRoutes = ['#profile', '#addhabits']; // add #profile and #addhabits
 
 // window.addEventListener('hashchange', updateContent);
 
 function updateMain(path) {
-    console.log("hello updating main")
-
+    // Clear page
     nav.innerHTML = '';
     main.innerHTML = '';
     heading.innerHTML = '';
@@ -480,10 +536,6 @@ function updateMain(path) {
                 break;
             case '#logout':
                 auth.logout(); break;
-            // case '#more':
-            //     renderLandingPage(); renderMenuMessage(); break;
-            // case '#top':
-            //     break;
             default:
                 content.render404(); break;
         }
@@ -496,8 +548,8 @@ function updateContent() {
     const path = window.location.hash;
     if (privateRoutes.includes(path) && !auth.currentUser()) {
         window.location.hash = ''
-        // } else if (!privateRoutes.includes(path) && auth.currentUser()) {
-        //     window.location.hash = 'profile';
+    } else if (!privateRoutes.includes(path) && auth.currentUser() && window.location.hash != '#logout') {
+        window.location.hash = 'profile';
     } else {
         updateMain(path);
     }
@@ -562,7 +614,7 @@ async function streaksHelper() {
         let currentStreakTotal = streaks.streakData.current_streak;
 
         let dayNumber = '';
-        console.log(dayNumber);
+
         if (currentStreakTotal === 1) {
             dayNumber = '🔥'
         } else {
