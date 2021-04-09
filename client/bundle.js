@@ -143,7 +143,6 @@ module.exports = {
 },{"./auth":2,"./forms":4,"./requests":9}],2:[function(require,module,exports){
 (function (process){(function (){
 const jwt_decode = require('jwt-decode')
-const apiUrl = process.env.API_URL || 'https://habit-your-way.herokuapp.com'
 
 async function requestLogin(e){
     try {
@@ -152,7 +151,7 @@ async function requestLogin(e){
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(Object.fromEntries(new FormData(e.target)))
         }
-        const r = await fetch(`${apiUrl}/auth/login`, options)
+        const r = await fetch(`${process.env.API || "http://localhost:3000"}/auth/login`, options)
         const data = await r.json()
         if (!data.success) { throw new Error(data.err); }
         login(data.token);
@@ -168,7 +167,7 @@ async function requestRegistration(e) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(Object.fromEntries(new FormData(e.target)))
         }
-        const r = await fetch(`${apiUrl}/auth/register`, options)
+        const r = await fetch(`${process.env.API || "http://localhost:3000"}/auth/register`, options)
         const data = await r.json()
         if (data.err){ throw Error(data.err) }
         requestLogin(e);
