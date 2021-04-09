@@ -8,7 +8,7 @@ const heading = document.querySelector('header');
 const main = document.querySelector('main');
 
 const publicRoutes = ['#', '#login', '#register'];
-const privateRoutes = []; // add #profile and #addhabits
+const privateRoutes = ['#profile', '#addhabits']; // add #profile and #addhabits
 
 // window.addEventListener('hashchange', updateContent);
 
@@ -39,10 +39,6 @@ function updateMain(path) {
                 break;
             case '#logout':
                 auth.logout(); break;
-            // case '#more':
-            //     renderLandingPage(); renderMenuMessage(); break;
-            // case '#top':
-            //     break;
             default:
                 content.render404(); break;
         }
@@ -55,8 +51,8 @@ function updateContent() {
     const path = window.location.hash;
     if (privateRoutes.includes(path) && !auth.currentUser()) {
         window.location.hash = ''
-        // } else if (!privateRoutes.includes(path) && auth.currentUser()) {
-        //     window.location.hash = 'profile';
+        } else if (!privateRoutes.includes(path) && auth.currentUser()) {
+            window.location.hash = 'profile';
     } else {
         updateMain(path);
     }
