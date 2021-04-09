@@ -10,52 +10,66 @@ header {
     text-align: center;
 }
 
-.heading {
+h1 {
+    font-size: 18px;
+    padding-bottom: 5px;
+    color: rgb(80, 80, 80);
+}
+
+/* .heading {
     background-color: pink;
     border-radius: 15%;
     padding-top: 3rem;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
-}
+} */
 
 #title-icon {
     font-size: 100px;
 }
 
+img {
+    max-width: 400px;
+}
+
 .container {
-    border: solid 2px red;
-    min-height: 100vh;
+    /* min-height: 100vh; */
     display: grid;
     grid-template-rows: min-content;
 }
 
 .streaks-list {
-    border: lightblue 2px solid;
+    border: rgb(158, 187, 250) 2px solid;
+    border-radius: 10px;
     margin: 5px;
     grid-row: 2 / 2;
 }
 
 .habits-list {
-    border: lightblue 2px solid;
+    border: rgb(158, 187, 250) 2px solid;
+    border-radius: 10px;
     margin: 5px;
     grid-row: 1 / 2;
 }
 
 .streaks-heading, .habits-heading {
     padding: 10px;
+    margin: 5px;
     display: grid;
     grid-template-columns: 5fr 1fr;
 }
 
 .habit-container{
     display: grid;
-    grid-template-columns: 3fr 3fr 1fr 1fr 1fr;
+    grid-template-columns: 3fr 2fr 1fr 1fr 1fr;
     grid-gap: 20px;
-    padding: 3px;
+    padding: 6px;
     align-items: center;
     margin: 10px;
-    border: 2px solid green;
+    margin-bottom: 15px;
+    font-size: 16px;
+    /* border: 2px solid green; */
 }
 
 .habits-extras-container {
@@ -63,21 +77,27 @@ header {
     grid-column: 1 / 6;
     grid-gap: 20px;
     margin: 10px;
+    margin: 10px;
+    margin-bottom: 15px;
     flex-direction: row;
-    border: 2px solid green;
+    border: 2px solid lightgray;
+    border-radius: 10px;
+    padding: 6px;
     align-items: center;
+    font-size: 14px;
 }
 
 .habit-extra-item {
     display: grid;
+    align-items: center;
 }
 
 .extras-date {
-    grid-column: 1 / 2;
+    grid-column: 1 / 3;
 }
 
 .extras-progress {
-    grid-column: 2 / 4;
+    grid-column: 3 / 4;
 
 }
 
@@ -85,61 +105,38 @@ header {
     grid-column: 5 / 6;
 }
 
-/* .extras-date, .extras-date-two, .extras-date-three {
-    display: grid;
-    grid-column: 1 / 2;
-    align-items: center;
-}
-
-.extras-date, .extras-progress, .extras-result {
-    grid-row: 1;
-}
-
-.extras-date-two, .extras-progress-two, .extras-result-two {
-    grid-row: 2;
-}
-
-.extras-date-three, .extras-progress-three, .extra-results-three {
-    grid-row: 3;
-}
-
-.extras-progress, .extras-progress-two, .extras-progress-three {
-    display: grid;
-    grid-column: 3 / 4;
-    align-items: center;
-}
-
-.extras-result, .extras-result-two, .extra-results-three {
-    grid-column: 5 / 6;
-} */
-
-
 .streak-container {
     display: grid;
     grid-template-columns: 3fr 3fr;
-    grid-gap: 10px;
+    grid-gap: 9px;
     padding: 3px;
     align-items: center;
     margin: 3px;
-    border: 2px solid purple;
+    padding: 15px;
+    /* border: 2px solid purple; */
 }
 
 .streak-container h5 {
     display: grid;
-    border: 2px solid hotpink;
     grid-column: 1 / 3;
-    font-size: 17px;
+    font-size: 15px;
+    /* border: 2px solid hotpink; */
+    justify-content: center;
 }
 
 .streaks-container {
     display: none;
+    grid-gap: 20px;
 }
 
 .streak-container p:nth-child(2) {
     display: grid;
-    grid-column: 3 / 6;
-    font-size: 12px;
-    border: 2px solid yellow;
+    grid-row: 2;
+    grid-column: 1 / 6;
+    font-size: 14px;
+    font-style: italic;
+    justify-content: center;
+    /* border: 2px solid yellow; */
 }
 
 .streak-container p:nth-child(3) {
@@ -147,7 +144,8 @@ header {
     grid-column: 1 / 6;
     justify-content: center;
     font-size: 12px;
-    border: 2px solid lightcoral;
+    color: grey;
+    /* border: 2px solid lightcoral; */
 }
 
 progress {

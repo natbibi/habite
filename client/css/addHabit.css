@@ -25,9 +25,9 @@ div.form > input, select {
 
 div.form>h2 {
     width: 100%;
-    background-color: #1464f6;
+    background-color:rgb(158, 187, 250);
     color: white;
-    padding: 1em;
+    padding: 0.5em;
     border-radius: 10px;
 
 }
@@ -40,7 +40,7 @@ div form {
 }
 
 form select, input {
-    padding: 1em;
+    padding: 0.7em;
     border-radius: 10px;
     border: none;
     outline: none;
