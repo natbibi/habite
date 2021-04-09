@@ -66,7 +66,7 @@ async function streaksHelper() {
         let message;
 
         if (currentStreakTotal === 0) {
-            message = "Crumbs ... let's get back in the habite!";
+            message = "Crumbs ... let's get back in the habit!";
         } else if (currentStreakTotal > 0 && currentStreakTotal <= 2) {
             message = "Great start!  Keep at it!";
         } else if (currentStreakTotal > 2 && currentStreakTotal <= 7) {
@@ -74,9 +74,9 @@ async function streaksHelper() {
         } else if (currentStreakTotal > 7 && currentStreakTotal <= 14) {
             message = "More than a week effort!";
         } else if (currentStreakTotal > 14) {
-            message = "Rehabite-ation not required here!";
+            message = "Rehabit-ation not required here!";
         } else {
-            message = "Whoops.  No streakers here!";
+            message = "Whoops. No streakers here!";
         }
 
         let currentStreakMessage = document.createElement('p');
