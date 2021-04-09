@@ -6,12 +6,13 @@
 
 div.form {
     /* display: flex; */
-    flex-direction: column;
+    /* flex-direction: column; */
     /* justify-content: flex-start; */
     /* text-align: center; */
-    align-items: center;
+    /* align-items: center; */
 
     /* padding: 1em; */
+    position: relative;
     margin: 1em 0;
     border-radius: 10px;
     box-shadow: 0 2px 8px 4px rgb(184, 184, 184);
@@ -33,10 +34,19 @@ div.form>h2 {
 }
 
 div form {
-    /* width: 80%; */
     padding: 1em;
     vertical-align: middle;
-    
+    /* position: relative; */
+}
+
+/* form label {
+    display: inline-block;
+    left: 40%;
+} */
+
+form label:not(:first-child)::before {
+    content:'\a';
+    white-space: pre;
 }
 
 form select, input {
@@ -46,23 +56,43 @@ form select, input {
     outline: none;
     margin-left: 1em;
     background-color: rgb(231, 231, 231);
+    font-size: 1em;
 }
 
-form > button {
-    background-color: blue;
+.add-habit-btn, .new-habit-btn, .delete-habit-btn {
+    position: relative;
+    right: 0;
+    text-align: right;
+    vertical-align: middle;
+    font-family: "Font Awesome 5 Free"; 
+    font-weight: 900; 
+    font-size: 2em;
+    line-height: 1em;
+    margin-left: 0.5em;
+    
 }
 
-form label {
-    margin-right: 1em;
+.add-habit-btn::before {
+    content: "\f058";
+    color: rgb(19, 185, 82);
 }
 
-form label::before {
-    content:'\a';
-    white-space: pre;
+.new-habit-btn::before {
+    content: "\f055";
+    color: rgb(24, 92, 218);
 }
 
+.delete-habit-btn::before {
+    content: "\f1f8";
+    color: rgb(177, 29, 29);
+}
+
+
+/* 
 form input[type='submit'] {
     display: block;
     width: 100%;
     margin: 1em auto
-}
+} */
+
+

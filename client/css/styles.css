@@ -152,7 +152,7 @@ progress {
     height: 30px
 }
 
-button, .increase-freq-btn, .minus-btn, .see-more-btn {
+button, .increase-freq-btn, .minus-btn, .see-more-btn{
   font-size: 18px;
   cursor: pointer;
   border: none;
