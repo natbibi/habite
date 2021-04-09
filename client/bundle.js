@@ -526,13 +526,17 @@ function updateMain(path) {
                 forms.renderLoginLink();
                 break;
             case '#profile':
-                rHelpers.renderHeading();
-                content.renderProfile(); break;
+                rHelpers.renderHeading("small");
+                content.renderProfile(); 
+                break;
+
             case '#addhabits':
-                rHelpers.renderHeading()
+                rHelpers.renderHeading("small")
                 addHabits.renderAddHabitsPage();
+               
                 break;
             case '#logout':
+                rHelpers.renderHeading()
                 auth.logout(); hideFooter(); break;
             default:
                 content.render404(); break;
@@ -565,7 +569,6 @@ const forms = require('./forms');
 const requests = require('./requests')
 const auth = require('./auth')
 
-const username = auth.currentUser();
 const nav = document.querySelector('nav');
 const heading = document.querySelector('header');
 const main = document.querySelector('main');
@@ -574,10 +577,10 @@ async function streaksHelper() {
     const showFooter = document.getElementById('footer')
     showFooter.style.display = 'block';
     const greeting = document.createElement('h1')
-    greeting.textContent = `Hi there, ${localStorage.getItem('username')}! 👋🏼`;
+    greeting.textContent = `Hi there, ${auth.currentUser()}! 👋🏼`;
     heading.appendChild(greeting);
 
-    const userData = await requests.getData(`users/${username}/habits/entries`);
+    const userData = await requests.getData(`users/${auth.currentUser()}/habits/entries`);
     if (requests.getData.err) { return }
     console.log(userData)
     const streaks = document.createElement('div')
@@ -655,7 +658,7 @@ async function streaksHelper() {
 }
 
 async function habitsHelper() {
-    const habitsList = await requests.getData(`users/${username}/habits/entries`);
+    const habitsList = await requests.getData(`users/${auth.currentUser()}/habits/entries`);
     if (habitsList.err) { return }
     const habits = document.createElement('div')
     habits.className = "habits-list"
@@ -706,7 +709,7 @@ async function habitsHelper() {
             } else { currentHabitTotal++ }
             try {
                 const data = { user_habit_id: currentHabitID, completed: true }
-                requests.postData(`users/${username}/habits/entries`, data);
+                requests.postData(`users/${auth.currentUser()}/habits/entries`, data);
                 updateProgressBar()
             } catch (err) {
                 throw err
@@ -719,7 +722,7 @@ async function habitsHelper() {
             if (currentHabitTotal === 0) {
             } else { currentHabitTotal-- }
             try {
-                requests.deleteData(`users/${username}/habits/entries/${currentHabitID}`);
+                requests.deleteData(`users/${auth.currentUser()}/habits/entries/${currentHabitID}`);
                 updateProgressBar()
             } catch (err) {
                 throw err
@@ -809,7 +812,7 @@ function renderNavBar() {
     nav.appendChild(loginLink);
 }
 
-function renderHeading() {
+function renderHeading(size) {
     header = document.querySelector('header');
 
     const heading = document.createElement('div');
@@ -819,7 +822,11 @@ function renderHeading() {
     iconDiv.id = "icon-div";
 
     const icon = document.createElement('img');
-    icon.src = '/images/habite-logo.png';
+    icon.src = '/images/logo.png';
+
+    if (size === "small") {
+        header.style.maxWidth = "300px";
+    }
     // icon.id = "title-icon";
     iconDiv.appendChild(icon);
 
