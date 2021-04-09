@@ -10,7 +10,6 @@ const main = document.querySelector('main');
 const publicRoutes = ['#', '#login', '#register'];
 const privateRoutes = ['#profile', '#addhabits']; // add #profile and #addhabits
 
-// window.addEventListener('hashchange', updateContent);
 
 function updateMain(path) {
     // Clear page
@@ -37,7 +36,7 @@ function updateMain(path) {
                 addHabits.renderAddHabitsPage();
                 break;
             case '#logout':
-                auth.logout(); break;
+                auth.logout(); hideFooter(); break;
             default:
                 content.render404(); break;
         }
@@ -55,6 +54,11 @@ function updateContent() {
     } else {
         updateMain(path);
     }
+}
+
+function hideFooter() {
+    const showFooter = document.getElementById('footer')
+    showFooter.style.display = 'none';    
 }
 
 module.exports = { updateContent };
