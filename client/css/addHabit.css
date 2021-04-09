@@ -4,65 +4,91 @@
     padding: 0;
 }
 
-div.form {
-    /* display: flex; */
-    flex-direction: column;
-    /* justify-content: flex-start; */
-    /* text-align: center; */
-    align-items: center;
-
-    /* padding: 1em; */
-    margin: 1em 0;
+div.form-container {
+    position: relative;
+    margin: 5px 0;
+    border: rgb(158, 187, 250) 2px solid;
     border-radius: 10px;
-    box-shadow: 0 2px 8px 4px rgb(184, 184, 184);
+    padding: 1px;
+    vertical-align: middle;
+    /* box-shadow: 0 2px 8px 4px rgb(184, 184, 184); */
     /* border: solid 2px green; */
 
 }
 
-div.form > input, select {
-    margin: 1em;
+div.form-container>form {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    align-items: center;
+    margin: 5px;
+    padding: 10px;
+    max-width: 100%;
 }
 
-div.form>h2 {
-    width: 100%;
-    background-color:rgb(158, 187, 250);
-    color: white;
-    padding: 0.5em;
+/* Headings */
+
+div.form-container>h2 {
+    display: flex;
+    /* vertical-align: middle; */
+    /* width: 100%; */
+    color: black;
+    padding: 10px;
+    margin: 5px;
     border-radius: 10px;
-
 }
 
-div form {
-    /* width: 80%; */
-    padding: 1em;
-    vertical-align: middle;
+
+
+.form-container>h2::before{
+    font-family: "Font Awesome 5 Free"; 
+    font-weight: 900; 
+    font-size: 30px;
+    /* line-height: 1em; */
+    margin-right: 10px;
     
 }
 
-form select, input {
+#add-habit-form>h2::before {
+    content: "\f058";
+    color: rgb(19, 185, 82);
+}
+
+#new-habit-form>h2::before {
+    content: "\f055";
+    color: rgb(24, 92, 218);
+}
+
+#delete-habit-form>h2::before {
+    content: "\f1f8";
+    color: rgb(177, 29, 29);
+}
+
+
+
+/* form label:not(:first-child)::before {
+    content:'\a';
+    white-space: pre;
+} */
+
+form select, form input, form button {
+    margin: 5px;
     padding: 0.7em;
     border-radius: 10px;
     border: none;
     outline: none;
-    margin-left: 1em;
+    margin-left: 10px;
     background-color: rgb(231, 231, 231);
+    font-size: 1em;
+    font-family: 'Allerta', sans-serif;
 }
 
-form > button {
-    background-color: blue;
+form select, form input, .add-habit-btn {
+    flex-grow: 1;
 }
 
-form label {
-    margin-right: 1em;
+form button{
+    min-width: 80px;
 }
 
-form label::before {
-    content:'\a';
-    white-space: pre;
-}
 
-form input[type='submit'] {
-    display: block;
-    width: 100%;
-    margin: 1em auto
-}
