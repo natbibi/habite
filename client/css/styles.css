@@ -152,7 +152,7 @@ progress {
     height: 30px
 }
 
-button, .increase-freq-btn, .minus-btn, .see-more-btn {
+button, .increase-freq-btn, .minus-btn, .see-more-btn{
   font-size: 18px;
   cursor: pointer;
   border: none;
@@ -164,3 +164,19 @@ button:hover {
     transform: scale(1.04);
 }
 
+input[type='submit'] {
+    cursor: pointer;
+}
+
+input[type='submit']:hover {
+    background-color: rgb(110, 110, 110);
+}
+
+.input-success {
+    background-color: rgb(109, 204, 109);
+}
+
+
+.input-fail {
+    background-color: rgb(196, 107, 107);
+}
