@@ -13,8 +13,7 @@ const privateRoutes = ['#profile', '#addhabits']; // add #profile and #addhabits
 // window.addEventListener('hashchange', updateContent);
 
 function updateMain(path) {
-    console.log("hello updating main")
-
+    // Clear page
     nav.innerHTML = '';
     main.innerHTML = '';
     heading.innerHTML = '';
@@ -51,8 +50,8 @@ function updateContent() {
     const path = window.location.hash;
     if (privateRoutes.includes(path) && !auth.currentUser()) {
         window.location.hash = ''
-        } else if (!privateRoutes.includes(path) && auth.currentUser()) {
-            window.location.hash = 'profile';
+    } else if (!privateRoutes.includes(path) && auth.currentUser() && window.location.hash != '#logout') {
+        window.location.hash = 'profile';
     } else {
         updateMain(path);
     }

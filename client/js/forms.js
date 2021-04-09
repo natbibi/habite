@@ -50,7 +50,6 @@ function renderRegisterForm() {
 
         const pass = document.getElementById("password");
         const confirm = document.getElementById("password-check");
-        console.log(document.getElementById("password-check"));
 
         if (pass.value === confirm.value) {
             try {

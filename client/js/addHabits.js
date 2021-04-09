@@ -113,7 +113,7 @@ function createNewHabitForm() {
 
         const allHabits = await req.getData(`habits`);
         const exists = allHabits.some(habit => habit.name.includes(nameInput.value));
-        console.log(exists);
+
         const btn = e.target.querySelector('button');
 
         if (!exists) {

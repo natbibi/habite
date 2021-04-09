@@ -4,9 +4,6 @@ const requests = require('./requests')
 const auth = require('./auth')
 const profile = require('./profile');
 
-const username = auth.currentUser();
-const nav = document.querySelector('nav');
-const heading = document.querySelector('header');
 const main = document.querySelector('main');
 // const newDiv = document.createElement('div').cloneNode();
 
