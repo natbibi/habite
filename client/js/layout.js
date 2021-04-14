@@ -8,13 +8,11 @@ const heading = document.querySelector('header');
 const main = document.querySelector('main');
 
 const publicRoutes = ['#', '#login', '#register'];
-const privateRoutes = []; // add #profile and #addhabits
+const privateRoutes = ['#profile', '#addhabits']; // add #profile and #addhabits
 
-// window.addEventListener('hashchange', updateContent);
 
 function updateMain(path) {
-    console.log("hello updating main")
-
+    // Clear page
     nav.innerHTML = '';
     main.innerHTML = '';
     heading.innerHTML = '';
@@ -31,18 +29,18 @@ function updateMain(path) {
                 forms.renderLoginLink();
                 break;
             case '#profile':
-                rHelpers.renderHeading();
-                content.renderProfile(); break;
+                rHelpers.renderHeading("small");
+                content.renderProfile(); 
+                break;
+
             case '#addhabits':
-                rHelpers.renderHeading()
+                rHelpers.renderHeading("small")
                 addHabits.renderAddHabitsPage();
+               
                 break;
             case '#logout':
-                auth.logout(); break;
-            // case '#more':
-            //     renderLandingPage(); renderMenuMessage(); break;
-            // case '#top':
-            //     break;
+                rHelpers.renderHeading()
+                auth.logout(); hideFooter(); break;
             default:
                 content.render404(); break;
         }
@@ -55,11 +53,16 @@ function updateContent() {
     const path = window.location.hash;
     if (privateRoutes.includes(path) && !auth.currentUser()) {
         window.location.hash = ''
-        // } else if (!privateRoutes.includes(path) && auth.currentUser()) {
-        //     window.location.hash = 'profile';
+    } else if (!privateRoutes.includes(path) && auth.currentUser() && window.location.hash != '#logout') {
+        window.location.hash = 'profile';
     } else {
         updateMain(path);
     }
+}
+
+function hideFooter() {
+    const showFooter = document.getElementById('footer')
+    showFooter.style.display = 'none';    
 }
 
 module.exports = { updateContent };

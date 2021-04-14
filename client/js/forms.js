@@ -5,7 +5,7 @@ function renderLoginForm() {
     // Define form fields
     const authFields = [
         { tag: 'label', attributes: { id: 'username-label', for: 'username' }, text: 'Username' },
-        { tag: 'input', attributes: { id: 'username', name: 'username', placeholder: 'Enter your username', required: true } },
+        { tag: 'input', attributes: { id: 'username', name: 'username', autocomplete: "off", placeholder: 'Enter your username', required: true } },
         { tag: 'label', attributes: { id: 'password-label', for: 'password' }, text: 'Password' },
         { tag: 'input', attributes: { id: 'password', type: 'password', name: 'password', placeholder: 'Enter your password', required: true } },
         { tag: 'label', attributes: { id: 'robot-label', for: 'robot-check' }, text: 'Not a robot, (bzzt, dzzt).' },
@@ -34,7 +34,7 @@ function renderLoginForm() {
 function renderRegisterForm() {
     const authFields = [
         { tag: 'label', attributes: { id: 'username-label', for: 'username' }, text: 'Username' },
-        { tag: 'input', attributes: { id: 'username', name: 'username', placeholder: 'Enter your username', required: true } },
+        { tag: 'input', attributes: { id: 'username', name: 'username', autocomplete: "off", placeholder: 'Enter your username', required: true } },
         { tag: 'label', attributes: { id: 'password-label', for: 'password' }, text: 'Password' },
         { tag: 'input', attributes: { id: 'password', type: 'password', name: 'password', placeholder: 'Enter your password', required: true } },
         { tag: 'input', attributes: { id: 'password-check', type: 'password', name: 'password', placeholder: 'Confirm password', required: true } },
@@ -50,7 +50,6 @@ function renderRegisterForm() {
 
         const pass = document.getElementById("password");
         const confirm = document.getElementById("password-check");
-        console.log(document.getElementById("password-check"));
 
         if (pass.value === confirm.value) {
             try {

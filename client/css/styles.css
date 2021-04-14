@@ -7,23 +7,26 @@ body{
 
 header {
     min-height: 70px;
+    max-width: 400px;
     text-align: center;
+    margin: 20px auto;
 }
 
 h1 {
+    margin: 10px 0;
     font-size: 18px;
     padding-bottom: 5px;
     color: rgb(80, 80, 80);
 }
 
-/* .heading {
-    background-color: pink;
-    border-radius: 15%;
-    padding-top: 3rem;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-} */
+.heading {
+    margin: 2em auto;
+}
+
+#icon-div>img {
+    position: relative;
+    width: 80%;    
+}
 
 #title-icon {
     font-size: 100px;
@@ -37,6 +40,12 @@ img {
     /* min-height: 100vh; */
     display: grid;
     grid-template-rows: min-content;
+    overflow-x: auto;
+}
+@media only screen and (max-width: 600px) {
+    .container {
+        margin-bottom: 100px;
+    }
 }
 
 .streaks-list {
@@ -152,7 +161,7 @@ progress {
     height: 30px
 }
 
-button, .increase-freq-btn, .minus-btn, .see-more-btn {
+button, .increase-freq-btn, .minus-btn, .see-more-btn{
   font-size: 18px;
   cursor: pointer;
   border: none;
@@ -164,3 +173,19 @@ button:hover {
     transform: scale(1.04);
 }
 
+input[type='submit'] {
+    cursor: pointer;
+}
+
+input[type='submit']:hover {
+    background-color: rgb(110, 110, 110);
+}
+
+.input-success {
+    background-color: rgb(109, 204, 109);
+}
+
+
+.input-fail {
+    background-color: rgb(196, 107, 107);
+}
