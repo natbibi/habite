@@ -54,7 +54,7 @@ function createAddHabitForm() {
         { tag: 'select', attributes:{ id: 'add-habits-dropdown', name: 'habits-dropdown' } },
         { tag: 'input', attributes: { id: 'add-habits-frequency', name: 'frequency', type: 'number', placeholder: 'e.g 3', min: "1", max: "24", required: "true" } },
         { tag: 'label', attributes: { id: 'add-habits-frequency-label', for: 'frequency' }, text: 'times per day' },
-        { tag: 'button', attributes: { class: 'add-habit-btn', type: 'submit', name: 'habit-sbmt'}, text: "Track"}
+        { tag: 'button', attributes: { class: 'add-habit-btn', type: 'submit', name: 'habit-sbmt' }, text: "Track" }
     ];
 
     const form = forms.createForm(fields);
@@ -102,7 +102,7 @@ function createAddHabitForm() {
 function createNewHabitForm() {
     fields = [
         { tag: 'label', attributes: { class: 'new-habit-name', for: 'new-habit-name' }, text: 'Habit name' },
-        { tag: 'input', attributes: { class: 'new-habit-name', name: 'new-habit-name', type: 'text', placeholder: 'e.g noodle farming', required: "true" }, text: 'Add a custom habit' },
+        { tag: 'input', attributes: { class: 'new-habit-name', autocomplete: "off", name: 'new-habit-name', type: 'text', placeholder: 'e.g noodle farming', required: "true" }, text: 'Add a custom habit' },
         { tag: 'button', attributes: { class: 'new-habit-btn', type: 'submit', name: 'new-habit-sbmt' }, text: "Add" }
     ];
 
@@ -126,7 +126,7 @@ function createNewHabitForm() {
         } else {
             inputFeedback(btn, "Exists!", false);
         }
-        
+
     };
 
     return form;
@@ -160,10 +160,10 @@ function createDeleteHabitForm() {
         const selected = userHabitsDropdown.options[userHabitsDropdown.selectedIndex].getAttribute('data-id');
         await req.deleteData(`users/${auth.currentUser()}/habits/${selected}`);
         form.reset();
-        
+
         await refreshForm(document.getElementById("delete-habit-form"));
-        
-       
+
+
     };
 
     return form;
@@ -171,9 +171,9 @@ function createDeleteHabitForm() {
 
 async function refreshForm(container) {
     const formName = container.id;
-  
+
     let newForm;
-    switch(formName) {
+    switch (formName) {
         case "add-habit-form": newForm = await createAddHabitForm(); break;
         case "new-habit-form": newForm = await createNewHabitForm(); break;
         case "delete-habit-form": newForm = await createDeleteHabitForm(); break;
@@ -195,7 +195,7 @@ function inputFeedback(element, text, success) {
     }, 2000)
 }
 
-module.exports = { 
+module.exports = {
     renderAddHabitsPage,
     createAddHabitForm,
     createDeleteHabitForm,
@@ -321,7 +321,7 @@ function renderLoginForm() {
     // Define form fields
     const authFields = [
         { tag: 'label', attributes: { id: 'username-label', for: 'username' }, text: 'Username' },
-        { tag: 'input', attributes: { id: 'username', name: 'username', placeholder: 'Enter your username', required: true } },
+        { tag: 'input', attributes: { id: 'username', name: 'username', autocomplete: "off", placeholder: 'Enter your username', required: true } },
         { tag: 'label', attributes: { id: 'password-label', for: 'password' }, text: 'Password' },
         { tag: 'input', attributes: { id: 'password', type: 'password', name: 'password', placeholder: 'Enter your password', required: true } },
         { tag: 'label', attributes: { id: 'robot-label', for: 'robot-check' }, text: 'Not a robot, (bzzt, dzzt).' },
@@ -350,7 +350,7 @@ function renderLoginForm() {
 function renderRegisterForm() {
     const authFields = [
         { tag: 'label', attributes: { id: 'username-label', for: 'username' }, text: 'Username' },
-        { tag: 'input', attributes: { id: 'username', name: 'username', placeholder: 'Enter your username', required: true } },
+        { tag: 'input', attributes: { id: 'username', name: 'username', autocomplete: "off", placeholder: 'Enter your username', required: true } },
         { tag: 'label', attributes: { id: 'password-label', for: 'password' }, text: 'Password' },
         { tag: 'input', attributes: { id: 'password', type: 'password', name: 'password', placeholder: 'Enter your password', required: true } },
         { tag: 'input', attributes: { id: 'password-check', type: 'password', name: 'password', placeholder: 'Confirm password', required: true } },
@@ -526,13 +526,17 @@ function updateMain(path) {
                 forms.renderLoginLink();
                 break;
             case '#profile':
-                rHelpers.renderHeading();
-                content.renderProfile(); break;
+                rHelpers.renderHeading("small");
+                content.renderProfile(); 
+                break;
+
             case '#addhabits':
-                rHelpers.renderHeading()
+                rHelpers.renderHeading("small")
                 addHabits.renderAddHabitsPage();
+               
                 break;
             case '#logout':
+                rHelpers.renderHeading()
                 auth.logout(); hideFooter(); break;
             default:
                 content.render404(); break;
@@ -579,6 +583,7 @@ async function streaksHelper() {
 
     const userData = await requests.getData(`users/${username}/habits/entries`);
     if (requests.getData.err) { return }
+    console.log(userData)
     const streaks = document.createElement('div')
     streaks.className = "streaks-list"
     const streaksHeading = document.createElement('h2')
@@ -617,7 +622,7 @@ async function streaksHelper() {
         let currentStreakTotal = streaks.streakData.current_streak;
 
         let dayNumber = '';
-
+        console.log(dayNumber);
         if (currentStreakTotal === 1) {
             dayNumber = '🔥'
         } else {
@@ -641,7 +646,7 @@ async function streaksHelper() {
         }
 
         let currentStreakMessage = document.createElement('p');
-        currentStreakMessage.textContent = `${currentStreakTotal} ${dayNumber}, ${message}`;
+        currentStreakMessage.textContent = `${currentStreakTotal} ${dayNumber} ${message}`;
         streakContainer.appendChild(currentStreakMessage);
 
         let topStreak = streaks.streakData.top_streak;
@@ -852,7 +857,7 @@ module.exports = {
     renderHeading
 }
 },{}],9:[function(require,module,exports){
-const apiUrl = 'https://debug3213123.herokuapp.com' // http://localhost:3000
+const apiUrl = 'https://habit-your-way.herokuapp.com' // http://localhost:3000
 
 async function getData(path) {
     try {

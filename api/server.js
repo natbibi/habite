@@ -34,8 +34,7 @@ server.use("/auth/login", limiter);
 server.post('/reset', (req, res) => {
   res.send(`reset limit for ${req.ip + req.body.username}`)
   limiter.resetKey(req.ip + req.body.username)
-}
-);
+});
 
 
 const usersRoutes = require('./routes/users');

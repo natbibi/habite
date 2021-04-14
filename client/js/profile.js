@@ -17,6 +17,7 @@ async function streaksHelper() {
 
     const userData = await requests.getData(`users/${username}/habits/entries`);
     if (requests.getData.err) { return }
+    console.log(userData)
     const streaks = document.createElement('div')
     streaks.className = "streaks-list"
     const streaksHeading = document.createElement('h2')
@@ -55,7 +56,7 @@ async function streaksHelper() {
         let currentStreakTotal = streaks.streakData.current_streak;
 
         let dayNumber = '';
-
+        console.log(dayNumber);
         if (currentStreakTotal === 1) {
             dayNumber = '🔥'
         } else {
@@ -79,7 +80,7 @@ async function streaksHelper() {
         }
 
         let currentStreakMessage = document.createElement('p');
-        currentStreakMessage.textContent = `${currentStreakTotal} ${dayNumber}, ${message}`;
+        currentStreakMessage.textContent = `${currentStreakTotal} ${dayNumber} ${message}`;
         streakContainer.appendChild(currentStreakMessage);
 
         let topStreak = streaks.streakData.top_streak;
