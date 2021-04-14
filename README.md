@@ -103,3 +103,6 @@ To teardown docker compose completely
 - Progress sharing
 - Password recovery
 - Dark mode
+
+### Presentation:
+- Slide deck: https://docs.google.com/presentation/d/1zz35L0qkeKtjEddYI5sMxLWUiJK6sENkWtQIbEeJMzM/edit?usp=sharing
