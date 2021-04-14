@@ -203,7 +203,7 @@ module.exports = {
 };
 },{"./auth":2,"./forms":4,"./requests":9}],2:[function(require,module,exports){
 const jwt_decode = require('jwt-decode')
-const apiUrl = 'https://debug3213123.herokuapp.com' // http://localhost:3000
+const apiUrl = 'https://habit-your-way.herokuapp.com' // http://localhost:3000
 
 async function requestLogin(e){
     try {
@@ -314,7 +314,7 @@ function render404() {
 
 module.exports = { renderProfile, renderLandingPage, render404 }
 },{"./auth":2,"./forms":4,"./profile":7,"./renderHelpers":8,"./requests":9}],4:[function(require,module,exports){
-const auth = require("./auth");
+  const auth = require("./auth");
 const main = document.querySelector('main');
 
 function renderLoginForm() {
@@ -569,7 +569,6 @@ const forms = require('./forms');
 const requests = require('./requests')
 const auth = require('./auth')
 
-const username = auth.currentUser();
 const nav = document.querySelector('nav');
 const heading = document.querySelector('header');
 const main = document.querySelector('main');
@@ -578,10 +577,10 @@ async function streaksHelper() {
     const showFooter = document.getElementById('footer')
     showFooter.style.display = 'block';
     const greeting = document.createElement('h1')
-    greeting.textContent = `Hi there, ${localStorage.getItem('username')}! 👋🏼`;
+    greeting.textContent = `Hi there, ${auth.currentUser()}! 👋🏼`;
     heading.appendChild(greeting);
 
-    const userData = await requests.getData(`users/${username}/habits/entries`);
+    const userData = await requests.getData(`users/${auth.currentUser()}/habits/entries`);
     if (requests.getData.err) { return }
     console.log(userData)
     const streaks = document.createElement('div')
@@ -622,7 +621,7 @@ async function streaksHelper() {
         let currentStreakTotal = streaks.streakData.current_streak;
 
         let dayNumber = '';
-        console.log(dayNumber);
+
         if (currentStreakTotal === 1) {
             dayNumber = '🔥'
         } else {
@@ -632,7 +631,7 @@ async function streaksHelper() {
         let message;
 
         if (currentStreakTotal === 0) {
-            message = "Crumbs ... let's get back in the habite!";
+            message = "Crumbs ... let's get back in the habit!";
         } else if (currentStreakTotal > 0 && currentStreakTotal <= 2) {
             message = "Great start!  Keep at it!";
         } else if (currentStreakTotal > 2 && currentStreakTotal <= 7) {
@@ -640,9 +639,9 @@ async function streaksHelper() {
         } else if (currentStreakTotal > 7 && currentStreakTotal <= 14) {
             message = "More than a week effort!";
         } else if (currentStreakTotal > 14) {
-            message = "Rehabite-ation not required here!";
+            message = "Rehabit-ation not required here!";
         } else {
-            message = "Whoops.  No streakers here!";
+            message = "Whoops. No streakers here!";
         }
 
         let currentStreakMessage = document.createElement('p');
@@ -659,7 +658,7 @@ async function streaksHelper() {
 }
 
 async function habitsHelper() {
-    const habitsList = await requests.getData(`users/${username}/habits/entries`);
+    const habitsList = await requests.getData(`users/${auth.currentUser()}/habits/entries`);
     if (habitsList.err) { return }
     const habits = document.createElement('div')
     habits.className = "habits-list"
@@ -710,7 +709,7 @@ async function habitsHelper() {
             } else { currentHabitTotal++ }
             try {
                 const data = { user_habit_id: currentHabitID, completed: true }
-                requests.postData(`users/${username}/habits/entries`, data);
+                requests.postData(`users/${auth.currentUser()}/habits/entries`, data);
                 updateProgressBar()
             } catch (err) {
                 throw err
@@ -723,7 +722,7 @@ async function habitsHelper() {
             if (currentHabitTotal === 0) {
             } else { currentHabitTotal-- }
             try {
-                requests.deleteData(`users/${username}/habits/entries/${currentHabitID}`);
+                requests.deleteData(`users/${auth.currentUser()}/habits/entries/${currentHabitID}`);
                 updateProgressBar()
             } catch (err) {
                 throw err
