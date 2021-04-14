@@ -49,8 +49,6 @@ To teardown docker compose completely
 5. Server up and running, database seeds and schema created, client skeleton added 
 6. Deploy Client to Netlify and API to Heroku with Heroku Postgres database add-on  
 
-### API
-
 ### Client 
 - Write layout tests
 - Set up file structure, link stylesheets, packages, fonts, and bundle js files 
