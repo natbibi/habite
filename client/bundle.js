@@ -141,9 +141,8 @@ module.exports = {
     createNewHabitForm
 };
 },{"./auth":2,"./forms":4,"./requests":9}],2:[function(require,module,exports){
-(function (process){(function (){
 const jwt_decode = require('jwt-decode')
-const apiUrl = process.env.API_URL || 'https://habit-your-way.herokuapp.com'
+const apiUrl = 'https://habit-your-way.herokuapp.com' // http://localhost:3000
 
 async function requestLogin(e){
     try {
@@ -202,8 +201,7 @@ module.exports = {
     login,
     logout
 }
-}).call(this)}).call(this,require('_process'))
-},{"_process":11,"jwt-decode":10}],3:[function(require,module,exports){
+},{"jwt-decode":10}],3:[function(require,module,exports){
 const rHelpers = require('./renderHelpers');
 const forms = require('./forms');
 const requests = require('./requests')
