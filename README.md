@@ -59,6 +59,14 @@ To teardown docker compose completely
 - Connect front end to backend via fetch requests to api and database  
 - Improve test coverage  
 
+### Server 
+- Design database schema
+- Set up MVC file structure
+- Set up RESTful API routes for client to access
+- Format data in a useful manner
+- Add brute force protection with express-rate-limit 
+- Impove test coverage and fix bugs
+
 # Bugs 
 - [x] navHandler is not defined on console
 - [x] Logout button is broken - says can’t find that page / doesnt work on mobile
