@@ -17,26 +17,8 @@ async function showAllHabits(req, res) {
 
 async function createHabit(req, res) {
   try {
-         /*
-      if (habit == 'hello') {
-        //continue
-        console.log('input is fine');
-        res.json(habit)
-      } else {
-        throw err;
-        console.log(err);
-      }
-      */
-      /*
-      if (habitName != 'hi') {
-        throw err
-      } else {
-        res.json(habit)
-        console.log('try executed')
-      }
-      */
     const habit = await Habit.create({ ...req.body });
-    res.json(habit)
+    res.status(201).json(habit)
   } catch (err) {
     res.status(403).send({ err: err })
   }
@@ -46,9 +28,9 @@ async function createUserHabit(req, res) {
   try {
     //check if valid jwt is for the requested user
     // if (res.locals.user !== req.params.username) throw err
-    const jsDate = new Date().toLocaleString('en-GB', {timeZone: 'Europe/London'})
+    const jsDate = new Date().toLocaleString('en-US', {timeZone: 'Europe/London'})
     const userHabit = await UserHabit.createUserHabit({ ...req.body, date:jsDate}, req.params.username);
-    res.json(userHabit)
+    res.status(201).json(userHabit)
   } catch (err) {
     res.status(403).send({ err: err })
   }
@@ -59,7 +41,7 @@ async function getUserHabits(req, res) {
     //check if valid jwt is for the requested user
     // if (res.locals.user !== req.params.username) throw err
     const userHabits = await UserHabit.getUserHabits(req.params.username)
-    res.json(userHabits)
+    res.status(200).json(userHabits)
   } catch (err) {
     res.status(403).send({ err: err })
   }
@@ -70,7 +52,7 @@ async function deleteUserHabit(req, res) {
     //check if valid jwt is for the requested user
     // if (res.locals.user !== req.params.username) throw err
     const userHabit = await UserHabit.deleteUserHabit(req.params.id)
-    res.json(userHabit)
+    res.status(204).json(userHabit)
   
   } catch (err) {
     res.status(403).send({ err: err })
@@ -81,9 +63,9 @@ async function createHabitEntry(req, res) {
   try {
     //check if valid jwt is for the requested user
     // if (res.locals.user !== req.params.username) throw err
-    const jsDate = new Date().toLocaleString('en-GB', {timeZone: 'Europe/London'})
+    const jsDate = new Date().toLocaleString('en-US', {timeZone: 'Europe/London'})
     const habitEntry = await UserHabit.createHabitEntry({ ...req.body, date: jsDate});
-    res.json(habitEntry)
+    res.status(201).json(habitEntry)
   } catch (err) {
     res.status(403).send({ err: err })
   }
@@ -94,7 +76,7 @@ async function deleteHabitEntry(req, res) {
     //check if valid jwt is for the requested user
     // if (res.locals.user !== req.params.username) throw err
     const deleteHabit = await UserHabit.deleteHabitEntry(req.params.id);
-    res.json(deleteHabit)
+    res.status(204).json(deleteHabit)
   } catch (err) {
     res.status(403).send({ err: err })
   }
@@ -108,7 +90,7 @@ async function getUserHabitEntries(req, res) {
       const habitsList = await UserHabit.getUserHabits(req.params.username)
       const streakData = streak(userHabits.allEntries)
       const result = formatData(habitsList, userHabits.habits, streakData)
-      res.json(result)
+      res.status(200).json(result)
       // res.json(result)
   } catch (err) {
     res.status(403).send({ err: err })
@@ -120,7 +102,7 @@ async function autoFillHabitEntries(req, res) {
     //check if valid jwt is for the requested user
     // if (res.locals.user !== req.params.username) throw err
     const userHabits = await UserHabit.autoFillHabitEntries()
-    res.json(userHabits)
+    res.status(201).json(userHabits)
   } catch (err) {
     res.status(403).send({ err: err })
   }
@@ -128,20 +110,15 @@ async function autoFillHabitEntries(req, res) {
 
 const schedule = require('node-schedule');
 let rule = new schedule.RecurrenceRule();
-
-//
 rule.tz = 'Europe/London';
-// runs at 23:59:59
 rule.second = 59;
 rule.minute = 59;
 rule.hour = 23;
-
 schedule.scheduleJob(rule, async function () {
   try {
-    const userHabits = await UserHabit.autoFillHabitEntries();
-    console.log('habit_entires auto completed')
+    await UserHabit.autoFillHabitEntries();
   } catch (err) {
-    console.log(err)
+    console.error(err)
   }
 });
 

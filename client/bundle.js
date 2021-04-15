@@ -203,7 +203,7 @@ module.exports = {
 };
 },{"./auth":2,"./forms":4,"./requests":9}],2:[function(require,module,exports){
 const jwt_decode = require('jwt-decode')
-const apiUrl = 'https://debug3213123.herokuapp.com' // http://localhost:3000
+const apiUrl = 'https://habit-your-way.herokuapp.com' // http://localhost:3000
 
 async function requestLogin(e){
     try {
@@ -314,7 +314,7 @@ function render404() {
 
 module.exports = { renderProfile, renderLandingPage, render404 }
 },{"./auth":2,"./forms":4,"./profile":7,"./renderHelpers":8,"./requests":9}],4:[function(require,module,exports){
-const auth = require("./auth");
+  const auth = require("./auth");
 const main = document.querySelector('main');
 
 function renderLoginForm() {
@@ -856,7 +856,7 @@ module.exports = {
     renderHeading
 }
 },{}],9:[function(require,module,exports){
-const apiUrl = 'https://debug3213123.herokuapp.com' // http://localhost:3000
+const apiUrl = 'https://habit-your-way.herokuapp.com' // http://localhost:3000
 
 async function getData(path) {
     try {

@@ -114,8 +114,6 @@ class UserHabit extends Habit {
       try {
         const checkMax = await db.query(SQL`SELECT COUNT(*) FROM habit_entries WHERE user_habit_id = ${data.user_habit_id} AND completed_at::DATE = current_date `)
         const findFreq = await db.query(SQL`SELECT frequency FROM user_habits WHERE id = ${data.user_habit_id}`)
-        console.log(checkMax)
-        console.log(findFreq)
         if (checkMax.rows[0].count < findFreq.rows[0].frequency) {
           const result = await db.query(SQL`INSERT INTO habit_entries (user_habit_id, completed, completed_at) VALUES (${data.user_habit_id}, ${data.completed}, ${data.date}) RETURNING *;`);
           const newHabitEntry = result.rows[0];
@@ -211,16 +209,12 @@ class UserHabit extends Habit {
           id: habit.id,
           timestamp: habit.completed_at,
         }));
-        console.log(resultAllHabits)
         const result = await db.query(SQL`
         SELECT users.username, users.id as user_id, habits.name, habit_entries.completed, user_habits.id AS user_habit_id, user_habits.frequency, count(*) AS total_completed, to_char(completed_at, 'MM-DD-YYYY') AS date
         FROM user_habits 
         JOIN users ON user_habits.user_id = users.id
         LEFT JOIN habits ON user_habits.habit_id = habits.id
         LEFT JOIN habit_entries ON user_habits.id = habit_entries.user_habit_id
-        WHERE 
-        to_char(habit_entries.completed_at, 'DD-MM-YYYY')  >= to_char(current_date - INTEGER '3', 'DD-MM-YYYY')
-        AND to_char(habit_entries.completed_at, 'DD-MM-YYYY') <=  to_char(current_date, 'DD-MM-YYYY')
         AND
         users.username = ${username}
         AND

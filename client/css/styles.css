@@ -40,6 +40,12 @@ img {
     /* min-height: 100vh; */
     display: grid;
     grid-template-rows: min-content;
+    overflow-x: auto;
+}
+@media only screen and (max-width: 600px) {
+    .container {
+        margin-bottom: 100px;
+    }
 }
 
 .streaks-list {
