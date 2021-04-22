@@ -4,7 +4,7 @@
 
 https://habite.netlify.app/
 
-A mobile friendly web-app that allows users to register for their own account. They can easily log and record their progress for any habits they wish to track, mark habits as complete for the day, and see their most recent completion streaks. The data is persisted in a Postgres Database connected to Heroku.  
+A mobile friendly web-app that allows users to register for their own account. They can easily login and record their progress for any habits they wish to track, mark habits as complete for the day, and see their most recent completion streaks. The data is persisted in a Postgres Database connected to Heroku.  
 
 # Description
 
