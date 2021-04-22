@@ -82,14 +82,15 @@ To teardown docker compose completely
 # Wins & Challenges 
 
 ## Wins 
-- Working great together between front end and back end  
-- Testing! Functions are split up and easy to test  
+- Thorough planning and design phase led to smooth implementation and delivery
+- Working great together between front end and back end 
+- Testing! Functions are split up and easy to test
 
 ## Challenges 
 - Setting up Heroku Postgres - issues with SSL and database credentials
 - Writing a lot of js before bundling 
 - Issues with date formatting  
-- Time!  
+- Time!
 
 # Code Snippet
 <img src="https://user-images.githubusercontent.com/58271566/114206148-f6af8c80-9952-11eb-90ae-eb6cbc47eaf9.png" width="600">
