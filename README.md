@@ -6,14 +6,14 @@ https://habite.netlify.app/
 
 A mobile friendly web-app that allows users to register for their own account. They can easily login and record their progress for any habits they wish to track, mark habits as complete for the day, and see their most recent completion streaks. The data is persisted in a Postgres Database connected to Heroku.  
 
-# Description
+## Description
 
 Habité! The name itself comes from the French word for “live”, which means our app is more than just a tool.  It’s a way for people to define their lifestyle choices and, more importantly, to do it their way!  
   
 <img width="1000" alt="habite" src="https://user-images.githubusercontent.com/58271566/114206025-cf58bf80-9952-11eb-9d02-2afd378417ab.png">
   
   
-# Installation & usage
+## Installation & usage
 
 ### For our app to be run on your local machine:
 
@@ -31,7 +31,7 @@ To run dB in shell
 To teardown docker compose completely  
 `bash _scripts/teardown.sh`  
 
-# Technologies
+## Technologies
 
 ### Dependencies:
 **Api:** cors, express, bcrypt, dotenv, jsonwebtoken, pg, sql-template-strings, express-rate-limit  
@@ -43,7 +43,7 @@ To teardown docker compose completely
 
 **Client:** watchify, concurrently, jest, jest-fetch-mock, coverage, dotenv, 
 
-# Process
+## Process
 1. Plan design and project's MoSCoW  
 2. Create a mockup of design, layout and basic functionality  
 3. Set up Docker Compose containers for Client, Server, Database  
@@ -67,7 +67,7 @@ To teardown docker compose completely
 - Add brute force protection with express-rate-limit 
 - Impove test coverage and fix bugs
 
-# Bugs 
+## Bugs 
 - [x] navHandler is not defined on console
 - [x] Logout button is broken - says can’t find that page / doesnt work on mobile
 - [x] Register works if I just click register e.g not entering username or password values
@@ -79,23 +79,23 @@ To teardown docker compose completely
 - [ ] Date in wrong format
 - [ ] Streaks not working 
 
-# Wins & Challenges 
+## Wins & Challenges 
 
-## Wins 
+### Wins 
 - Thorough planning and design phase led to smooth implementation and delivery
 - Working great together between front end and back end 
 - Testing! Functions are split up and easy to test
 
-## Challenges 
+### Challenges 
 - Setting up Heroku Postgres - issues with SSL and database credentials
 - Writing a lot of js before bundling 
 - Issues with date formatting  
 - Time!
 
-# Code Snippet
+## Code Snippet
 <img src="https://user-images.githubusercontent.com/58271566/114206148-f6af8c80-9952-11eb-90ae-eb6cbc47eaf9.png" width="600">
 
-# Future Features
+## Future Features
 - Graphs
 - Refresh Tokens
 - Email notifications / reminders
@@ -105,5 +105,5 @@ To teardown docker compose completely
 - Password recovery
 - Dark mode
 
-### Presentation:
-- Slide deck: https://docs.google.com/presentation/d/1zz35L0qkeKtjEddYI5sMxLWUiJK6sENkWtQIbEeJMzM/edit?usp=sharing
+## Slide Deck 
+https://docs.google.com/presentation/d/1zz35L0qkeKtjEddYI5sMxLWUiJK6sENkWtQIbEeJMzM/edit?usp=sharing
